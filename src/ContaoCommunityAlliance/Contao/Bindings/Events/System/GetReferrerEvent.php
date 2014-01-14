@@ -79,10 +79,14 @@ class GetReferrerEvent
 	 * Set the referrerUrl.
 	 *
 	 * @param string $referrerUrl The referrer url.
+	 *
+	 * @return GetReferrerEvent
 	 */
 	public function setReferrerUrl($referrerUrl)
 	{
 		$this->referrerUrl = $referrerUrl;
+
+		return $this;
 	}
 
 	/**
