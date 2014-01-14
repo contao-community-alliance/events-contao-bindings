@@ -35,7 +35,7 @@ class SystemSubscriber
 		return array(
 			ContaoEvents::SYSTEM_GET_REFERRER       => 'handleGetReferer',
 			ContaoEvents::SYSTEM_LOG                => 'handleLog',
-			ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE => 'loadLanguageFile',
+			ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE => 'handleLoadLanguageFile',
 		);
 	}
 
