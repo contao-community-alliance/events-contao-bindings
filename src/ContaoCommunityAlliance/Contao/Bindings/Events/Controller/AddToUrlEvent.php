@@ -4,14 +4,14 @@
  *
  * PHP version 5
  * @package    ContaoCommunityAlliance\Contao\Bindings\Events
- * @subpackage Backend
+ * @subpackage Controller
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @copyright  The Contao Community Alliance
  * @license    LGPL.
  * @filesource
  */
 
-namespace ContaoCommunityAlliance\Contao\Bindings\Events\Backend;
+namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 

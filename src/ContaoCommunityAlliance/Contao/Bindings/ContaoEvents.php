@@ -23,7 +23,7 @@ class ContaoEvents
 	 *
 	 * @see \Contao\Controller::addToUrl()
 	 */
-	const CONTROLLER_ADD_TO_URL = 'contao.events.backend.add.to.url';
+	const CONTROLLER_ADD_TO_URL = 'contao.events.controller.add.to.url';
 
 	/**
 	 * Event for loading a data container (DCA).
