@@ -28,6 +28,13 @@ class ControllerSubscriber
 	implements EventSubscriberInterface
 {
 	/**
+	 * Kill parent constructor.
+	 */
+	public function __construct()
+	{
+	}
+
+	/**
 	 * Returns an array of event names this subscriber wants to listen to.
 	 *
 	 * @return array
