@@ -27,12 +27,15 @@ class ControllerSubscriber
 	extends \Controller
 	implements EventSubscriberInterface
 {
+	// @codingStandardsIgnoreStart
 	/**
-	 * Kill parent constructor.
+	 * Create a new instance.
 	 */
 	public function __construct()
 	{
+		parent::__construct();
 	}
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Returns an array of event names this subscriber wants to listen to.
@@ -56,9 +59,9 @@ class ControllerSubscriber
 	 *
 	 * @return void
 	 */
-	public static function handleAddToUrl(AddToUrlEvent $event)
+	public function handleAddToUrl(AddToUrlEvent $event)
 	{
-		$event->setUrl(\Controller::addToUrl($event->getSuffix()));
+		$event->setUrl($this->addToUrl($event->getSuffix()));
 	}
 
 	/**
@@ -80,9 +83,9 @@ class ControllerSubscriber
 	 *
 	 * @return void
 	 */
-	public static function handleRedirect(RedirectEvent $event)
+	public function handleRedirect(RedirectEvent $event)
 	{
-		\Controller::redirect($event->getNewLocation(), $event->getStatusCode());
+		$this->redirect($event->getNewLocation(), $event->getStatusCode());
 	}
 
 	/**
@@ -92,8 +95,8 @@ class ControllerSubscriber
 	 *
 	 * @return void
 	 */
-	public static function handleReload(ReloadEvent $event)
+	public function handleReload(ReloadEvent $event)
 	{
-		\Controller::reload();
+		$this->reload();
 	}
 }

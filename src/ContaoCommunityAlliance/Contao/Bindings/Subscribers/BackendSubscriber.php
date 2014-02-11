@@ -21,8 +21,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Subscriber for the Backend class in Contao.
  */
 class BackendSubscriber
+	extends \Backend
 	implements EventSubscriberInterface
 {
+	// @codingStandardsIgnoreStart
+	/**
+	 * Create a new instance.
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+	// @codingStandardsIgnoreEnd
+
 	/**
 	 * Returns an array of event names this subscriber wants to listen to.
 	 *
@@ -42,8 +53,8 @@ class BackendSubscriber
 	 *
 	 * @return void
 	 */
-	public static function handleAddToUrl(AddToUrlEvent $event)
+	public function handleAddToUrl(AddToUrlEvent $event)
 	{
-		$event->setUrl(\Backend::addToUrl($event->getSuffix()));
+		$event->setUrl($this->addToUrl($event->getSuffix()));
 	}
 }

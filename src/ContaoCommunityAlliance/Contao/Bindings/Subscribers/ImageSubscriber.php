@@ -22,8 +22,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Subscriber for the System class in Contao.
  */
 class ImageSubscriber
+	extends \Controller
 	implements EventSubscriberInterface
 {
+	// @codingStandardsIgnoreStart
+	/**
+	 * Create a new instance.
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+	// @codingStandardsIgnoreEnd
+
 	/**
 	 * Returns an array of event names this subscriber wants to listen to.
 	 *
@@ -46,7 +57,7 @@ class ImageSubscriber
 	 */
 	public function handleResize(ResizeImageEvent $event)
 	{
-		$event->setResultImage(\Image::get(
+		$event->setResultImage($this->getImage(
 			$event->getImage(),
 			$event->getWidth(),
 			$event->getHeight(),
@@ -65,7 +76,7 @@ class ImageSubscriber
 	 */
 	public function handleGenerateHtml(GenerateHtmlEvent $event)
 	{
-		$event->setHtml(\Image::getHtml(
+		$event->setHtml($this->generateImage(
 			$event->getSrc(),
 			$event->getAlt(),
 			$event->getAttributes()

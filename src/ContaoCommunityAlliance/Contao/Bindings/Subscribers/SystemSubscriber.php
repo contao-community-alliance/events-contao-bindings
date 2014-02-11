@@ -23,8 +23,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Subscriber for the System class in Contao.
  */
 class SystemSubscriber
+	extends \System
 	implements EventSubscriberInterface
 {
+	// @codingStandardsIgnoreStart
+	/**
+	 * Create a new instance.
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+	// @codingStandardsIgnoreEnd
+
 	/**
 	 * Returns an array of event names this subscriber wants to listen to.
 	 *
@@ -48,7 +59,7 @@ class SystemSubscriber
 	 */
 	public function handleGetReferer(GetReferrerEvent $event)
 	{
-		$event->setReferrerUrl(\System::getReferer($event->isEncodeAmpersands(), $event->getTableName()));
+		$event->setReferrerUrl($this->getReferer($event->isEncodeAmpersands(), $event->getTableName()));
 	}
 
 	/**
@@ -60,7 +71,7 @@ class SystemSubscriber
 	 */
 	public function handleLog(LogEvent $event)
 	{
-		\System::log($event->getText(), $event->getFunction(), $event->getCategory());
+		$this->log($event->getText(), $event->getFunction(), $event->getCategory());
 	}
 
 	/**
@@ -72,6 +83,6 @@ class SystemSubscriber
 	 */
 	public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
 	{
-		\System::loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
+		$this->loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
 	}
 }
