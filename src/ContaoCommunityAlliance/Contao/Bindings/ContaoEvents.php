@@ -10,11 +10,20 @@ class ContaoEvents
 	/**
 	 * Event for adding parameters to the current url and suffixing it with the current request token.
 	 *
-	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\BackEnd\AddToUrlEvent
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Backend\AddToUrlEvent
 	 *
 	 * @see \Contao\Backend::addToUrl()
 	 */
 	const BACKEND_ADD_TO_URL = 'contao.events.backend.add.to.url';
+
+	/**
+	 * Event for getting the name of the current active backend theme.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Backend\GetThemeEvent
+	 *
+	 * @see \Contao\Backend::getTheme()
+	 */
+	const BACKEND_GET_THEME = 'contao.events.backend.get-theme';
 
 	/**
 	 * Event for adding parameters to the current url.
