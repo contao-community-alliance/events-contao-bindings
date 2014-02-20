@@ -44,6 +44,15 @@ class ContaoEvents
 	const CONTROLLER_GET_ARTICLE = 'contao.events.controller.get-article';
 
 	/**
+	 * Event for getting a rendered content element.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent
+	 *
+	 * @see \Contao\Controller::getContentElement()
+	 */
+	const CONTROLLER_GET_CONTENT_ELEMENT = 'contao.events.controller.get-content-element';
+
+	/**
 	 * Event for loading a data container (DCA).
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent

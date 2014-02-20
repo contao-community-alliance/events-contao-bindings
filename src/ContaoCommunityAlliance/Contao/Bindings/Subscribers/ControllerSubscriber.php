@@ -15,6 +15,7 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
@@ -45,6 +46,7 @@ class ControllerSubscriber
 		return array(
 			ContaoEvents::CONTROLLER_ADD_TO_URL          => 'handleAddToUrl',
 			ContaoEvents::CONTROLLER_GET_ARTICLE         => 'handleGetArticle',
+			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT => 'handleGetContentElement',
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER => 'handleLoadDataContainer',
 			ContaoEvents::CONTROLLER_REDIRECT            => 'handleRedirect',
 			ContaoEvents::CONTROLLER_RELOAD              => 'handleReload',
@@ -64,7 +66,7 @@ class ControllerSubscriber
 	}
 
 	/**
-	 * Rendern an article.
+	 * Render an article.
 	 *
 	 * @param GetArticleEvent $event
 	 *
@@ -80,6 +82,23 @@ class ControllerSubscriber
 		);
 
 		$event->setArticle($article);
+	}
+
+	/**
+	 * Render an content element.
+	 *
+	 * @param GetContentElementEvent $event
+	 *
+	 * @return void
+	 */
+	public function handleGetContentElement(GetContentElementEvent $event)
+	{
+		$contentElement = $this->getContentElement(
+			$event->getContentElementId(),
+			$event->getColumn()
+		);
+
+		$event->setContentElement($contentElement);
 	}
 
 	/**
