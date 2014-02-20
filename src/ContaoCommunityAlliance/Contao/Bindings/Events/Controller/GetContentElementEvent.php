@@ -17,7 +17,7 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
- * This Event is emitted when an article should be rendered.
+ * This Event is emitted when a content element should be rendered.
  */
 class GetContentElementEvent
 	extends ContaoApiEvent
