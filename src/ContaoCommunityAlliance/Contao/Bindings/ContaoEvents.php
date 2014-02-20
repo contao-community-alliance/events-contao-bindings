@@ -141,4 +141,13 @@ class ContaoEvents
 	 * @see \Contao\System::loadLanguageFile()
 	 */
 	const SYSTEM_LOAD_LANGUAGE_FILE = 'contao.events.system.load.language.file';
+
+	/**
+	 * Event for generate a calendar event.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
+	 *
+	 * @see \Contao\System::loadLanguageFile()
+	 */
+	const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
 }
