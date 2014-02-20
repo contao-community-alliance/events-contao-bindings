@@ -14,6 +14,7 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
@@ -44,12 +45,13 @@ class ControllerSubscriber
 	public static function getSubscribedEvents()
 	{
 		return array(
-			ContaoEvents::CONTROLLER_ADD_TO_URL          => 'handleAddToUrl',
-			ContaoEvents::CONTROLLER_GET_ARTICLE         => 'handleGetArticle',
-			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT => 'handleGetContentElement',
-			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER => 'handleLoadDataContainer',
-			ContaoEvents::CONTROLLER_REDIRECT            => 'handleRedirect',
-			ContaoEvents::CONTROLLER_RELOAD              => 'handleReload',
+			ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
+			ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
+			ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
+			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
+			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
+			ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
+			ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
 		);
 	}
 
@@ -63,6 +65,22 @@ class ControllerSubscriber
 	public static function handleAddToUrl(AddToUrlEvent $event)
 	{
 		$event->setUrl(\Controller::addToUrl($event->getSuffix()));
+	}
+
+	/**
+	 * Add an enclosure to a template.
+	 *
+	 * @param AddEnclosureToTemplateEvent $event The event.
+	 *
+	 * @return void
+	 */
+	public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event)
+	{
+		\Controller::addEnclosuresToTemplate(
+			$event->getTemplate(),
+			$event->getEnclosureData(),
+			$event->getKey()
+		);
 	}
 
 	/**

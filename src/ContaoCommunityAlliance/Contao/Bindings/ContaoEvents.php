@@ -35,6 +35,15 @@ class ContaoEvents
 	const CONTROLLER_ADD_TO_URL = 'contao.events.controller.add.to.url';
 
 	/**
+	 * Event for adding an enclosure to a template.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent
+	 *
+	 * @see \Contao\Controller::addEnclosureToTemplate()
+	 */
+	const CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE = 'contao.events.controller.add-enclosure-to-template';
+
+	/**
 	 * Event for getting a rendered article.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent
