@@ -15,6 +15,7 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
@@ -47,6 +48,7 @@ class ControllerSubscriber
 		return array(
 			ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
 			ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
+			ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE     => 'handleAddImageToTemplate',
 			ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
 			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
@@ -80,6 +82,23 @@ class ControllerSubscriber
 			$event->getTemplate(),
 			$event->getEnclosureData(),
 			$event->getKey()
+		);
+	}
+
+	/**
+	 * Add an image to a template.
+	 *
+	 * @param AddImageToTemplateEvent $event The event.
+	 *
+	 * @return void
+	 */
+	public function handleAddImageToTemplate(AddImageToTemplateEvent $event)
+	{
+		\Controller::addImageToTemplate(
+			$event->getTemplate(),
+			$event->getImageData(),
+			$event->getMaxWidth(),
+			$event->getLightboxId()
 		);
 	}
 

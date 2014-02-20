@@ -44,6 +44,15 @@ class ContaoEvents
 	const CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE = 'contao.events.controller.add-enclosure-to-template';
 
 	/**
+	 * Event for adding an image to a template.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent
+	 *
+	 * @see \Contao\Controller::addImageToTemplate()
+	 */
+	const CONTROLLER_ADD_IMAGE_TO_TEMPLATE = 'contao.events.controller.add-image-to-template';
+
+	/**
 	 * Event for getting a rendered article.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent
