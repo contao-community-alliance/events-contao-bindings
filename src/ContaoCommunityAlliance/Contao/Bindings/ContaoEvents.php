@@ -35,6 +35,15 @@ class ContaoEvents
 	const CONTROLLER_ADD_TO_URL = 'contao.events.controller.add.to.url';
 
 	/**
+	 * Event for getting a rendered article.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent
+	 *
+	 * @see \Contao\Controller::getArticle()
+	 */
+	const CONTROLLER_GET_ARTICLE = 'contao.events.controller.get-article';
+
+	/**
 	 * Event for loading a data container (DCA).
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent

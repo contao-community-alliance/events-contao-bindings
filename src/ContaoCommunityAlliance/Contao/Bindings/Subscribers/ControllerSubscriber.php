@@ -14,6 +14,7 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
@@ -43,6 +44,7 @@ class ControllerSubscriber
 	{
 		return array(
 			ContaoEvents::CONTROLLER_ADD_TO_URL          => 'handleAddToUrl',
+			ContaoEvents::CONTROLLER_GET_ARTICLE         => 'handleGetArticle',
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER => 'handleLoadDataContainer',
 			ContaoEvents::CONTROLLER_REDIRECT            => 'handleRedirect',
 			ContaoEvents::CONTROLLER_RELOAD              => 'handleReload',
@@ -59,6 +61,25 @@ class ControllerSubscriber
 	public static function handleAddToUrl(AddToUrlEvent $event)
 	{
 		$event->setUrl(\Controller::addToUrl($event->getSuffix()));
+	}
+
+	/**
+	 * Rendern an article.
+	 *
+	 * @param GetArticleEvent $event
+	 *
+	 * @return void
+	 */
+	public function handleGetArticle(GetArticleEvent $event)
+	{
+		$article = $this->getArticle(
+			$event->getArticleId(),
+			$event->getTeaserOnly(),
+			true,
+			$event->getColumn()
+		);
+
+		$event->setArticle($article);
 	}
 
 	/**
