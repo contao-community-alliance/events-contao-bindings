@@ -16,6 +16,7 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
@@ -49,6 +50,7 @@ class ControllerSubscriber
 			ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
 			ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
 			ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE     => 'handleAddImageToTemplate',
+			ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL     => 'handleGenerateFrontendUrl',
 			ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
 			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
@@ -100,6 +102,24 @@ class ControllerSubscriber
 			$event->getMaxWidth(),
 			$event->getLightboxId()
 		);
+	}
+
+	/**
+	 * Generate a frontend url.
+	 *
+	 * @param GenerateFrontendUrlEvent $event
+	 *
+	 * @return void
+	 */
+	public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
+	{
+		$url = \Controller::generateFrontendUrl(
+			$event->getPageData(),
+			$event->getParameters(),
+			$event->getLanguage()
+		);
+
+		$event->setUrl($url);
 	}
 
 	/**

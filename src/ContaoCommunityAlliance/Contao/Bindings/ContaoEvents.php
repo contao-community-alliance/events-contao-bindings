@@ -53,6 +53,15 @@ class ContaoEvents
 	const CONTROLLER_ADD_IMAGE_TO_TEMPLATE = 'contao.events.controller.add-image-to-template';
 
 	/**
+	 * Event to generate a frontend url.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent
+	 *
+	 * @see \Contao\Controller::generateFrontendUrl()
+	 */
+	const CONTROLLER_GENERATE_FRONTEND_URL = 'contao.events.controller.generate-frontend-url';
+
+	/**
 	 * Event for getting a rendered article.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent
