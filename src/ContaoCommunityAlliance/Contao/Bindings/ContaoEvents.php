@@ -164,8 +164,6 @@ class ContaoEvents
 	 * Event for generate a calendar event.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
-	 *
-	 * @see \Contao\System::loadLanguageFile()
 	 */
 	const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
 }
