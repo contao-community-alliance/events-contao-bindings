@@ -35,7 +35,7 @@ class GetContentElementEvent
 	/**
 	 * @var string
 	 */
-	protected $contentElement;
+	protected $contentElementHtml;
 
 	function __construct($contentElementId, $column = 'main')
 	{
@@ -62,17 +62,17 @@ class GetContentElementEvent
 	/**
 	 * @param string $contentElement
 	 */
-	public function setContentElement($contentElement)
+	public function setContentElementHtml($contentElement)
 	{
-		$this->contentElement = $contentElement;
+		$this->contentElementHtml = $contentElement;
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getContentElement()
+	public function getContentElementHtml()
 	{
-		return $this->contentElement;
+		return $this->contentElementHtml;
 	}
 }

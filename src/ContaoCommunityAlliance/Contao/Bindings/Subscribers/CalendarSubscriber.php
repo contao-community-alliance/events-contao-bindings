@@ -162,7 +162,7 @@ class CalendarSubscriber
 
 				$eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT, $getContentElementEvent);
 
-				$objTemplate->details .= $getContentElementEvent->getContentElement();
+				$objTemplate->details .= $getContentElementEvent->getContentElementHtml();
 			}
 		}
 
