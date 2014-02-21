@@ -40,12 +40,12 @@ class GetCalendarEventEvent
 	/**
 	 * @var string
 	 */
-	protected $calendarEvent;
+	protected $template = 'event_full';
 
 	/**
 	 * @var string
 	 */
-	protected $template = 'event_full';
+	protected $calendarEventHtml;
 
 	/**
 	 * @param int       $calendarEventId The calendar event ID.
@@ -101,17 +101,17 @@ class GetCalendarEventEvent
 	/**
 	 * @param string $calendarEvent
 	 */
-	public function setCalendarEvent($calendarEvent)
+	public function setCalendarEventHtml($calendarEvent)
 	{
-		$this->calendarEvent = $calendarEvent;
+		$this->calendarEventHtml = $calendarEvent;
 		return $this;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getCalendarEvent()
+	public function getCalendarEventHtml()
 	{
-		return $this->calendarEvent;
+		return $this->calendarEventHtml;
 	}
 }

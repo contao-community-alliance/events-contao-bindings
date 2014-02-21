@@ -50,7 +50,7 @@ class CalendarSubscriber
 	 */
 	public function handleEvent(GetCalendarEventEvent $event)
 	{
-		if ($event->getCalendarEvent()) {
+		if ($event->getCalendarEventHtml()) {
 			return;
 		}
 
@@ -203,6 +203,6 @@ class CalendarSubscriber
 		}
 
 		$calendarEvent = $objTemplate->parse();
-		$event->setCalendarEvent($calendarEvent);
+		$event->setCalendarEventHtml($calendarEvent);
 	}
 }
