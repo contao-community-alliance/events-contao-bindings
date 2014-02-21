@@ -32,7 +32,7 @@ class GetTemplateGroupEvent
 	 */
 	protected $templates;
 
-	function __construct($prefix)
+	public function __construct($prefix)
 	{
 		$this->prefix = (string) $prefix;
 		$this->templates = new \ArrayObject();

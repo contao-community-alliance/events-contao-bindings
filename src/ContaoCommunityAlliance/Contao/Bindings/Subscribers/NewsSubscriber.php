@@ -368,7 +368,13 @@ class NewsSubscriber
 		return sprintf('<a href="%s" title="%s"%s>%s</a>',
 						$strArticleUrl,
 						specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-						($objArticle->target ? (($objPage->outputFormat == 'xhtml') ? ' onclick="return !window.open(this.href)"' : ' target="_blank"') : ''),
+						$objArticle->target
+							? (
+							($objPage->outputFormat == 'xhtml')
+								? ' onclick="return !window.open(this.href)"'
+								: ' target="_blank"'
+							)
+							: '',
 						$strLink);
 	}
 }

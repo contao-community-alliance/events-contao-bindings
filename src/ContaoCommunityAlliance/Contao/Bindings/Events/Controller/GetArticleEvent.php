@@ -42,7 +42,7 @@ class GetArticleEvent
 	 */
 	protected $article;
 
-	function __construct($articleId, $teaserOnly = false, $column = 'main')
+	public function __construct($articleId, $teaserOnly = false, $column = 'main')
 	{
 		$this->articleId  = (int) $articleId;
 		$this->teaserOnly = (bool) $teaserOnly;

@@ -23,32 +23,40 @@ class GetNewsEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The news ID.
+	 *
 	 * @var int
 	 */
 	protected $newsId;
 
 	/**
+	 * The template name.
+	 *
 	 * @var string
 	 */
 	protected $template = 'news_full';
 
 	/**
+	 * The rendered news html.
+	 *
 	 * @var string
 	 */
 	protected $newsHtml;
 
 	/**
-	 * @param int  $newsId     The news ID.
-	 * @param bool $teaserOnly Generate the teaser only.
+	 * Create the event.
+	 *
+	 * @param int    $newsId   The news ID.
+	 * @param string $template The template name.
 	 */
-	function __construct($newsId, $template = 'news_full')
+	public function __construct($newsId, $template = 'news_full')
 	{
-		$this->newsId   = (int) $newsId;
-		$this->template = (string) $template;
+		$this->newsId   = (int)$newsId;
+		$this->template = (string)$template;
 	}
 
 	/**
-	 * Return the calendar event ID.
+	 * Return the news ID.
 	 *
 	 * @return int
 	 */
@@ -58,6 +66,8 @@ class GetNewsEvent
 	}
 
 	/**
+	 * Return the template name.
+	 *
 	 * @return string
 	 */
 	public function getTemplate()
@@ -66,15 +76,21 @@ class GetNewsEvent
 	}
 
 	/**
-	 * @param string $calendarEvent
+	 * Set the rendered news html.
+	 *
+	 * @param string $newsHtml The rendered html.
+	 *
+	 * @return GetNewsEvent
 	 */
-	public function setNewsHtml($calendarEvent)
+	public function setNewsHtml($newsHtml)
 	{
-		$this->newsHtml = $calendarEvent;
+		$this->newsHtml = $newsHtml;
 		return $this;
 	}
 
 	/**
+	 * Return the rendered news html.
+	 *
 	 * @return string
 	 */
 	public function getNewsHtml()

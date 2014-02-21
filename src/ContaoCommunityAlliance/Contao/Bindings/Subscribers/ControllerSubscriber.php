@@ -109,7 +109,7 @@ class ControllerSubscriber
 	/**
 	 * Generate a frontend url.
 	 *
-	 * @param GenerateFrontendUrlEvent $event
+	 * @param GenerateFrontendUrlEvent $event The event.
 	 *
 	 * @return void
 	 */
@@ -127,7 +127,7 @@ class ControllerSubscriber
 	/**
 	 * Render an article.
 	 *
-	 * @param GetArticleEvent $event
+	 * @param GetArticleEvent $event The event.
 	 *
 	 * @return void
 	 */
@@ -146,7 +146,7 @@ class ControllerSubscriber
 	/**
 	 * Render an content element.
 	 *
-	 * @param GetContentElementEvent $event
+	 * @param GetContentElementEvent $event The event.
 	 *
 	 * @return void
 	 */
@@ -163,16 +163,17 @@ class ControllerSubscriber
 	/**
 	 * Collect a template group.
 	 *
-	 * @param GetTemplateGroupEvent $event
+	 * @param GetTemplateGroupEvent $event The event.
 	 *
 	 * @return void
 	 */
 	public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
 	{
 		$templatesArray = \Controller::getTemplateGroup($event->getPrefix());
-		$templates = $event->getTemplates();
+		$templates      = $event->getTemplates();
 
-		foreach ($templatesArray as $templateName => $templateLabel) {
+		foreach ($templatesArray as $templateName => $templateLabel)
+		{
 			$templates[$templateName] = $templateLabel;
 		}
 	}

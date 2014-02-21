@@ -23,35 +23,45 @@ class GetCalendarEventEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The calendar event ID.
+	 *
 	 * @var int
 	 */
 	protected $calendarEventId;
 
 	/**
+	 * A concrete calendar event date time.
+	 *
 	 * @var \DateTime|null
 	 */
 	protected $dateTime;
 
 	/**
+	 * The template name.
+	 *
 	 * @var string
 	 */
 	protected $template = 'event_full';
 
 	/**
+	 * The rendered calendar event html.
+	 *
 	 * @var string
 	 */
 	protected $calendarEventHtml;
 
 	/**
+	 * Create the event.
+	 *
 	 * @param int       $calendarEventId The calendar event ID.
-	 * @param \DateTime $dateTime A concrete event date time.
-	 * @param bool      $teaserOnly Generate the teaser only.
+	 * @param \DateTime $dateTime        A concrete event date time.
+	 * @param string    $template        The template name.
 	 */
-	function __construct($calendarEventId, \DateTime $dateTime = null, $template = 'event_full')
+	public function __construct($calendarEventId, \DateTime $dateTime = null, $template = 'event_full')
 	{
-		$this->calendarEventId = (int) $calendarEventId;
+		$this->calendarEventId = (int)$calendarEventId;
 		$this->dateTime        = $dateTime;
-		$this->template        = (string) $template;
+		$this->template        = (string)$template;
 	}
 
 	/**
@@ -75,6 +85,8 @@ class GetCalendarEventEvent
 	}
 
 	/**
+	 * Retur the template name.
+	 * 
 	 * @return string
 	 */
 	public function getTemplate()
@@ -83,15 +95,21 @@ class GetCalendarEventEvent
 	}
 
 	/**
-	 * @param string $calendarEvent
+	 * Set the rendered calendar event html.
+	 *
+	 * @param string $calendarEventHtml The rendered html.
+	 *
+	 * @return GetCalendarEventEvent
 	 */
-	public function setCalendarEventHtml($calendarEvent)
+	public function setCalendarEventHtml($calendarEventHtml)
 	{
-		$this->calendarEventHtml = $calendarEvent;
+		$this->calendarEventHtml = $calendarEventHtml;
 		return $this;
 	}
 
 	/**
+	 * Return the rendered calendar event html.
+	 *
 	 * @return string
 	 */
 	public function getCalendarEventHtml()

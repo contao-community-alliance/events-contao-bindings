@@ -22,34 +22,52 @@ class AddImageToTemplateEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The image data.
+	 *
 	 * @var array
 	 */
 	protected $imageData;
 
 	/**
+	 * The template object.
+	 *
 	 * @var \Template|object
 	 */
 	protected $template;
 
 	/**
+	 * The max image width.
+	 *
 	 * @var int|null
 	 */
 	protected $maxWidth = null;
 
 	/**
+	 * The lightbox ID.
+	 *
 	 * @var string|null
 	 */
 	protected $lightboxId = null;
 
-	function __construct($imageData, $template, $maxWidth = null, $lightboxId = null)
+	/**
+	 * Create new event.
+	 *
+	 * @param array            $imageData  The image data.
+	 * @param \Template|object $template   The template object.
+	 * @param int|null         $maxWidth   The max image width.
+	 * @param string|null      $lightboxId The lightbox ID.
+	 */
+	public function __construct($imageData, $template, $maxWidth = null, $lightboxId = null)
 	{
-		$this->imageData = $imageData;
-		$this->template  = $template;
-		$this->maxWidth  = empty($maxWidth) ? null : (int) $maxWidth;
-		$this->lightboxId = empty($lightboxId) ? null : (string) $lightboxId;
+		$this->imageData  = $imageData;
+		$this->template   = $template;
+		$this->maxWidth   = empty($maxWidth) ? null : (int)$maxWidth;
+		$this->lightboxId = empty($lightboxId) ? null : (string)$lightboxId;
 	}
 
 	/**
+	 * Return the image data.
+	 *
 	 * @return array
 	 */
 	public function getImageData()
@@ -58,6 +76,8 @@ class AddImageToTemplateEvent
 	}
 
 	/**
+	 * Return the template object, to add the image.
+	 *
 	 * @return \Template|object
 	 */
 	public function getTemplate()
@@ -66,6 +86,8 @@ class AddImageToTemplateEvent
 	}
 
 	/**
+	 * Return the max image width, if any is set.
+	 *
 	 * @return int|null
 	 */
 	public function getMaxWidth()
@@ -74,6 +96,8 @@ class AddImageToTemplateEvent
 	}
 
 	/**
+	 * Return the lightbox ID, if any is set.
+	 *
 	 * @return null|string
 	 */
 	public function getLightboxId()

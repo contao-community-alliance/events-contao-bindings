@@ -37,7 +37,7 @@ class GetContentElementEvent
 	 */
 	protected $contentElementHtml;
 
-	function __construct($contentElementId, $column = 'main')
+	public function __construct($contentElementId, $column = 'main')
 	{
 		$this->contentElementId  = (int) $contentElementId;
 		$this->column     = (string) $column;

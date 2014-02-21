@@ -42,7 +42,7 @@ class GenerateFrontendUrlEvent
 	 */
 	protected $url;
 
-	function __construct(array $pageData, $parameters = null, $language = null)
+	public function __construct(array $pageData, $parameters = null, $language = null)
 	{
 		$this->pageData   = $pageData;
 		$this->parameters = empty($parameters) ? null : (string) $parameters;

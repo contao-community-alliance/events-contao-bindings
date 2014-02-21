@@ -52,7 +52,7 @@ class BackendSubscriber
 	/**
 	 * Add some suffix to the current URL.
 	 *
-	 * @param AddToUrlEvent $event The event.
+	 * @param GetThemeEvent $event The event.
 	 *
 	 * @return void
 	 */

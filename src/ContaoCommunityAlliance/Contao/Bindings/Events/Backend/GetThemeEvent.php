@@ -29,15 +29,21 @@ class GetThemeEvent
 	protected $theme;
 
 	/**
-	 * @param string $theme
+	 * Set the theme name.
+	 *
+	 * @param string $theme The theme name.
+	 *
+	 * @return GetThemeEvent
 	 */
 	public function setTheme($theme)
 	{
-		$this->theme = (string) $theme;
+		$this->theme = (string)$theme;
 		return $this;
 	}
 
 	/**
+	 * Return the theme name.
+	 *
 	 * @return string
 	 */
 	public function getTheme()
