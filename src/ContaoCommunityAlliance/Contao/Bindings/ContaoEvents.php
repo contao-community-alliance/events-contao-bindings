@@ -166,4 +166,11 @@ class ContaoEvents
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
 	 */
 	const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
+
+	/**
+	 * Event for generate a news.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent
+	 */
+	const NEWS_GET_NEWS = 'contao.events.news.get-news';
 }
