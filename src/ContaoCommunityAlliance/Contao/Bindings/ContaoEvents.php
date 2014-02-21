@@ -80,6 +80,15 @@ class ContaoEvents
 	const CONTROLLER_GET_CONTENT_ELEMENT = 'contao.events.controller.get-content-element';
 
 	/**
+	 * Event for getting a template group.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEvent
+	 *
+	 * @see \Contao\Controller::getTemplateGroup()
+	 */
+	const CONTROLLER_GET_TEMPLATE_GROUP = 'contao.events.controller.get-template-group';
+
+	/**
 	 * Event for loading a data container (DCA).
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent

@@ -19,6 +19,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplate
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
@@ -53,6 +54,7 @@ class ControllerSubscriber
 			ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL     => 'handleGenerateFrontendUrl',
 			ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
 			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
+			ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP        => 'handleGetTemplateGroup',
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
 			ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
 			ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
@@ -155,7 +157,24 @@ class ControllerSubscriber
 			$event->getColumn()
 		);
 
-		$event->setContentElement($contentElement);
+		$event->setContentElementHtml($contentElement);
+	}
+
+	/**
+	 * Collect a template group.
+	 *
+	 * @param GetTemplateGroupEvent $event
+	 *
+	 * @return void
+	 */
+	public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
+	{
+		$templatesArray = \Controller::getTemplateGroup($event->getPrefix());
+		$templates = $event->getTemplates();
+
+		foreach ($templatesArray as $templateName => $templateLabel) {
+			$templates[$templateName] = $templateLabel;
+		}
 	}
 
 	/**
