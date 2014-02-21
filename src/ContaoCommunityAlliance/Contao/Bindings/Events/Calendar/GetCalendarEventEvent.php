@@ -33,11 +33,6 @@ class GetCalendarEventEvent
 	protected $dateTime;
 
 	/**
-	 * @var bool
-	 */
-	protected $teaserOnly;
-
-	/**
 	 * @var string
 	 */
 	protected $template = 'event_full';
@@ -52,11 +47,10 @@ class GetCalendarEventEvent
 	 * @param \DateTime $dateTime A concrete event date time.
 	 * @param bool      $teaserOnly Generate the teaser only.
 	 */
-	function __construct($calendarEventId, \DateTime $dateTime = null, $teaserOnly = false, $template = 'event_full')
+	function __construct($calendarEventId, \DateTime $dateTime = null, $template = 'event_full')
 	{
 		$this->calendarEventId = (int) $calendarEventId;
 		$this->dateTime        = $dateTime;
-		$this->teaserOnly      = (string) $teaserOnly;
 		$this->template        = (string) $template;
 	}
 
@@ -78,16 +72,6 @@ class GetCalendarEventEvent
 	public function getDateTime()
 	{
 		return $this->dateTime;
-	}
-
-	/**
-	 * Determine if only the teaser should be generated.
-	 *
-	 * @return boolean
-	 */
-	public function getTeaserOnly()
-	{
-		return $this->teaserOnly;
 	}
 
 	/**
