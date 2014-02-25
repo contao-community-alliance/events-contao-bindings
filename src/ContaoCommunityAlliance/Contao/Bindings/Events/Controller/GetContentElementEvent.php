@@ -23,27 +23,42 @@ class GetContentElementEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The id of the content element.
+	 *
 	 * @var int
 	 */
 	protected $contentElementId;
 
 	/**
+	 * The column for the content element.
+	 *
 	 * @var string
 	 */
 	protected $column = 'main';
 
 	/**
+	 * The html code for the content element.
+	 *
 	 * @var string
 	 */
 	protected $contentElementHtml;
 
+	/**
+	 * Create a new instance.
+	 *
+	 * @param int    $contentElementId The id of the content element.
+	 *
+	 * @param string $column           The column for the content element.
+	 */
 	public function __construct($contentElementId, $column = 'main')
 	{
-		$this->contentElementId  = (int) $contentElementId;
-		$this->column     = (string) $column;
+		$this->contentElementId = (int)$contentElementId;
+		$this->column           = (string)$column;
 	}
 
 	/**
+	 * Retrieve the id of the content element.
+	 *
 	 * @return int
 	 */
 	public function getContentElementId()
@@ -52,6 +67,8 @@ class GetContentElementEvent
 	}
 
 	/**
+	 * Retrieve the column for the content element.
+	 *
 	 * @return string
 	 */
 	public function getColumn()
@@ -60,15 +77,22 @@ class GetContentElementEvent
 	}
 
 	/**
-	 * @param string $contentElement
+	 * Set the html code for the content element.
+	 *
+	 * @param string $contentElement The html code.
+	 *
+	 * @return GetContentElementEvent
 	 */
 	public function setContentElementHtml($contentElement)
 	{
 		$this->contentElementHtml = $contentElement;
+
 		return $this;
 	}
 
 	/**
+	 * Retrieve the html code for the content element.
+	 *
 	 * @return string
 	 */
 	public function getContentElementHtml()

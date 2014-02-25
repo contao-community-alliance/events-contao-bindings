@@ -18,9 +18,6 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEven
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Image\ResizeImageEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -50,31 +47,33 @@ class CalendarSubscriber
 	 */
 	public function handleEvent(GetCalendarEventEvent $event)
 	{
-		if ($event->getCalendarEventHtml()) {
+		if ($event->getCalendarEventHtml())
+		{
 			return;
 		}
 
 		$eventDispatcher = $event->getDispatcher();
 
 		$calendarCollection = \CalendarModel::findAll();
-		$calendarIds = $calendarCollection->fetchEach('id');
-		$eventModel = \CalendarEventsModel::findPublishedByParentAndIdOrAlias(
+		$calendarIds        = $calendarCollection->fetchEach('id');
+		$eventModel         = \CalendarEventsModel::findPublishedByParentAndIdOrAlias(
 			$event->getCalendarEventId(),
 			$calendarIds
 		);
 
-		if (!$eventModel) {
+		if (!$eventModel)
+		{
 			return;
 		}
 
 		$calendarModel = $eventModel->getRelated('pid');
-		$objPage = \PageModel::findWithDetails($calendarModel->jumpTo);
+		$objPage       = \PageModel::findWithDetails($calendarModel->jumpTo);
 
 		$intStartTime = $eventModel->startTime;
-		$intEndTime = $eventModel->endTime;
-		$span = \Calendar::calculateSpan($intStartTime, $intEndTime);
+		$intEndTime   = $eventModel->endTime;
+		$span         = \Calendar::calculateSpan($intStartTime, $intEndTime);
 
-		// Do not show dates in the past if the event is recurring (see #923)
+		// Do not show dates in the past if the event is recurring (see #923).
 		if ($eventModel->recurring)
 		{
 			$arrRange = deserialize($eventModel->repeatEach);
@@ -82,54 +81,70 @@ class CalendarSubscriber
 			while ($intStartTime < time() && $intEndTime < $eventModel->repeatEnd)
 			{
 				$intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
-				$intEndTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
+				$intEndTime   = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
 			}
 		}
 
 		if ($objPage->outputFormat == 'xhtml')
 		{
 			$strTimeStart = '';
-			$strTimeEnd = '';
+			$strTimeEnd   = '';
 			$strTimeClose = '';
 		}
 		else
 		{
 			$strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '">';
-			$strTimeEnd = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '">';
+			$strTimeEnd   = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '">';
 			$strTimeClose = '</time>';
 		}
 
-		// Get date
+		// Get date.
 		if ($span > 0)
 		{
-			$date = $strTimeStart . \Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) . $strTimeClose . ' - ' . $strTimeEnd . \Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) . $strTimeClose;
+			$date = $strTimeStart .
+				\Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) .
+				$strTimeClose . ' - ' . $strTimeEnd .
+				\Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) .
+				$strTimeClose;
 		}
 		elseif ($intStartTime == $intEndTime)
 		{
-			$date = $strTimeStart . \Date::parse($objPage->dateFormat, $intStartTime) . ($eventModel->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) . ')' : '') . $strTimeClose;
+			$date = $strTimeStart .
+				\Date::parse($objPage->dateFormat, $intStartTime) .
+				($eventModel->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) . ')' : '') .
+				$strTimeClose;
 		}
 		else
 		{
-			$date = $strTimeStart . \Date::parse($objPage->dateFormat, $intStartTime) . ($eventModel->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) . $strTimeClose . ' - ' . $strTimeEnd . \Date::parse($objPage->timeFormat, $intEndTime) . ')' : '') . $strTimeClose;
+			$date = $strTimeStart .
+				\Date::parse($objPage->dateFormat, $intStartTime) .
+				($eventModel->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) .
+					$strTimeClose . ' - ' . $strTimeEnd .
+					\Date::parse($objPage->timeFormat, $intEndTime) . ')' : ''
+				) . $strTimeClose;
 		}
 
-		$until = '';
+		$until     = '';
 		$recurring = '';
 
-		// Recurring event
+		// Recurring event.
 		if ($eventModel->recurring)
 		{
-			$arrRange = deserialize($eventModel->repeatEach);
-			$strKey = 'cal_' . $arrRange['unit'];
+			$arrRange  = deserialize($eventModel->repeatEach);
+			$strKey    = 'cal_' . $arrRange['unit'];
 			$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
 
 			if ($eventModel->recurrences > 0)
 			{
-				$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $eventModel->repeatEnd));
+				$until = sprintf(
+					$GLOBALS['TL_LANG']['MSC']['cal_until'],
+					\Date::parse($objPage->dateFormat, $eventModel->repeatEnd)
+				);
 			}
 		}
 
-		// Override the default image size
+		// Override the default image size.
+		// FIXME: This is always false.
 		if ($this->imgSize != '')
 		{
 			$size = deserialize($this->imgSize);
@@ -143,15 +158,16 @@ class CalendarSubscriber
 		$objTemplate = new \FrontendTemplate($event->getTemplate());
 		$objTemplate->setData($eventModel->row());
 
-		$objTemplate->date = $date;
-		$objTemplate->start = $intStartTime;
-		$objTemplate->end = $intEndTime;
-		$objTemplate->class = ($eventModel->cssClass != '') ? ' ' . $eventModel->cssClass : '';
-		$objTemplate->recurring = $recurring;
-		$objTemplate->until = $until;
+		$objTemplate->date          = $date;
+		$objTemplate->start         = $intStartTime;
+		$objTemplate->end           = $intEndTime;
+		$objTemplate->class         = ($eventModel->cssClass != '') ? ' ' . $eventModel->cssClass : '';
+		$objTemplate->recurring     = $recurring;
+		$objTemplate->until         = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
 		$objTemplate->details = '';
+
 		$objElement = \ContentModel::findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
 
 		if ($objElement !== null)
@@ -168,7 +184,7 @@ class CalendarSubscriber
 
 		$objTemplate->addImage = false;
 
-		// Add an image
+		// Add an image.
 		if ($eventModel->addImage && $eventModel->singleSRC != '')
 		{
 			$objModel = \FilesModel::findByUuid($eventModel->singleSRC);
@@ -182,8 +198,8 @@ class CalendarSubscriber
 			}
 			elseif (is_file(TL_ROOT . '/' . $objModel->path))
 			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrEvent = $eventModel->row();
+				// Do not override the field now that we have a model registry (see #6303).
+				$arrEvent              = $eventModel->row();
 				$arrEvent['singleSRC'] = $objModel->path;
 
 				$addImageToTemplateEvent = new AddImageToTemplateEvent($arrEvent, $objTemplate);
@@ -194,7 +210,7 @@ class CalendarSubscriber
 
 		$objTemplate->enclosure = array();
 
-		// Add enclosures
+		// Add enclosures.
 		if ($eventModel->addEnclosure)
 		{
 			$addEnclosureToTemplateEvent = new AddEnclosureToTemplateEvent($eventModel->row(), $objTemplate);

@@ -23,28 +23,45 @@ class AddEnclosureToTemplateEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The enclosure data.
+	 *
 	 * @var array
 	 */
 	protected $enclosureData;
 
 	/**
+	 * The template object.
+	 *
 	 * @var \Template|object
 	 */
 	protected $template;
 
 	/**
+	 * The key to use in the template.
+	 *
 	 * @var string|null
 	 */
 	protected $key = null;
 
-	function __construct($imageData, $template, $key = 'enclosure')
+	/**
+	 * Create a new instance.
+	 *
+	 * @param array            $imageData The enclosure data.
+	 *
+	 * @param \Template|object $template  The template object.
+	 *
+	 * @param string           $key       The key to use in the template.
+	 */
+	public function __construct($imageData, $template, $key = 'enclosure')
 	{
 		$this->enclosureData = $imageData;
 		$this->template      = $template;
-		$this->key           = (string) $key;
+		$this->key           = (string)$key;
 	}
 
 	/**
+	 * Retrieve the enclosure data.
+	 *
 	 * @return array
 	 */
 	public function getEnclosureData()
@@ -53,6 +70,8 @@ class AddEnclosureToTemplateEvent
 	}
 
 	/**
+	 * Retrieve the template object.
+	 *
 	 * @return \Template|object
 	 */
 	public function getTemplate()
@@ -61,6 +80,8 @@ class AddEnclosureToTemplateEvent
 	}
 
 	/**
+	 * Retrieve the key to use in the template.
+	 *
 	 * @return null|string
 	 */
 	public function getKey()

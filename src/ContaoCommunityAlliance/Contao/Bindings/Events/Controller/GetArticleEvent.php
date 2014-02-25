@@ -23,33 +23,52 @@ class GetArticleEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * Id of the article.
+	 *
 	 * @var int
 	 */
 	protected $articleId;
 
 	/**
+	 * Flag determining if only the teaser shall be returned.
+	 *
 	 * @var bool
 	 */
 	protected $teaserOnly = false;
 
 	/**
+	 * The column for the article.
+	 *
 	 * @var string
 	 */
 	protected $column = 'main';
 
 	/**
+	 * The html code for the article.
+	 *
 	 * @var string
 	 */
 	protected $article;
 
+	/**
+	 * Create a new instance.
+	 *
+	 * @param int    $articleId  The id of the article.
+	 *
+	 * @param bool   $teaserOnly Flag determining if only the teaser shall be returned.
+	 *
+	 * @param string $column     The column for the content element.
+	 */
 	public function __construct($articleId, $teaserOnly = false, $column = 'main')
 	{
-		$this->articleId  = (int) $articleId;
-		$this->teaserOnly = (bool) $teaserOnly;
-		$this->column     = (string) $column;
+		$this->articleId  = (int)$articleId;
+		$this->teaserOnly = (bool)$teaserOnly;
+		$this->column     = (string)$column;
 	}
 
 	/**
+	 * Retrieve the id of the article.
+	 *
 	 * @return int
 	 */
 	public function getArticleId()
@@ -58,6 +77,8 @@ class GetArticleEvent
 	}
 
 	/**
+	 * Retrieve the flag determining if only the teaser shall be returned.
+	 *
 	 * @return boolean
 	 */
 	public function getTeaserOnly()
@@ -66,6 +87,8 @@ class GetArticleEvent
 	}
 
 	/**
+	 * Retrieve the column for the article.
+	 *
 	 * @return string
 	 */
 	public function getColumn()
@@ -74,7 +97,11 @@ class GetArticleEvent
 	}
 
 	/**
-	 * @param string $article
+	 * Set the resulting html code for the article.
+	 *
+	 * @param string $article The resulting html code.
+	 *
+	 * @return GetArticleEvent
 	 */
 	public function setArticle($article)
 	{
@@ -83,6 +110,8 @@ class GetArticleEvent
 	}
 
 	/**
+	 * Retrieve the resulting html code for the article.
+	 *
 	 * @return string
 	 */
 	public function getArticle()

@@ -23,33 +23,52 @@ class GenerateFrontendUrlEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The data for the page.
+	 *
 	 * @var array
 	 */
 	protected $pageData;
 
 	/**
+	 * The parameters to use in the url.
+	 *
 	 * @var string|null
 	 */
 	protected $parameters = null;
 
 	/**
+	 * The language code to use in the url.
+	 *
 	 * @var string|null
 	 */
 	protected $language = null;
 
 	/**
+	 * The resulting url.
+	 *
 	 * @var string
 	 */
 	protected $url;
 
+	/**
+	 * Create a new instance.
+	 *
+	 * @param array       $pageData   The data for the page.
+	 *
+	 * @param array|null  $parameters The parameters to use in the url.
+	 *
+	 * @param string|null $language   The language code to use in the url.
+	 */
 	public function __construct(array $pageData, $parameters = null, $language = null)
 	{
 		$this->pageData   = $pageData;
-		$this->parameters = empty($parameters) ? null : (string) $parameters;
-		$this->language   = empty($language) ? null : (string) $language;
+		$this->parameters = empty($parameters) ? null : (string)$parameters;
+		$this->language   = empty($language) ? null : (string)$language;
 	}
 
 	/**
+	 * Retrtieve the data for the page.
+	 *
 	 * @return array
 	 */
 	public function getPageData()
@@ -58,6 +77,8 @@ class GenerateFrontendUrlEvent
 	}
 
 	/**
+	 * Retrtieve the parameters to use in the url.
+	 *
 	 * @return string|null
 	 */
 	public function getParameters()
@@ -66,6 +87,8 @@ class GenerateFrontendUrlEvent
 	}
 
 	/**
+	 * Retrtieve the language code to use in the url.
+	 *
 	 * @return string|null
 	 */
 	public function getLanguage()
@@ -74,15 +97,21 @@ class GenerateFrontendUrlEvent
 	}
 
 	/**
-	 * @param string $contentElement
+	 * Set the resulting url.
+	 *
+	 * @param string $url The resulting url.
+	 *
+	 * @return GenerateFrontendUrlEvent
 	 */
-	public function setUrl($contentElement)
+	public function setUrl($url)
 	{
-		$this->url = $contentElement;
+		$this->url = $url;
 		return $this;
 	}
 
 	/**
+	 * Retrieve the resulting url.
+	 *
 	 * @return string
 	 */
 	public function getUrl()

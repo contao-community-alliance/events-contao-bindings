@@ -14,15 +14,12 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Image\ResizeImageEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -52,43 +49,51 @@ class NewsSubscriber
 	 */
 	public function handleNews(GetNewsEvent $event)
 	{
-		if ($event->getNewsHtml()) {
+		if ($event->getNewsHtml())
+		{
 			return;
 		}
 
 		$eventDispatcher = $event->getDispatcher();
 
 		$newsArchiveCollection = \NewsArchiveModel::findAll();
-		$newsArchiveIds = $newsArchiveCollection->fetchEach('id');
-		$newsModel = \NewsModel::findPublishedByParentAndIdOrAlias(
+		$newsArchiveIds        = $newsArchiveCollection->fetchEach('id');
+		$newsModel             = \NewsModel::findPublishedByParentAndIdOrAlias(
 			$event->getNewsId(),
 			$newsArchiveIds
 		);
 
-		if (!$newsModel) {
+		if (!$newsModel)
+		{
 			return;
 		}
 
 		$newsModel = $newsModel->current();
 
 		$newsArchiveModel = $newsModel->getRelated('pid');
-		$objPage = \PageModel::findWithDetails($newsArchiveModel->jumpTo);
+		$objPage          = \PageModel::findWithDetails($newsArchiveModel->jumpTo);
 
 		$objTemplate = new \FrontendTemplate($event->getTemplate());
 		$objTemplate->setData($newsModel->row());
 
-		$objTemplate->class = (($newsModel->cssClass != '') ? ' ' . $newsModel->cssClass : '');
-		$objTemplate->newsHeadline = $newsModel->headline;
-		$objTemplate->subHeadline = $newsModel->subheadline;
+		$objTemplate->class          = (($newsModel->cssClass != '') ? ' ' . $newsModel->cssClass : '');
+		$objTemplate->newsHeadline   = $newsModel->headline;
+		$objTemplate->subHeadline    = $newsModel->subheadline;
 		$objTemplate->hasSubHeadline = $newsModel->subheadline ? true : false;
-		$objTemplate->linkHeadline = $this->generateLink($eventDispatcher, $newsModel->headline, $newsModel);
-		$objTemplate->more = $this->generateLink($eventDispatcher, $GLOBALS['TL_LANG']['MSC']['more'], $newsModel, false, true);
-		$objTemplate->link = $this->generateNewsUrl($eventDispatcher, $newsModel);
-		$objTemplate->archive = $newsModel->getRelated('pid');
-		$objTemplate->count = 0;
-		$objTemplate->text = '';
+		$objTemplate->linkHeadline   = $this->generateLink($eventDispatcher, $newsModel->headline, $newsModel);
+		$objTemplate->more           = $this->generateLink(
+			$eventDispatcher,
+			$GLOBALS['TL_LANG']['MSC']['more'],
+			$newsModel,
+			false,
+			true
+		);
+		$objTemplate->link           = $this->generateNewsUrl($eventDispatcher, $newsModel);
+		$objTemplate->archive        = $newsModel->getRelated('pid');
+		$objTemplate->count          = 0;
+		$objTemplate->text           = '';
 
-		// Clean the RTE output
+		// Clean the RTE output.
 		if ($newsModel->teaser != '')
 		{
 			if ($objPage->outputFormat == 'xhtml')
@@ -103,13 +108,13 @@ class NewsSubscriber
 			$objTemplate->teaser = \String::encodeEmail($objTemplate->teaser);
 		}
 
-		// Display the "read more" button for external/article links
+		// Display the "read more" button for external/article links.
 		if ($newsModel->source != 'default')
 		{
 			$objTemplate->text = true;
 		}
 
-		// Compile the news text
+		// Compile the news text.
 		else
 		{
 			$objElement = \ContentModel::findPublishedByPidAndTable($newsModel->id, 'tl_news');
@@ -129,18 +134,18 @@ class NewsSubscriber
 
 		$arrMeta = $this->getMetaFields($newsModel);
 
-		// Add the meta information
-		$objTemplate->date = $arrMeta['date'];
-		$objTemplate->hasMetaFields = !empty($arrMeta);
+		// Add the meta information.
+		$objTemplate->date             = $arrMeta['date'];
+		$objTemplate->hasMetaFields    = !empty($arrMeta);
 		$objTemplate->numberOfComments = $arrMeta['ccount'];
-		$objTemplate->commentCount = $arrMeta['comments'];
-		$objTemplate->timestamp = $newsModel->date;
-		$objTemplate->author = $arrMeta['author'];
-		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $newsModel->date);
+		$objTemplate->commentCount     = $arrMeta['comments'];
+		$objTemplate->timestamp        = $newsModel->date;
+		$objTemplate->author           = $arrMeta['author'];
+		$objTemplate->datetime         = date('Y-m-d\TH:i:sP', $newsModel->date);
 
 		$objTemplate->addImage = false;
 
-		// Add an image
+		// Add an image.
 		if ($newsModel->addImage && $newsModel->singleSRC != '')
 		{
 			$objModel = \FilesModel::findByUuid($newsModel->singleSRC);
@@ -154,10 +159,11 @@ class NewsSubscriber
 			}
 			elseif (is_file(TL_ROOT . '/' . $objModel->path))
 			{
-				// Do not override the field now that we have a model registry (see #6303)
+				// Do not override the field now that we have a model registry (see #6303).
 				$arrArticle = $newsModel->row();
 
-				// Override the default image size
+				// Override the default image size.
+				// FIXME: this is always false!
 				if ($this->imgSize != '')
 				{
 					$size = deserialize($this->imgSize);
@@ -178,7 +184,7 @@ class NewsSubscriber
 
 		$objTemplate->enclosure = array();
 
-		// Add enclosures
+		// Add enclosures.
 		if ($newsModel->addEnclosure)
 		{
 			$addEnclosureToTemplateEvent = new AddEnclosureToTemplateEvent($newsModel->row(), $objTemplate);
@@ -192,8 +198,10 @@ class NewsSubscriber
 
 
 	/**
-	 * Return the meta fields of a news article as array
-	 * @param \NewsModel $objArticle
+	 * Return the meta fields of a news article as array.
+	 *
+	 * @param \NewsModel $objArticle The model.
+	 *
 	 * @return array
 	 */
 	protected function getMetaFields($objArticle)
@@ -205,7 +213,6 @@ class NewsSubscriber
 			return array();
 		}
 
-		global $objPage;
 		$return = array();
 
 		foreach ($meta as $field)
@@ -213,7 +220,7 @@ class NewsSubscriber
 			switch ($field)
 			{
 				case 'date':
-					$return['date'] = \Date::parse($objPage->datimFormat, $objArticle->date);
+					$return['date'] = \Date::parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
 					break;
 
 				case 'author':
@@ -221,7 +228,9 @@ class NewsSubscriber
 					{
 						if ($objAuthor->google != '')
 						{
-							$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <a href="https://plus.google.com/' . $objAuthor->google . '" rel="author" target="_blank">' . $objAuthor->name . '</a>';
+							$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] .
+								' <a href="https://plus.google.com/' . $objAuthor->google .
+								'" rel="author" target="_blank">' . $objAuthor->name . '</a>';
 						}
 						else
 						{
@@ -235,10 +244,11 @@ class NewsSubscriber
 					{
 						break;
 					}
-					$intTotal = \CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
-					$return['ccount'] = $intTotal;
+					$intTotal           = \CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
+					$return['ccount']   = $intTotal;
 					$return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
 					break;
+				default:
 			}
 		}
 
@@ -247,18 +257,27 @@ class NewsSubscriber
 
 
 	/**
-	 * Generate a URL and return it as string
-	 * @param object
-	 * @param boolean
+	 * Generate a URL and return it as string.
+	 *
+	 * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
+	 *
+	 * @param \NewsModel               $objItem         The news model.
+	 *
+	 * @param boolean                  $blnAddArchive   Add the current archive parameter (news archive) (default: false).
+	 *
 	 * @return string
 	 */
-	protected function generateNewsUrl(EventDispatcher $eventDispatcher, \NewsModel $objItem, $blnAddArchive=false)
+	protected function generateNewsUrl(
+		EventDispatcherInterface $eventDispatcher,
+		\NewsModel $objItem,
+		$blnAddArchive = false
+	)
 	{
 		$url = null;
 
 		switch ($objItem->source)
 		{
-			// Link to an external page
+			// Link to an external page.
 			case 'external':
 				if (substr($objItem->url, 0, 7) == 'mailto:')
 				{
@@ -270,7 +289,7 @@ class NewsSubscriber
 				}
 				break;
 
-			// Link to an internal page
+			// Link to an internal page.
 			case 'internal':
 				if (($objTarget = $objItem->getRelated('jumpTo')) !== null)
 				{
@@ -282,13 +301,15 @@ class NewsSubscriber
 				}
 				break;
 
-			// Link to an article
+			// Link to an article.
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager' => true))) !== null
+					&& ($objPid = $objArticle->getRelated('pid')) !== null)
 				{
 					$generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
 						$objPid->row(),
-						'/articles/' . ((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id)
+						'/articles/' .
+						((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id)
 					);
 
 					$eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL, $generateFrontendUrlEvent);
@@ -296,9 +317,11 @@ class NewsSubscriber
 					$url = $generateFrontendUrlEvent->getUrl();
 				}
 				break;
+
+			default:
 		}
 
-		// Link to the default page
+		// Link to the default page.
 		if ($url === null)
 		{
 			$objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
@@ -311,7 +334,8 @@ class NewsSubscriber
 			{
 				$generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
 					$objPage->row(),
-					(($GLOBALS['TL_CONFIG']['useAutoItem'] && !$GLOBALS['TL_CONFIG']['disableAlias']) ?  '/' : '/items/') . ((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objItem->alias != '') ? $objItem->alias : $objItem->id)
+					(($GLOBALS['TL_CONFIG']['useAutoItem'] && !$GLOBALS['TL_CONFIG']['disableAlias']) ?  '/' : '/items/') .
+					((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objItem->alias != '') ? $objItem->alias : $objItem->id)
 				);
 
 				$eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL, $generateFrontendUrlEvent);
@@ -319,7 +343,7 @@ class NewsSubscriber
 				$url = $generateFrontendUrlEvent->getUrl();
 			}
 
-			// Add the current archive parameter (news archive)
+			// Add the current archive parameter (news archive).
 			if ($blnAddArchive && \Input::get('month') != '')
 			{
 				$url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . \Input::get('month');
@@ -329,18 +353,30 @@ class NewsSubscriber
 		return $url;
 	}
 
-
 	/**
-	 * Generate a link and return it as string
-	 * @param string
-	 * @param object
-	 * @param boolean
-	 * @param boolean
+	 * Generate a link and return it as string.
+	 *
+	 * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
+	 *
+	 * @param string                   $strLink         The link text.
+	 *
+	 * @param \Model                   $objArticle      The model.
+	 *
+	 * @param bool                     $blnAddArchive   Add the current archive parameter (news archive) (default: false).
+	 *
+	 * @param bool                     $blnIsReadMore   Determine if the link is a "read more" link.
+	 *
 	 * @return string
 	 */
-	protected function generateLink(EventDispatcher $eventDispatcher, $strLink, $objArticle, $blnAddArchive=false, $blnIsReadMore=false)
+	protected function generateLink(
+		EventDispatcherInterface $eventDispatcher,
+		$strLink,
+		$objArticle,
+		$blnAddArchive = false,
+		$blnIsReadMore = false
+	)
 	{
-		// Internal link
+		// Internal link.
 		if ($objArticle->source != 'external')
 		{
 			return sprintf('<a href="%s" title="%s">%s%s</a>',
@@ -350,27 +386,25 @@ class NewsSubscriber
 							($blnIsReadMore ? ' <span class="invisible">'.$objArticle->headline.'</span>' : ''));
 		}
 
-		// Encode e-mail addresses
+		// Encode e-mail addresses.
 		if (substr($objArticle->url, 0, 7) == 'mailto:')
 		{
 			$strArticleUrl = \String::encodeEmail($objArticle->url);
 		}
 
-		// Ampersand URIs
+		// Ampersand URIs.
 		else
 		{
 			$strArticleUrl = ampersand($objArticle->url);
 		}
 
-		global $objPage;
-
-		// External link
+		// External link.
 		return sprintf('<a href="%s" title="%s"%s>%s</a>',
 						$strArticleUrl,
 						specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
 						$objArticle->target
 							? (
-							($objPage->outputFormat == 'xhtml')
+							($GLOBALS['objPage']->outputFormat == 'xhtml')
 								? ' onclick="return !window.open(this.href)"'
 								: ' target="_blank"'
 							)
