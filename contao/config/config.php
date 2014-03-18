@@ -12,6 +12,8 @@
  */
 
 $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'ContaoCommunityAlliance\Contao\Bindings\Subscribers\BackendSubscriber';
+$GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'ContaoCommunityAlliance\Contao\Bindings\Subscribers\CalendarSubscriber';
 $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'ContaoCommunityAlliance\Contao\Bindings\Subscribers\ControllerSubscriber';
 $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'ContaoCommunityAlliance\Contao\Bindings\Subscribers\ImageSubscriber';
+$GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'ContaoCommunityAlliance\Contao\Bindings\Subscribers\NewsSubscriber';
 $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'ContaoCommunityAlliance\Contao\Bindings\Subscribers\SystemSubscriber';

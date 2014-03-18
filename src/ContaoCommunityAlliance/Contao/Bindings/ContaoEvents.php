@@ -10,11 +10,20 @@ class ContaoEvents
 	/**
 	 * Event for adding parameters to the current url and suffixing it with the current request token.
 	 *
-	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\BackEnd\AddToUrlEvent
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Backend\AddToUrlEvent
 	 *
 	 * @see \Contao\Backend::addToUrl()
 	 */
 	const BACKEND_ADD_TO_URL = 'contao.events.backend.add.to.url';
+
+	/**
+	 * Event for getting the name of the current active backend theme.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Backend\GetThemeEvent
+	 *
+	 * @see \Contao\Backend::getTheme()
+	 */
+	const BACKEND_GET_THEME = 'contao.events.backend.get-theme';
 
 	/**
 	 * Event for adding parameters to the current url.
@@ -24,6 +33,60 @@ class ContaoEvents
 	 * @see \Contao\Controller::addToUrl()
 	 */
 	const CONTROLLER_ADD_TO_URL = 'contao.events.controller.add.to.url';
+
+	/**
+	 * Event for adding an enclosure to a template.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent
+	 *
+	 * @see \Contao\Controller::addEnclosureToTemplate()
+	 */
+	const CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE = 'contao.events.controller.add-enclosure-to-template';
+
+	/**
+	 * Event for adding an image to a template.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent
+	 *
+	 * @see \Contao\Controller::addImageToTemplate()
+	 */
+	const CONTROLLER_ADD_IMAGE_TO_TEMPLATE = 'contao.events.controller.add-image-to-template';
+
+	/**
+	 * Event to generate a frontend url.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent
+	 *
+	 * @see \Contao\Controller::generateFrontendUrl()
+	 */
+	const CONTROLLER_GENERATE_FRONTEND_URL = 'contao.events.controller.generate-frontend-url';
+
+	/**
+	 * Event for getting a rendered article.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent
+	 *
+	 * @see \Contao\Controller::getArticle()
+	 */
+	const CONTROLLER_GET_ARTICLE = 'contao.events.controller.get-article';
+
+	/**
+	 * Event for getting a rendered content element.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent
+	 *
+	 * @see \Contao\Controller::getContentElement()
+	 */
+	const CONTROLLER_GET_CONTENT_ELEMENT = 'contao.events.controller.get-content-element';
+
+	/**
+	 * Event for getting a template group.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEvent
+	 *
+	 * @see \Contao\Controller::getTemplateGroup()
+	 */
+	const CONTROLLER_GET_TEMPLATE_GROUP = 'contao.events.controller.get-template-group';
 
 	/**
 	 * Event for loading a data container (DCA).
@@ -96,4 +159,18 @@ class ContaoEvents
 	 * @see \Contao\System::loadLanguageFile()
 	 */
 	const SYSTEM_LOAD_LANGUAGE_FILE = 'contao.events.system.load.language.file';
+
+	/**
+	 * Event for generate a calendar event.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
+	 */
+	const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
+
+	/**
+	 * Event for generate a news.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent
+	 */
+	const NEWS_GET_NEWS = 'contao.events.news.get-news';
 }
