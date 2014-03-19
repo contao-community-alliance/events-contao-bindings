@@ -173,4 +173,11 @@ class ContaoEvents
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent
 	 */
 	const NEWS_GET_NEWS = 'contao.events.news.get-news';
+
+	/**
+	 * Event for preparing the configuration array of an widget.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent
+	 */
+	const WIDGET_GET_ATTRIBUTES_FROM_DCA = 'contao.events.widget.get.attributes.from.dca';
 }

@@ -24,6 +24,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerE
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReloadEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -61,6 +62,8 @@ class ControllerSubscriber
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
 			ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
 			ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
+			// Was moved from Controller to Widget class in Contao 3.2.
+			ContaoEvents::WIDGET_GET_ATTRIBUTES_FROM_DCA       => 'handleGetAttributesFromDca'
 		);
 	}
 
@@ -218,5 +221,25 @@ class ControllerSubscriber
 	public function handleReload(ReloadEvent $event)
 	{
 		$this->reload();
+	}
+
+	/**
+	 * Handle the widget preparation.
+	 *
+	 * @param GetAttributesFromDcaEvent $event The event.
+	 *
+	 * @return void
+	 */
+	public function handleGetAttributesFromDca(GetAttributesFromDcaEvent $event)
+	{
+		$event->setResult(
+			$this->prepareForWidget(
+				$event->getFieldConfiguration(),
+				$event->getWidgetName(),
+				$event->getValue(),
+				$event->getWidgetId(),
+				$event->getTable()
+			)
+		);
 	}
 }
