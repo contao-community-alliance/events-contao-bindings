@@ -50,7 +50,8 @@ class WidgetSubscriber
 				$event->getWidgetName(),
 				$event->getValue(),
 				$event->getWidgetId(),
-				$event->getTable()
+				$event->getTable(),
+				$event->getDataContainer()
 			)
 		);
 	}

@@ -22,6 +22,13 @@ class GetAttributesFromDcaEvent
 	extends ContaoApiEvent
 {
 	/**
+	 * The data container in use.
+	 *
+	 * @var \DataContainer
+	 */
+	protected $dc;
+
+	/**
 	 * The input field configuration.
 	 *
 	 * @var array
@@ -66,23 +73,36 @@ class GetAttributesFromDcaEvent
 	/**
 	 * Create a new instance.
 	 *
-	 * @param array  $fieldConfiguration The field configuration from the dca.
+	 * @param array          $fieldConfiguration The field configuration from the dca.
 	 *
-	 * @param string $widgetName         The name of the widget.
+	 * @param string         $widgetName         The name of the widget.
 	 *
-	 * @param mixed  $value              The value to use in the widget (optional).
+	 * @param mixed          $value              The value to use in the widget (optional).
 	 *
-	 * @param string $widgetId           The widget id (optional).
+	 * @param string         $widgetId           The widget id (optional).
 	 *
-	 * @param string $table              The table name (optional).
+	 * @param string         $table              The table name (optional).
+	 *
+	 * @param \DataContainer $dc                 The data container in use.
 	 */
-	public function __construct($fieldConfiguration, $widgetName, $value = null, $widgetId = '', $table = '')
+	public function __construct($fieldConfiguration, $widgetName, $value = null, $widgetId = '', $table = '', $dc = null)
 	{
 		$this->fieldConfiguration = (array)$fieldConfiguration;
 		$this->widgetName         = $widgetName;
 		$this->value              = $value;
 		$this->widgetId           = $widgetId;
 		$this->table              = $table;
+		$this->dc                 = $dc;
+	}
+
+	/**
+	 * Retrieve the data container in use.
+	 *
+	 * @return \DataContainer|null
+	 */
+	public function getDataContainer()
+	{
+		return $this->dc;
 	}
 
 	/**
