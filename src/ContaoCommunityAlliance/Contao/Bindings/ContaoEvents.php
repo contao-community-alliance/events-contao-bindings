@@ -180,4 +180,11 @@ class ContaoEvents
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent
 	 */
 	const WIDGET_GET_ATTRIBUTES_FROM_DCA = 'contao.events.widget.get.attributes.from.dca';
+
+	/**
+	 * Event to add a message.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Message\AddMessageEvent
+	 */
+	const MESSAGE_ADD = 'contao.message.add';
 }
