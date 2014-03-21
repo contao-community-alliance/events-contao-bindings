@@ -120,15 +120,15 @@ class NewsSubscriber
 		$objTemplate->newsHeadline   = $objArticle->headline;
 		$objTemplate->subHeadline    = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
-		$objTemplate->linkHeadline   = $this->generateLink($eventDispatcher, $objArticle->headline, $objArticle);
-		$objTemplate->more           = $this->generateLink(
+		$objTemplate->linkHeadline   = $this->generateLinkForEvent($eventDispatcher, $objArticle->headline, $objArticle);
+		$objTemplate->more           = $this->generateLinkForEvent(
 			$eventDispatcher,
 			$GLOBALS['TL_LANG']['MSC']['more'],
 			$objArticle,
 			false,
 			true
 		);
-		$objTemplate->link           = $this->generateNewsUrl($eventDispatcher, $objArticle);
+		$objTemplate->link           = $this->generateNewsUrlForEvent($eventDispatcher, $objArticle);
 		$objTemplate->archive        = $objArticle->archive;
 		$objTemplate->count          = 0;
 		$objTemplate->text           = '';
@@ -169,7 +169,7 @@ class NewsSubscriber
 			$objTemplate->text = $this->String->encodeEmail($objArticle->text);
 		}
 
-		$arrMeta = $this->getMetaFields($objArticle);
+		$arrMeta = $this->getMetaFieldsForEvent($objArticle);
 
 		// Add meta information.
 		$objTemplate->date             = $arrMeta['date'];
@@ -230,7 +230,7 @@ class NewsSubscriber
 	 *
 	 * @return array
 	 */
-	protected function getMetaFields($objArticle)
+	protected function getMetaFieldsForEvent($objArticle)
 	{
 		$meta = deserialize($this->news_metaFields);
 
@@ -296,7 +296,7 @@ class NewsSubscriber
 	 *
 	 * @return string
 	 */
-	protected function generateNewsUrl(
+	protected function generateNewsUrlForEvent(
 		EventDispatcherInterface $eventDispatcher,
 		\Database_Result $objArticle,
 		$blnAddArchive = false
@@ -420,7 +420,7 @@ class NewsSubscriber
 	 *
 	 * @return string
 	 */
-	protected function generateLink(
+	protected function generateLinkForEvent(
 		EventDispatcherInterface $eventDispatcher,
 		$strLink,
 		$objArticle,
@@ -432,7 +432,7 @@ class NewsSubscriber
 		if ($objArticle->source != 'external')
 		{
 			return sprintf('<a href="%s" title="%s">%s%s</a>',
-							$this->generateNewsUrl($eventDispatcher, $objArticle, $blnAddArchive),
+							$this->generateNewsUrlForEvent($eventDispatcher, $objArticle, $blnAddArchive),
 							specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 							$strLink,
 							($blnIsReadMore ? ' <span class="invisible">'.$objArticle->headline.'</span>' : ''));
