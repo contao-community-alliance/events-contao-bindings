@@ -32,41 +32,87 @@ class AddMessageEvent
 
 	const TYPE_RAW = 'raw';
 
-	static public function createError($content)
+	/**
+	 * Create an event to add an error message.
+	 *
+	 * @param string $content The message.
+	 *
+	 * @return AddMessageEvent
+	 */
+	public static function createError($content)
 	{
 		return new static($content, 'error');
 	}
 
-	static public function createConfirm($content)
+	/**
+	 * Create an event to add a confirm message.
+	 *
+	 * @param string $content The message.
+	 *
+	 * @return AddMessageEvent
+	 */
+	public static function createConfirm($content)
 	{
 		return new static($content, 'confirm');
 	}
 
-	static public function createNew($content)
+	/**
+	 * Create an event to add a new message.
+	 *
+	 * @param string $content The message.
+	 *
+	 * @return AddMessageEvent
+	 */
+	public static function createNew($content)
 	{
 		return new static($content, 'new');
 	}
 
-	static public function createInfo($content)
+	/**
+	 * Create an event to add an info message.
+	 *
+	 * @param string $content The message.
+	 *
+	 * @return AddMessageEvent
+	 */
+	public static function createInfo($content)
 	{
 		return new static($content, 'info');
 	}
 
-	static public function createRaw($content)
+	/**
+	 * Create an event to add a raw message.
+	 *
+	 * @param string $content The message.
+	 *
+	 * @return AddMessageEvent
+	 */
+	public static function createRaw($content)
 	{
 		return new static($content);
 	}
 
 	/**
+	 * The message text.
+	 *
 	 * @var string
 	 */
 	protected $content;
 
 	/**
+	 * The message type.
+	 *
 	 * @var string
 	 */
 	protected $type;
 
+	/**
+	 * Create a new instance.
+	 *
+	 * @param string $content The message text.
+	 *
+	 * @param string $type    The message type.
+	 */
 	public function __construct($content, $type = self::TYPE_RAW)
 	{
 		$this->content = $content;
@@ -74,6 +120,8 @@ class AddMessageEvent
 	}
 
 	/**
+	 * Retrieve the message text.
+	 *
 	 * @return string
 	 */
 	public function getContent()
@@ -82,6 +130,8 @@ class AddMessageEvent
 	}
 
 	/**
+	 * Retrieve the message type.
+	 *
 	 * @return string
 	 */
 	public function getType()

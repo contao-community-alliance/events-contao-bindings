@@ -35,7 +35,15 @@ class MessageSubscriber
 		);
 	}
 
-	public function addMessage(AddMessageEvent $event) {
+	/**
+	 * Add a message to the contao message array in the session.
+	 *
+	 * @param AddMessageEvent $event The event.
+	 *
+	 * @return void
+	 */
+	public function addMessage(AddMessageEvent $event)
+	{
 		\Message::add($event->getContent(), 'TL_' . strtoupper($event->getType()));
 	}
 }
