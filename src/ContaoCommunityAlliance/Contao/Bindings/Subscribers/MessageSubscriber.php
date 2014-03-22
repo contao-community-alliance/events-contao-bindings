@@ -35,8 +35,17 @@ class MessageSubscriber
 		);
 	}
 
-	public function addMessage(AddMessageEvent $event) {
-
+	/**
+	 * Add a message to the contao message array in the session.
+	 *
+	 * @param AddMessageEvent $event The event.
+	 *
+	 * @return void
+	 *
+	 * @throws \Exception When an invalid message type is encountered.
+	 */
+	public function addMessage(AddMessageEvent $event)
+	{
 		if ($event->getContent() == '')
 		{
 			return;
