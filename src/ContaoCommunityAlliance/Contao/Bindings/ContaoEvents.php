@@ -80,6 +80,15 @@ class ContaoEvents
 	const CONTROLLER_GET_CONTENT_ELEMENT = 'contao.events.controller.get-content-element';
 
 	/**
+	 * Event for loading details of a page.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetPageDetailsEvent
+	 *
+	 * @see \Contao\Controller::getPageDetails()
+	 */
+	const CONTROLLER_GET_PAGE_DETAILS = 'contao.events.controller.get-page-details';
+
+	/**
 	 * Event for getting a template group.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEvent
