@@ -125,6 +125,15 @@ class ContaoEvents
 	const CONTROLLER_RELOAD = 'contao.events.controller.reload';
 
 	/**
+	 * Event for parsing the date.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent
+	 *
+	 * @see \Contao\Date::parseDate()
+	 */
+	const DATE_PARSE = 'contao.events.data.parse';
+
+	/**
 	 * Event for generating a resized copy of an image.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Image\ResizeImageEvent

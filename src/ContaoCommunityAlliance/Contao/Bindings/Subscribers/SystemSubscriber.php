@@ -14,6 +14,7 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\GetReferrerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LogEvent;
@@ -47,6 +48,8 @@ class SystemSubscriber
 			ContaoEvents::SYSTEM_GET_REFERRER       => 'handleGetReferer',
 			ContaoEvents::SYSTEM_LOG                => 'handleLog',
 			ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE => 'handleLoadLanguageFile',
+			// Got moved to class \Contao\Date for Contao 3.
+			ContaoEvents::DATE_PARSE                => 'handleParseDate',
 		);
 	}
 
@@ -84,5 +87,20 @@ class SystemSubscriber
 	public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
 	{
 		$this->loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
+	}
+
+	/**
+	 * Handle the date parsing.
+	 *
+	 * @param ParseDateEvent $event The event.
+	 *
+	 * @return void
+	 */
+	public function handleParseDate($event)
+	{
+		if ($event->getResult() === null)
+		{
+			$event->setResult($this->parseDate($event->getFormat(), $event->getTimestamp()));
+		}
 	}
 }
