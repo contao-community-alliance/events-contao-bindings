@@ -25,6 +25,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerE
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReloadEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReplaceInsertTagsEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -64,6 +65,7 @@ class ControllerSubscriber
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
 			ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
 			ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
+			ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS       => 'handleReplaceInsertTags',
 			// Was moved from Controller to Widget class in Contao 3.2.
 			ContaoEvents::WIDGET_GET_ATTRIBUTES_FROM_DCA       => 'handleGetAttributesFromDca'
 		);
@@ -240,6 +242,20 @@ class ControllerSubscriber
 	public function handleReload(ReloadEvent $event)
 	{
 		$this->reload();
+	}
+
+	/**
+	 * Replace insert tags.
+	 *
+	 * @param ReplaceInsertTagsEvent $event The event.
+	 *
+	 * @return void
+	 */
+	public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event)
+	{
+		$result = $this->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
+
+		$event->setBuffer($result);
 	}
 
 	/**
