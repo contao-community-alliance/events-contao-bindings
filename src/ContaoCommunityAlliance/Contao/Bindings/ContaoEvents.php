@@ -125,6 +125,15 @@ class ContaoEvents
 	const CONTROLLER_RELOAD = 'contao.events.controller.reload';
 
 	/**
+	 * Event for replacing Contao Insert Tags.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReplaceInsertTagsEvent
+	 *
+	 * @see \Contao\Controller::replaceInsertTags()
+	 */
+	const CONTROLLER_REPLACE_INSERT_TAGS = 'contao.events.controller.replace.insert.tags';
+
+	/**
 	 * Event for parsing the date.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent
