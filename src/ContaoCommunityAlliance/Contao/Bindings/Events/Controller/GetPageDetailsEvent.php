@@ -19,7 +19,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 /**
  * This Event is emitted when the details of a page must be collected.
  */
-class GetPageDetailsEvents
+class GetPageDetailsEvent
 	extends ContaoApiEvent
 {
 	/**
@@ -39,11 +39,11 @@ class GetPageDetailsEvents
 	/**
 	 * Create a new instance.
 	 *
-	 * @param int    $pageId  The id of the page.
+	 * @param int $pageId The id of the page.
 	 */
 	public function __construct($pageId)
 	{
-		$this->pageId  = (int)$pageId;
+		$this->pageId = (int)$pageId;
 	}
 
 	/**
