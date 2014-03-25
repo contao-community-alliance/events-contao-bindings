@@ -19,7 +19,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplate
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetPageDetailsEvents;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetPageDetailsEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
@@ -165,15 +165,16 @@ class ControllerSubscriber
 	/**
 	 * Collect details for a page.
 	 *
-	 * @param GetPageDetailsEvents $event The event.
+	 * @param GetPageDetailsEvent $event The event.
 	 *
 	 * @return void
 	 */
-	public function handleGetPageDetails(GetPageDetailsEvents $event)
+	public function handleGetPageDetails(GetPageDetailsEvent $event)
 	{
 		$page = \PageModel::findWithDetails($event->getPageId());
 
-		if ($page) {
+		if ($page)
+		{
 			$event->setPageDetails($page->row());
 		}
 	}
