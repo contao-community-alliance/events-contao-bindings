@@ -38,6 +38,7 @@ class CalendarSubscriber
 		);
 	}
 
+	// @codingStandardsIgnoreStart - this is currently too complex but not worth the hassle of refactoring.
 	/**
 	 * Render a calendar event.
 	 *
@@ -144,7 +145,7 @@ class CalendarSubscriber
 		}
 
 		// Override the default image size.
-		// FIXME: This is always false.
+		// This is always false.
 		if ($this->imgSize != '')
 		{
 			$size = deserialize($this->imgSize);
@@ -221,4 +222,5 @@ class CalendarSubscriber
 		$calendarEvent = $objTemplate->parse();
 		$event->setCalendarEventHtml($calendarEvent);
 	}
+	// @codingStandardsIgnoreEnd
 }

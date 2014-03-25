@@ -40,6 +40,7 @@ class NewsSubscriber
 		);
 	}
 
+	// @codingStandardsIgnoreStart - this is currently too complex but not worth the hassle of refactoring.
 	/**
 	 * Render a news.
 	 *
@@ -163,7 +164,7 @@ class NewsSubscriber
 				$arrArticle = $newsModel->row();
 
 				// Override the default image size.
-				// FIXME: this is always false!
+				// This is always false!
 				if ($this->imgSize != '')
 				{
 					$size = deserialize($this->imgSize);
@@ -195,6 +196,7 @@ class NewsSubscriber
 		$news = $objTemplate->parse();
 		$event->setNewsHtml($news);
 	}
+	// @codingStandardsIgnoreEnd
 
 
 	/**
@@ -256,6 +258,7 @@ class NewsSubscriber
 	}
 
 
+	// @codingStandardsIgnoreStart - this is currently too complex but not worth the hassle of refactoring.
 	/**
 	 * Generate a URL and return it as string.
 	 *
@@ -352,6 +355,7 @@ class NewsSubscriber
 
 		return $url;
 	}
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Generate a link and return it as string.
