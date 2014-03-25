@@ -19,6 +19,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplate
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetPageDetailsEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
@@ -34,7 +35,7 @@ class ControllerSubscriber
 	extends \Controller
 	implements EventSubscriberInterface
 {
-	// @codingStandardsIgnoreStart
+	// @codingStandardsIgnoreStart - This override is not useless as the style checker thinks.
 	/**
 	 * Create a new instance.
 	 */
@@ -58,6 +59,7 @@ class ControllerSubscriber
 			ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL     => 'handleGenerateFrontendUrl',
 			ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
 			ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
+			ContaoEvents::CONTROLLER_GET_PAGE_DETAILS          => 'handleGetPageDetails',
 			ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP        => 'handleGetTemplateGroup',
 			ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
 			ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
@@ -167,6 +169,23 @@ class ControllerSubscriber
 		);
 
 		$event->setContentElementHtml($contentElement);
+	}
+
+	/**
+	 * Collect details for a page.
+	 *
+	 * @param GetPageDetailsEvents $event The event.
+	 *
+	 * @return void
+	 */
+	public function handleGetPageDetails(GetPageDetailsEvents $event)
+	{
+		$page = $this->getPageDetails($event->getPageId());
+
+		if ($page)
+		{
+			$event->setPageDetails($page->row());
+		}
 	}
 
 	/**
