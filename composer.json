@@ -28,8 +28,8 @@
 	"require": {
 		"php":">=5.3",
 		"contao/core": "~2.11",
-		"contao-community-alliance/event-dispatcher": "~1.0",
-		"contao-community-alliance/composer-installer": "*"
+		"contao-community-alliance/composer-plugin": "~2.0",
+		"contao-community-alliance/event-dispatcher": "~1.0"
 	},
 	"require-dev": {
 		"metamodels/php-coding-standard":"dev-master",
