@@ -56,6 +56,12 @@ class CalendarSubscriber
 		$eventDispatcher = $event->getDispatcher();
 
 		$calendarCollection = \CalendarModel::findAll();
+
+		if (!$calendarCollection)
+		{
+			return;
+		}
+
 		$calendarIds        = $calendarCollection->fetchEach('id');
 		$eventModel         = \CalendarEventsModel::findPublishedByParentAndIdOrAlias(
 			$event->getCalendarEventId(),
