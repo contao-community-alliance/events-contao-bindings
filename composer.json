@@ -27,7 +27,7 @@
 	},
 	"require": {
 		"php":">=5.3",
-		"contao/core": "~3.2",
+		"contao/core": "~3.2.0",
 		"contao-community-alliance/composer-plugin": "~2.0",
 		"contao-community-alliance/event-dispatcher": "~1.0"
 	},
@@ -35,15 +35,12 @@
 		"metamodels/php-coding-standard":"dev-master",
 		"phpunit/phpunit": ">=3.7.10,<4-dev"
 	},
-	"conflict": {
-		"contao/core": "3.0.*"
-	},
 	"autoload": {
 		"psr-0": {"ContaoCommunityAlliance\\Contao\\Bindings": "src"}
 	},
 	"extra":{
 		"branch-alias": {
-			"dev-master": "3.2.x-dev"
+			"dev-contao-3.2": "3.2.x-dev"
 		},
 		"contao": {
 			"sources": {
