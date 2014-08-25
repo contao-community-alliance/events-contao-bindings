@@ -50,5 +50,7 @@
 				"contao": "system/modules/events-contao-bindings"
 			}
 		}
-	}
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev"
 }

@@ -76,9 +76,25 @@ class CalendarSubscriber
 		$calendarModel = $eventModel->getRelated('pid');
 		$objPage       = \PageModel::findWithDetails($calendarModel->jumpTo);
 
-		$intStartTime = $eventModel->startTime;
-		$intEndTime   = $eventModel->endTime;
-		$span         = \Calendar::calculateSpan($intStartTime, $intEndTime);
+		if ($event->getDateTime()) {
+			$selectedStartDateTime = clone $event->getDateTime();
+			$selectedStartDateTime->setTime(
+				date('H', $eventModel->startTime),
+				date('i', $eventModel->startTime),
+				date('s', $eventModel->startTime)
+			);
+
+			$secondsBetweenStartAndEndTime = $eventModel->endTime - $eventModel->startTime;
+
+			$intStartTime = $selectedStartDateTime->getTimestamp();
+			$intEndTime   = $intStartTime + $secondsBetweenStartAndEndTime;
+		}
+		else {
+			$intStartTime = $eventModel->startTime;
+			$intEndTime   = $eventModel->endTime;
+		}
+
+		$span = \Calendar::calculateSpan($intStartTime, $intEndTime);
 
 		// Do not show dates in the past if the event is recurring (see #923).
 		if ($eventModel->recurring)
