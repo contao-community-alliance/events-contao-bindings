@@ -107,9 +107,25 @@ class CalendarSubscriber
 
 		$objPage = $this->getPageDetails($objEvent->jumpTo);
 
-		$intStartTime = $objEvent->startTime;
-		$intEndTime   = $objEvent->endTime;
-		$span         = \Calendar::calculateSpan($intStartTime, $intEndTime);
+		if ($event->getDateTime()) {
+			$selectedStartDateTime = clone $event->getDateTime();
+			$selectedStartDateTime->setTime(
+				date('H', $objEvent->startTime),
+				date('i', $objEvent->startTime),
+				date('s', $objEvent->startTime)
+			);
+
+			$secondsBetweenStartAndEndTime = $objEvent->endTime - $objEvent->startTime;
+
+			$intStartTime = $selectedStartDateTime->getTimestamp();
+			$intEndTime   = $intStartTime + $secondsBetweenStartAndEndTime;
+		}
+		else {
+			$intStartTime = $objEvent->startTime;
+			$intEndTime   = $objEvent->endTime;
+		}
+
+		$span = \Calendar::calculateSpan($intStartTime, $intEndTime);
 
 		// Do not show dates in the past if the event is recurring (see #923).
 		if ($objEvent->recurring)

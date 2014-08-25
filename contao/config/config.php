@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
  *
