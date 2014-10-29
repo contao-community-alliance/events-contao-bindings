@@ -254,42 +254,42 @@ class ApiTestCase extends ProphecyTestCase
 
 	public function test_message_addMessage_dispatches_event()
 	{
-		$this->propheSizeAddMessageEvent('test', 'error');
+		$this->prophesizeAddMessageEvent('test', 'error');
 
 		$this->assertNull(Api\Message\addMessage('test', 'error'));
 	}
 
 	public function test_message_addError_dispatches_event()
 	{
-		$this->propheSizeAddMessageEvent('error message', AddMessageEvent::TYPE_ERROR);
+		$this->prophesizeAddMessageEvent('error message', AddMessageEvent::TYPE_ERROR);
 
 		$this->assertNull(Api\Message\addError('error message'));
 	}
 
 	public function test_message_addInfo_dispatches_event()
 	{
-		$this->propheSizeAddMessageEvent('info message', AddMessageEvent::TYPE_INFO);
+		$this->prophesizeAddMessageEvent('info message', AddMessageEvent::TYPE_INFO);
 
 		$this->assertNull(Api\Message\addInfo('info message'));
 	}
 
 	public function test_message_addConfirm_dispatches_event()
 	{
-		$this->propheSizeAddMessageEvent('confirm message', AddMessageEvent::TYPE_CONFIRM);
+		$this->prophesizeAddMessageEvent('confirm message', AddMessageEvent::TYPE_CONFIRM);
 
 		$this->assertNull(Api\Message\addConfirm('confirm message'));
 	}
 
 	public function test_message_addNew_dispatches_event()
 	{
-		$this->propheSizeAddMessageEvent('new message', AddMessageEvent::TYPE_NEW);
+		$this->prophesizeAddMessageEvent('new message', AddMessageEvent::TYPE_NEW);
 
 		$this->assertNull(Api\Message\addNew('new message'));
 	}
 
 	public function test_message_addRaw_dispatches_event()
 	{
-		$this->propheSizeAddMessageEvent('raw message', AddMessageEvent::TYPE_RAW);
+		$this->prophesizeAddMessageEvent('raw message', AddMessageEvent::TYPE_RAW);
 
 		$this->assertNull(Api\Message\addRaw('raw message'));
 	}
@@ -359,7 +359,6 @@ class ApiTestCase extends ProphecyTestCase
 		);
 	}
 
-
 	private function prophesizeDispatchedEvent($eventName, $eventClass, $listener = null)
 	{
 		$test = $this;
@@ -385,7 +384,7 @@ class ApiTestCase extends ProphecyTestCase
 		$GLOBALS['container']['event-dispatcher'] = $dispatcher->reveal();
 	}
 
-	private function propheSizeAddMessageEvent($content, $type)
+	private function prophesizeAddMessageEvent($content, $type)
 	{
 		$test = $this;
 		$this->prophesizeDispatchedEvent(
