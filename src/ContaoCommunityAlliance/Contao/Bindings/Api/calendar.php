@@ -31,9 +31,9 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEven
  */
 function getCalendarEvent($calendarEventId, \DateTime $dateTime = null, $template = 'event_full')
 {
-    $event = new GetCalendarEventEvent($calendarEventId, $dateTime, $template);
+	$event = new GetCalendarEventEvent($calendarEventId, $dateTime, $template);
 
-    Api\dispatch(ContaoEvents::CALENDAR_GET_EVENT, $event);
+	Api\dispatch(ContaoEvents::CALENDAR_GET_EVENT, $event);
 
-    return $event->getCalendarEventHtml();
+	return $event->getCalendarEventHtml();
 }

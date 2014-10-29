@@ -30,15 +30,15 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Image\ResizeImageEvent;
  */
 function generateHtml($src, $alt = '', $attributes = '')
 {
-    $event = new GenerateHtmlEvent($src, $alt, $attributes);
+	$event = new GenerateHtmlEvent($src, $alt, $attributes);
 
-    Api\dispatch(ContaoEvents::IMAGE_GET_HTML, $event);
+	Api\dispatch(ContaoEvents::IMAGE_GET_HTML, $event);
 
-    return $event->getHtml();
+	return $event->getHtml();
 }
 
 /**
- * Resize an image and store the resized version in the assets/images folder
+ * Resize an image and store the resized version in the assets/images folder.
  *
  * @param string      $image  The image path.
  * @param int         $width  The target width.
@@ -51,9 +51,9 @@ function generateHtml($src, $alt = '', $attributes = '')
  */
 function resizeImage($image, $width, $height, $mode = '', $target = null, $force = false)
 {
-    $event = new ResizeImageEvent($image, $width, $height, $mode, $target, $force);
+	$event = new ResizeImageEvent($image, $width, $height, $mode, $target, $force);
 
-    Api\dispatch(ContaoEvents::IMAGE_RESIZE, $event);
+	Api\dispatch(ContaoEvents::IMAGE_RESIZE, $event);
 
-    return $event->getResultImage();
+	return $event->getResultImage();
 }

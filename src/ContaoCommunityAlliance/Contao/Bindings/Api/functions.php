@@ -20,9 +20,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Dispatch an event.
  *
- * @param string                   $name        Event name.
- * @param Event                    $event       Event class.
- * @param EventDispatcherInterface $dispatcher  Optional pass a custom event dispatcher.
+ * @param string                   $name       Event name.
+ * @param Event                    $event      Event class.
+ * @param EventDispatcherInterface $dispatcher Optional pass a custom event dispatcher.
  *
  * @return void
  *
@@ -30,9 +30,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 function dispatch($name, Event $event = null, EventDispatcherInterface $dispatcher = null)
 {
-    if (!$dispatcher) {
-        $dispatcher = $GLOBALS['container']['event-dispatcher'];
-    }
+	if (!$dispatcher)
+	{
+		$dispatcher = $GLOBALS['container']['event-dispatcher'];
+	}
 
-    $dispatcher->dispatch($name, $event);
+	$dispatcher->dispatch($name, $event);
 }

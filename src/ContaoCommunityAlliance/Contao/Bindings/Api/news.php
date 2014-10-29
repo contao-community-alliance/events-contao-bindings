@@ -28,9 +28,9 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent;
  */
 function getNews($newsId, $template = 'news_full')
 {
-    $event = new GetNewsEvent($newsId, $template);
+	$event = new GetNewsEvent($newsId, $template);
 
-    Api\dispatch(ContaoEvents::NEWS_GET_NEWS, $event);
+	Api\dispatch(ContaoEvents::NEWS_GET_NEWS, $event);
 
-    return $event->getNewsHtml();
+	return $event->getNewsHtml();
 }

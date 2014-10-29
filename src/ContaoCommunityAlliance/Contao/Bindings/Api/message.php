@@ -28,9 +28,9 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Message\AddMessageEvent;
  */
 function addMessage($content, $type)
 {
-    $event = new AddMessageEvent($content, $type);
+	$event = new AddMessageEvent($content, $type);
 
-    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
+	Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }
 
 /**
@@ -42,9 +42,9 @@ function addMessage($content, $type)
  */
 function addError($content)
 {
-    $event = AddMessageEvent::createError($content);
+	$event = AddMessageEvent::createError($content);
 
-    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
+	Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }
 
 /**
@@ -56,9 +56,9 @@ function addError($content)
  */
 function addConfirm($content)
 {
-    $event = AddMessageEvent::createConfirm($content);
+	$event = AddMessageEvent::createConfirm($content);
 
-    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
+	Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }
 
 /**
@@ -70,9 +70,9 @@ function addConfirm($content)
  */
 function addNew($content)
 {
-    $event = AddMessageEvent::createNew($content);
+	$event = AddMessageEvent::createNew($content);
 
-    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
+	Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }
 
 /**
@@ -84,9 +84,9 @@ function addNew($content)
  */
 function addInfo($content)
 {
-    $event = AddMessageEvent::createInfo($content);
+	$event = AddMessageEvent::createInfo($content);
 
-    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
+	Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }
 
 /**
@@ -98,7 +98,7 @@ function addInfo($content)
  */
 function addRaw($content)
 {
-    $event = AddMessageEvent::createRaw($content);
+	$event = AddMessageEvent::createRaw($content);
 
-    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
+	Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }

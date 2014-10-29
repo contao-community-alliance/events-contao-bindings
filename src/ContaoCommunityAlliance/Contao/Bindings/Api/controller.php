@@ -40,13 +40,13 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReplaceInsertTagsE
  */
 function addEnclosureToTemplate($imageData, $template, $key = 'enclosure')
 {
-    $event = new AddEnclosureToTemplateEvent($imageData, $template, $key);
+	$event = new AddEnclosureToTemplateEvent($imageData, $template, $key);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE, $event);
 }
 
 /**
- * Add an image to a template
+ * Add an image to a template.
  *
  * @param array            $imageData  The image data.
  * @param \Template|object $template   The template object.
@@ -57,9 +57,9 @@ function addEnclosureToTemplate($imageData, $template, $key = 'enclosure')
  */
 function addImageToTemplate($imageData, $template, $maxWidth = null, $lightboxId = null)
 {
-    $event = new AddImageToTemplateEvent($imageData, $template, $maxWidth, $lightboxId);
+	$event = new AddImageToTemplateEvent($imageData, $template, $maxWidth, $lightboxId);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE, $event);
 }
 
 /**
@@ -71,11 +71,11 @@ function addImageToTemplate($imageData, $template, $maxWidth = null, $lightboxId
  */
 function addToUrl($suffix)
 {
-    $event = new AddToUrlEvent($suffix);
+	$event = new AddToUrlEvent($suffix);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_ADD_TO_URL, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_ADD_TO_URL, $event);
 
-    return $event->getUrl();
+	return $event->getUrl();
 }
 
 /**
@@ -89,11 +89,11 @@ function addToUrl($suffix)
  */
 function generateFrontendUrl(array $pageData, $parameters = null, $language = null)
 {
-    $event = new GenerateFrontendUrlEvent($pageData, $parameters, $language);
+	$event = new GenerateFrontendUrlEvent($pageData, $parameters, $language);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL, $event);
 
-    return $event->getUrl();
+	return $event->getUrl();
 }
 
 /**
@@ -107,11 +107,11 @@ function generateFrontendUrl(array $pageData, $parameters = null, $language = nu
  */
 function getArticle($articleId, $teaserOnly = false, $column = 'main')
 {
-    $event = new GetArticleEvent($articleId, $teaserOnly, $column);
+	$event = new GetArticleEvent($articleId, $teaserOnly, $column);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_GET_ARTICLE, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_GET_ARTICLE, $event);
 
-    return $event->getArticle();
+	return $event->getArticle();
 }
 
 /**
@@ -124,11 +124,11 @@ function getArticle($articleId, $teaserOnly = false, $column = 'main')
  */
 function getContentElement($contentElementId, $column = 'main')
 {
-    $event = new GetContentElementEvent($contentElementId, $column);
+	$event = new GetContentElementEvent($contentElementId, $column);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT, $event);
 
-    return $event->getContentElementHtml();
+	return $event->getContentElementHtml();
 }
 
 /**
@@ -140,11 +140,11 @@ function getContentElement($contentElementId, $column = 'main')
  */
 function getPageDetails($pageId)
 {
-    $event = new GetPageDetailsEvent($pageId);
+	$event = new GetPageDetailsEvent($pageId);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_GET_PAGE_DETAILS, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_GET_PAGE_DETAILS, $event);
 
-    return $event->getPageDetails();
+	return $event->getPageDetails();
 }
 
 /**
@@ -156,11 +156,11 @@ function getPageDetails($pageId)
  */
 function getTemplateGroup($prefix)
 {
-    $event = new GetTemplateGroupEvent($prefix);
+	$event = new GetTemplateGroupEvent($prefix);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP, $event);
 
-    return $event->getTemplates();
+	return $event->getTemplates();
 }
 
 /**
@@ -173,9 +173,9 @@ function getTemplateGroup($prefix)
  */
 function loadDataContainer($name, $ignoreCache = false)
 {
-    $event = new LoadDataContainerEvent($name, $ignoreCache);
+	$event = new LoadDataContainerEvent($name, $ignoreCache);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER, $event);
 }
 
 /**
@@ -188,9 +188,9 @@ function loadDataContainer($name, $ignoreCache = false)
  */
 function redirect($newLocation, $statusCode = 303)
 {
-    $event = new RedirectEvent($newLocation, $statusCode);
+	$event = new RedirectEvent($newLocation, $statusCode);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_REDIRECT, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_REDIRECT, $event);
 }
 
 /**
@@ -200,9 +200,9 @@ function redirect($newLocation, $statusCode = 303)
  */
 function reload()
 {
-    $event = new ReloadEvent();
+	$event = new ReloadEvent();
 
-    Api\dispatch(ContaoEvents::CONTROLLER_RELOAD, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_RELOAD, $event);
 }
 
 /**
@@ -215,9 +215,9 @@ function reload()
  */
 function replaceInsertTags($buffer, $allowCache = true)
 {
-    $event = new ReplaceInsertTagsEvent($buffer, $allowCache);
+	$event = new ReplaceInsertTagsEvent($buffer, $allowCache);
 
-    Api\dispatch(ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS, $event);
+	Api\dispatch(ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS, $event);
 
-    return $event->getBuffer();
+	return $event->getBuffer();
 }

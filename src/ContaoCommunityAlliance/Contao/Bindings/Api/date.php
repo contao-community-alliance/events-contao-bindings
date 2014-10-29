@@ -28,9 +28,9 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent;
  */
 function parseDate($timestamp = null, $format = null)
 {
-    $event = new ParseDateEvent($timestamp, $format);
+	$event = new ParseDateEvent($timestamp, $format);
 
-    Api\dispatch(ContaoEvents::DATE_PARSE, $event);
+	Api\dispatch(ContaoEvents::DATE_PARSE, $event);
 
-    return $event->getResult();
+	return $event->getResult();
 }

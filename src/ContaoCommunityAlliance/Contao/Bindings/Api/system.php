@@ -30,15 +30,15 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\System\LogEvent;
  */
 function getReferrer($encodeAmpersands = false, $tableName = null)
 {
-    $event = new GetReferrerEvent($encodeAmpersands, $tableName);
+	$event = new GetReferrerEvent($encodeAmpersands, $tableName);
 
-    Api\dispatch(ContaoEvents::SYSTEM_GET_REFERRER, $event);
+	Api\dispatch(ContaoEvents::SYSTEM_GET_REFERRER, $event);
 
-    return $event->getReferrerUrl();
+	return $event->getReferrerUrl();
 }
 
 /**
- * Load a language file
+ * Load a language file.
  *
  * @param string $fileName    The name of the language file to load.
  * @param string $language    Optional language code of the language in which the file shall get loaded.
@@ -48,9 +48,9 @@ function getReferrer($encodeAmpersands = false, $tableName = null)
  */
 function loadLanguageFile($fileName, $language = null, $ignoreCache = false)
 {
-    $event = new LoadLanguageFileEvent($fileName, $language, $ignoreCache);
+	$event = new LoadLanguageFileEvent($fileName, $language, $ignoreCache);
 
-    Api\dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+	Api\dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
 }
 
 /**
@@ -64,7 +64,7 @@ function loadLanguageFile($fileName, $language = null, $ignoreCache = false)
  */
 function log($text, $function, $category)
 {
-    $event = new LogEvent($text, $function, $category);
+	$event = new LogEvent($text, $function, $category);
 
-    Api\dispatch(ContaoEvents::SYSTEM_LOG, $event);
+	Api\dispatch(ContaoEvents::SYSTEM_LOG, $event);
 }
