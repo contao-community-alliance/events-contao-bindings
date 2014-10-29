@@ -34,25 +34,25 @@
 	"require-dev": {
 		"metamodels/php-coding-standard":"dev-master",
 		"phpunit/phpunit": ">=3.7.10,<4-dev",
-        "phpspec/prophecy-phpunit": "~1.0"
+		"phpspec/prophecy-phpunit": "~1.0"
 	},
 	"conflict": {
 		"contao/core": "3.0.*"
 	},
 	"autoload": {
 		"psr-0": {"ContaoCommunityAlliance\\Contao\\Bindings": "src"},
-        "files": [
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/backend.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/calendar.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/controller.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/date.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/functions.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/image.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/message.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/news.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/system.php",
-            "src/ContaoCommunityAlliance/Contao/Bindings/Api/widget.php"
-        ]
+		"files": [
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/backend.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/calendar.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/controller.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/date.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/functions.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/image.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/message.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/news.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/system.php",
+			"src/ContaoCommunityAlliance/Contao/Bindings/Api/widget.php"
+		]
 	},
 	"extra":{
 		"branch-alias": {
