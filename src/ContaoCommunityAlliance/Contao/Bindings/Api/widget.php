@@ -35,7 +35,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEv
  *
  * @return array
  */
-function getAttributesFromDcaEvent($fieldConfiguration, $widgetName, $value = null, $widgetId = '', $table = '', $dc = null)
+function getAttributesFromDca($fieldConfiguration, $widgetName, $value = null, $widgetId = '', $table = '', $dc = null)
 {
     $event = new GetAttributesFromDcaEvent($fieldConfiguration, $widgetName, $value, $widgetId, $table, $dc);
 

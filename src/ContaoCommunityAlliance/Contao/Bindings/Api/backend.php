@@ -14,10 +14,11 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Api\Backend;
 
+use ContaoCommunityAlliance\Contao\Bindings\Api;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\GetThemeEvent;
-use Netzmacht\Contao\Events;
+
 
 /**
  * Add suffix to the url.
@@ -30,7 +31,7 @@ function addToUrl($suffix)
 {
     $event = new AddToUrlEvent($suffix);
 
-    Events\dispatch(ContaoEvents::BACKEND_ADD_TO_URL, $event);
+    Api\dispatch(ContaoEvents::BACKEND_ADD_TO_URL, $event);
 
     return $event->getUrl();
 }
@@ -44,7 +45,7 @@ function getTheme()
 {
     $event = new GetThemeEvent();
 
-    Events\dispatch(ContaoEvents::BACKEND_GET_THEME);
+    Api\dispatch(ContaoEvents::BACKEND_GET_THEME, $event);
 
     return $event->getTheme();
 }

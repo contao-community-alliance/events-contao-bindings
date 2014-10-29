@@ -33,7 +33,8 @@
 	},
 	"require-dev": {
 		"metamodels/php-coding-standard":"dev-master",
-		"phpunit/phpunit": ">=3.7.10,<4-dev"
+		"phpunit/phpunit": ">=3.7.10,<4-dev",
+        "phpspec/prophecy-phpunit": "~1.0"
 	},
 	"conflict": {
 		"contao/core": "3.0.*"

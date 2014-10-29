@@ -30,7 +30,7 @@ function addMessage($content, $type)
 {
     $event = new AddMessageEvent($content, $type);
 
-    Api\dispatch(ContaoEvents::IMAGE_RESIZE, $event);
+    Api\dispatch(ContaoEvents::MESSAGE_ADD, $event);
 }
 
 /**
