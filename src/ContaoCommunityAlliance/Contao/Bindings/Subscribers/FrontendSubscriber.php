@@ -44,6 +44,6 @@ class FrontendSubscriber
 	 */
 	public static function handleAddToUrl(AddToUrlEvent $event)
 	{
-		$event->setUrl(\Frontend::addToUrl($event->getSuffix()));
+		$event->setUrl(\Frontend::addToUrl($event->getSuffix(), $event->isIgnoreParams()));
 	}
 }
