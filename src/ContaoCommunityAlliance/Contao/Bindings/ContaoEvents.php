@@ -26,6 +26,15 @@ class ContaoEvents
 	const BACKEND_GET_THEME = 'contao.events.backend.get-theme';
 
 	/**
+	 * Event for adding parameters to the current url and suffixing it with the current request token.
+	 *
+	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Frontend\AddToUrlEvent
+	 *
+	 * @see \Contao\Frontend::addToUrl()
+	 */
+	const FRONTEND_ADD_TO_URL = 'contao.events.frontend.add.to.url';
+
+	/**
 	 * Event for adding parameters to the current url.
 	 *
 	 * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent
