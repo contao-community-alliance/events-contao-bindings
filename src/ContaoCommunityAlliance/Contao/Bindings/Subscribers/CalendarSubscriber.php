@@ -116,9 +116,15 @@ class CalendarSubscriber
 		}
 		else
 		{
+			$strTimeStart = '';
+			$strTimeEnd   = '';
+			$strTimeClose = '';
+            /*
+             * TODO $this->date and $this->time is used in the <a> title attribute and cannot contain HTML!
 			$strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '">';
 			$strTimeEnd   = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '">';
 			$strTimeClose = '</time>';
+            */
 		}
 
 		// Get date.
