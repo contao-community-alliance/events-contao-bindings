@@ -1,6 +1,6 @@
 {
 	"name":"contao-community-alliance/events-contao-bindings",
-	"description":"Multipurpose translation manager and interface",
+	"description":"This library turns the Contao Core API into events.",
 	"keywords":["contao", "translation"],
 	"type":"contao-module",
 	"homepage":"http://c-c-a.org/",
