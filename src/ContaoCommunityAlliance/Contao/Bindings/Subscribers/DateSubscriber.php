@@ -3,9 +3,11 @@
  * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
  *
  * PHP version 5
+ *
  * @package    ContaoCommunityAlliance\Contao\Bindings
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Tristan Lins <tristan.lins@bit3.de>
  * @copyright  The Contao Community Alliance
  * @license    LGPL.
  * @filesource
@@ -20,33 +22,31 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Subscriber for the System class in Contao.
  */
-class DateSubscriber
-	implements EventSubscriberInterface
+class DateSubscriber implements EventSubscriberInterface
 {
-	/**
-	 * Returns an array of event names this subscriber wants to listen to.
-	 *
-	 * @return array
-	 */
-	public static function getSubscribedEvents()
-	{
-		return array(
-			ContaoEvents::DATE_PARSE       => 'handleParseDate',
-		);
-	}
+    /**
+     * Returns an array of event names this subscriber wants to listen to.
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ContaoEvents::DATE_PARSE => 'handleParseDate',
+        );
+    }
 
-	/**
-	 * Handle the date parsing.
-	 *
-	 * @param ParseDateEvent $event The event.
-	 *
-	 * @return void
-	 */
-	public static function handleParseDate($event)
-	{
-		if ($event->getResult() === null)
-		{
-			$event->setResult(\Date::parse($event->getFormat(), $event->getTimestamp()));
-		}
-	}
+    /**
+     * Handle the date parsing.
+     *
+     * @param ParseDateEvent $event The event.
+     *
+     * @return void
+     */
+    public static function handleParseDate($event)
+    {
+        if ($event->getResult() === null) {
+            $event->setResult(\Date::parse($event->getFormat(), $event->getTimestamp()));
+        }
+    }
 }

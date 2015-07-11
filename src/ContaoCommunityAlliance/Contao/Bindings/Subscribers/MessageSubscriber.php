@@ -3,9 +3,11 @@
  * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
  *
  * PHP version 5
+ *
  * @package    ContaoCommunityAlliance\Contao\Bindings
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Tristan Lins <tristan.lins@bit3.de>
  * @copyright  The Contao Community Alliance
  * @license    LGPL.
  * @filesource
@@ -20,30 +22,29 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Subscriber for the news extension.
  */
-class MessageSubscriber
-	implements EventSubscriberInterface
+class MessageSubscriber implements EventSubscriberInterface
 {
-	/**
-	 * Returns an array of event names this subscriber wants to listen to.
-	 *
-	 * @return array
-	 */
-	public static function getSubscribedEvents()
-	{
-		return array(
-			ContaoEvents::MESSAGE_ADD => 'addMessage',
-		);
-	}
+    /**
+     * Returns an array of event names this subscriber wants to listen to.
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ContaoEvents::MESSAGE_ADD => 'addMessage',
+        );
+    }
 
-	/**
-	 * Add a message to the contao message array in the session.
-	 *
-	 * @param AddMessageEvent $event The event.
-	 *
-	 * @return void
-	 */
-	public function addMessage(AddMessageEvent $event)
-	{
-		\Message::add($event->getContent(), 'TL_' . strtoupper($event->getType()));
-	}
+    /**
+     * Add a message to the contao message array in the session.
+     *
+     * @param AddMessageEvent $event The event.
+     *
+     * @return void
+     */
+    public function addMessage(AddMessageEvent $event)
+    {
+        \Message::add($event->getContent(), 'TL_' . strtoupper($event->getType()));
+    }
 }

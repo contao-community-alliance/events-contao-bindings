@@ -7,6 +7,7 @@
  * @package    ContaoCommunityAlliance\Contao\Bindings\Events
  * @subpackage Controller
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Tristan Lins <tristan.lins@bit3.de>
  * @copyright  The Contao Community Alliance
  * @license    LGPL.
  * @filesource
@@ -19,82 +20,82 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 /**
  * This Event is emitted when a news should be rendered.
  */
-class GetNewsEvent
-	extends ContaoApiEvent
+class GetNewsEvent extends ContaoApiEvent
 {
-	/**
-	 * The news ID.
-	 *
-	 * @var int
-	 */
-	protected $newsId;
+    /**
+     * The news ID.
+     *
+     * @var int
+     */
+    protected $newsId;
 
-	/**
-	 * The template name.
-	 *
-	 * @var string
-	 */
-	protected $template = 'news_full';
+    /**
+     * The template name.
+     *
+     * @var string
+     */
+    protected $template = 'news_full';
 
-	/**
-	 * The rendered news html.
-	 *
-	 * @var string
-	 */
-	protected $newsHtml;
+    /**
+     * The rendered news html.
+     *
+     * @var string
+     */
+    protected $newsHtml;
 
-	/**
-	 * Create the event.
-	 *
-	 * @param int    $newsId   The news ID.
-	 * @param string $template The template name.
-	 */
-	public function __construct($newsId, $template = 'news_full')
-	{
-		$this->newsId   = (int)$newsId;
-		$this->template = (string)$template;
-	}
+    /**
+     * Create the event.
+     *
+     * @param int    $newsId   The news ID.
+     * @param string $template The template name.
+     */
+    public function __construct($newsId, $template = 'news_full')
+    {
+        $this->newsId   = (int) $newsId;
+        $this->template = (string) $template;
+    }
 
-	/**
-	 * Return the news ID.
-	 *
-	 * @return int
-	 */
-	public function getNewsId()
-	{
-		return $this->newsId;
-	}
+    /**
+     * Return the news ID.
+     *
+     * @return int
+     */
+    public function getNewsId()
+    {
+        return $this->newsId;
+    }
 
-	/**
-	 * Return the template name.
-	 *
-	 * @return string
-	 */
-	public function getTemplate()
-	{
-		return $this->template;
-	}
+    /**
+     * Return the template name.
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
 
-	/**
-	 * Set the rendered news html.
-	 *
-	 * @param string $newsHtml The rendered html.
-	 *
-	 * @return GetNewsEvent
-	 */
-	public function setNewsHtml($newsHtml)
-	{
-		$this->newsHtml = $newsHtml;
-		return $this;
-	}
+    /**
+     * Set the rendered news html.
+     *
+     * @param string $newsHtml The rendered html.
+     *
+     * @return GetNewsEvent
+     */
+    public function setNewsHtml($newsHtml)
+    {
+        $this->newsHtml = $newsHtml;
 
-	/**
-	 * Return the rendered news html.
-	 *
-	 * @return string
-	 */
-	public function getNewsHtml()
-	{
-		return $this->newsHtml;
-	}
+        return $this;
+    }
+
+    /**
+     * Return the rendered news html.
+     *
+     * @return string
+     */
+    public function getNewsHtml()
+    {
+        return $this->newsHtml;
+    }
 }

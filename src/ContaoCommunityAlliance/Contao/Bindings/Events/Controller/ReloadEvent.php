@@ -18,7 +18,6 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 /**
  * This Event is emitted when the client shall reload the current url.
  */
-class ReloadEvent
-	extends ContaoApiEvent
+class ReloadEvent extends ContaoApiEvent
 {
 }

@@ -3,8 +3,8 @@
  * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
  *
  * PHP version 5
- * @package    ContaoCommunityAlliance\Contao\Bindings\Events
- * @subpackage System
+ * @package    ContaoCommunityAlliance\Contao\Bindings
+ * @subpackage Events
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @copyright  The Contao Community Alliance
  * @license    LGPL.
@@ -16,9 +16,10 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Events;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Base class for all events
+ * Base class for all events.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
-class ContaoApiEvent
-	extends Event
+class ContaoApiEvent extends Event
 {
 }
