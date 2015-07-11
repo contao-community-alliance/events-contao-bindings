@@ -58,7 +58,7 @@ class NewsSubscriber
 		$eventDispatcher = $event->getDispatcher();
 
 		$newsArchiveCollection = \NewsArchiveModel::findAll();
-		$newsArchiveIds        = $newsArchiveCollection->fetchEach('id');
+		$newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : array();
 		$newsModel             = \NewsModel::findPublishedByParentAndIdOrAlias(
 			$event->getNewsId(),
 			$newsArchiveIds
