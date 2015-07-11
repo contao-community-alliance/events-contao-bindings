@@ -34,7 +34,7 @@
     "contao-community-alliance/event-dispatcher": "~1.0"
   },
   "require-dev": {
-    "metamodels/php-coding-standard": "dev-master",
+    "phpcq/all-tasks": "~1.0",
     "phpunit/phpunit": ">=3.7.10,<4-dev"
   },
   "autoload": {
@@ -42,9 +42,14 @@
       "ContaoCommunityAlliance\\Contao\\Bindings": "src"
     }
   },
+  "autoload-dev": {
+    "psr-0": {
+      "ContaoCommunityAlliance\\Contao\\Bindings\\Test": "tests"
+    }
+  },
   "extra": {
     "branch-alias": {
-      "dev-contao-3.2": "3.2.x-dev"
+      "dev-master": "3.5.x-dev"
     },
     "contao": {
       "sources": {

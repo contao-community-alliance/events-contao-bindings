@@ -12,7 +12,7 @@
 		 bootstrap="tests/bootstrap.php"
 		>
 	<testsuites>
-		<testsuite name="Translator core tests">
+		<testsuite name="Contao Events bindings core tests">
 			<directory>./tests/ContaoCommunityAlliance/</directory>
 		</testsuite>
 	</testsuites>
