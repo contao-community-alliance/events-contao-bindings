@@ -1,53 +1,58 @@
 {
-	"name":"contao-community-alliance/events-contao-bindings",
-	"description":"This library turns the Contao Core API into events.",
-	"keywords":["contao", "translation"],
-	"type":"contao-module",
-	"homepage":"http://c-c-a.org/",
-	"license":"LGPL-3.0+",
-	"authors":[
-		{
-			"name":"Christian Schiffler",
-			"email":"c.schiffler@cyberspectrum.de",
-			"homepage":"http://www.cyberspectrum.de",
-			"role":"Developer"
-		},
-		{
-			"name":"Tristan Lins",
-			"email":"tristan.lins@bit3.de",
-			"homepage":"http://bit3.de/",
-			"role":"Developer"
-		}
-	],
-	"support": {
-		"email":"info@contao-community-alliance.de",
-		"issues":"https://github.com/contao-community-alliance/events-contao-bindings/issues",
-		"irc":"irc://irc.freenode.org/contao.cca",
-		"source":"https://github.com/contao-community-alliance/events-contao-bindings"
-	},
-	"require": {
-		"php":">=5.3",
-		"contao/core": ">=3.3,<3.6-dev",
-		"contao-community-alliance/composer-plugin": "~2.0",
-		"contao-community-alliance/event-dispatcher": "~1.0"
-	},
-	"require-dev": {
-		"metamodels/php-coding-standard":"dev-master",
-		"phpunit/phpunit": ">=3.7.10,<4-dev"
-	},
-	"autoload": {
-		"psr-0": {"ContaoCommunityAlliance\\Contao\\Bindings": "src"}
-	},
-	"extra":{
-		"branch-alias": {
-			"dev-contao-3.2": "3.2.x-dev"
-		},
-		"contao": {
-			"sources": {
-				"contao": "system/modules/events-contao-bindings"
-			}
-		}
-	},
-	"prefer-stable": true,
-	"minimum-stability": "dev"
+  "name": "contao-community-alliance/events-contao-bindings",
+  "description": "This library turns the Contao Core API into events.",
+  "keywords": [
+    "contao",
+    "translation"
+  ],
+  "type": "contao-module",
+  "homepage": "http://c-c-a.org/",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Christian Schiffler",
+      "email": "c.schiffler@cyberspectrum.de",
+      "homepage": "http://www.cyberspectrum.de",
+      "role": "Developer"
+    },
+    {
+      "name": "Tristan Lins",
+      "email": "tristan.lins@bit3.de",
+      "homepage": "http://bit3.de/",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "info@contao-community-alliance.de",
+    "issues": "https://github.com/contao-community-alliance/events-contao-bindings/issues",
+    "irc": "irc://irc.freenode.org/contao.cca",
+    "source": "https://github.com/contao-community-alliance/events-contao-bindings"
+  },
+  "require": {
+    "php": ">=5.3",
+    "contao/core": ">=3.3,<3.6-dev",
+    "contao-community-alliance/composer-plugin": "~2.0",
+    "contao-community-alliance/event-dispatcher": "~1.0"
+  },
+  "require-dev": {
+    "metamodels/php-coding-standard": "dev-master",
+    "phpunit/phpunit": ">=3.7.10,<4-dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "ContaoCommunityAlliance\\Contao\\Bindings": "src"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-contao-3.2": "3.2.x-dev"
+    },
+    "contao": {
+      "sources": {
+        "contao": "system/modules/events-contao-bindings"
+      }
+    }
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
 }
