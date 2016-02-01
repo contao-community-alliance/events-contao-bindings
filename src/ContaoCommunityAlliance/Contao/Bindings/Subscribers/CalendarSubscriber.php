@@ -202,6 +202,8 @@ class CalendarSubscriber implements EventSubscriberInterface
 
                 $objTemplate->details .= $getContentElementEvent->getContentElementHtml();
             }
+
+            $objTemplate->hasDetails = true;
         }
 
         $objTemplate->addImage = false;
