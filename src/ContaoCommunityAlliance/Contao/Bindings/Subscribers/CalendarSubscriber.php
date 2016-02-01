@@ -8,6 +8,7 @@
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
+ * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  The Contao Community Alliance
  * @license    LGPL.
  * @filesource
@@ -202,6 +203,8 @@ class CalendarSubscriber implements EventSubscriberInterface
 
                 $objTemplate->details .= $getContentElementEvent->getContentElementHtml();
             }
+
+            $objTemplate->hasDetails = true;
         }
 
         $objTemplate->addImage = false;
