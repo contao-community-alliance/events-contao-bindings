@@ -103,13 +103,25 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Clean the RTE output.
         if ($newsModel->teaser != '') {
-            if ($objPage->outputFormat == 'xhtml') {
-                $objTemplate->teaser = \String::toXhtml($newsModel->teaser);
-            } else {
-                $objTemplate->teaser = \String::toHtml5($newsModel->teaser);
-            }
+            // PHP 7 compatibility
+            // See #309 (https://github.com/contao/core-bundle/issues/309)
+            if (version_compare('3.5.5', VERSION . '.' . BUILD, '>=')) {
+                if ($objPage->outputFormat == 'xhtml') {
+                    $objTemplate->teaser = \StringUtil::toXhtml($newsModel->teaser);
+                } else {
+                    $objTemplate->teaser = \StringUtil::toHtml5($newsModel->teaser);
+                }
 
-            $objTemplate->teaser = \String::encodeEmail($objTemplate->teaser);
+                $objTemplate->teaser = \StringUtil::encodeEmail($objTemplate->teaser);
+            } else {
+                if ($objPage->outputFormat == 'xhtml') {
+                    $objTemplate->teaser = \String::toXhtml($newsModel->teaser);
+                } else {
+                    $objTemplate->teaser = \String::toHtml5($newsModel->teaser);
+                }
+
+                $objTemplate->teaser = \String::encodeEmail($objTemplate->teaser);
+            }
         }
 
         // Display the "read more" button for external/article links.
@@ -273,7 +285,13 @@ class NewsSubscriber implements EventSubscriberInterface
             // Link to an external page.
             case 'external':
                 if (substr($objItem->url, 0, 7) == 'mailto:') {
-                    $url = \String::encodeEmail($objItem->url);
+                    // PHP 7 compatibility
+                    // See #309 (https://github.com/contao/core-bundle/issues/309)
+                    if (version_compare('3.5.5', VERSION . '.' . BUILD, '>=')) {
+                        $url = \StringUtil::encodeEmail($objItem->url);
+                    } else {
+                        $url = \String::encodeEmail($objItem->url);
+                    }
                 } else {
                     $url = ampersand($objItem->url);
                 }
@@ -383,7 +401,13 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Encode e-mail addresses.
         if (substr($objArticle->url, 0, 7) == 'mailto:') {
-            $strArticleUrl = \String::encodeEmail($objArticle->url);
+            // PHP 7 compatibility
+            // See #309 (https://github.com/contao/core-bundle/issues/309)
+            if (version_compare('3.5.5', VERSION . '.' . BUILD, '>=')) {
+                $strArticleUrl = \StringUtil::encodeEmail($objArticle->url);
+            } else {
+                $strArticleUrl = \String::encodeEmail($objArticle->url);
+            }
         } else {
         // Ampersand URIs.
             $strArticleUrl = ampersand($objArticle->url);
