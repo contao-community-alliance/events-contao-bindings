@@ -105,7 +105,7 @@ class NewsSubscriber implements EventSubscriberInterface
         if ($newsModel->teaser != '') {
             // PHP 7 compatibility
             // See #309 (https://github.com/contao/core-bundle/issues/309)
-            if (version_compare('3.5.5', VERSION, '>=')) {
+            if (version_compare('3.5.5', VERSION . '.' . BUILD, '>=')) {
                 if ($objPage->outputFormat == 'xhtml') {
                     $objTemplate->teaser = \StringUtil::toXhtml($newsModel->teaser);
                 } else {
@@ -287,7 +287,7 @@ class NewsSubscriber implements EventSubscriberInterface
                 if (substr($objItem->url, 0, 7) == 'mailto:') {
                     // PHP 7 compatibility
                     // See #309 (https://github.com/contao/core-bundle/issues/309)
-                    if (version_compare('3.5.5', VERSION, '>=')) {
+                    if (version_compare('3.5.5', VERSION . '.' . BUILD, '>=')) {
                         $url = \StringUtil::encodeEmail($objItem->url);
                     } else {
                         $url = \String::encodeEmail($objItem->url);
@@ -403,7 +403,7 @@ class NewsSubscriber implements EventSubscriberInterface
         if (substr($objArticle->url, 0, 7) == 'mailto:') {
             // PHP 7 compatibility
             // See #309 (https://github.com/contao/core-bundle/issues/309)
-            if (version_compare('3.5.5', VERSION, '>=')) {
+            if (version_compare('3.5.5', VERSION . '.' . BUILD, '>=')) {
                 $strArticleUrl = \StringUtil::encodeEmail($objArticle->url);
             } else {
                 $strArticleUrl = \String::encodeEmail($objArticle->url);
