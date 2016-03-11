@@ -29,6 +29,7 @@ use Contao\ContentModel;
 use Contao\Date;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
+use Contao\PageModel;
 use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent;
