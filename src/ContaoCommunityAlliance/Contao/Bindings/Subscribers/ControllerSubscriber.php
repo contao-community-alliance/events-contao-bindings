@@ -32,6 +32,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Subscriber for the Controller class in Contao.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ControllerSubscriber extends \Controller implements EventSubscriberInterface
 {
