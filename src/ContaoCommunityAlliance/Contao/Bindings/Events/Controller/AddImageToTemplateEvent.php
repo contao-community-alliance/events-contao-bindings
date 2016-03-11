@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
+use Contao\Template;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
@@ -38,7 +39,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
     /**
      * The template object.
      *
-     * @var \Template|object
+     * @var Template|object
      */
     protected $template;
 
@@ -59,10 +60,10 @@ class AddImageToTemplateEvent extends ContaoApiEvent
     /**
      * Create new event.
      *
-     * @param array            $imageData  The image data.
-     * @param \Template|object $template   The template object.
-     * @param int|null         $maxWidth   The max image width.
-     * @param string|null      $lightboxId The lightbox ID.
+     * @param array           $imageData  The image data.
+     * @param Template|object $template   The template object.
+     * @param int|null        $maxWidth   The max image width.
+     * @param string|null     $lightboxId The lightbox ID.
      */
     public function __construct($imageData, $template, $maxWidth = null, $lightboxId = null)
     {
@@ -85,7 +86,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
     /**
      * Return the template object, to add the image.
      *
-     * @return \Template|object
+     * @return Template|object
      */
     public function getTemplate()
     {

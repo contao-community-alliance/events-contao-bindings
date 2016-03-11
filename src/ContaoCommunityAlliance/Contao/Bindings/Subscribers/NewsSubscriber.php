@@ -21,6 +21,19 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\ArticleModel;
+use Contao\CommentsModel;
+use Contao\ContentModel;
+use Contao\Date;
+use Contao\Environment;
+use Contao\FilesModel;
+use Contao\FrontendTemplate;
+use Contao\Input;
+use Contao\Model;
+use Contao\NewsArchiveModel;
+use Contao\NewsModel;
+use Contao\PageModel;
+use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
@@ -71,9 +84,9 @@ class NewsSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $newsArchiveCollection = \NewsArchiveModel::findAll();
+        $newsArchiveCollection = NewsArchiveModel::findAll();
         $newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : array();
-        $newsModel             = \NewsModel::findPublishedByParentAndIdOrAlias(
+        $newsModel             = NewsModel::findPublishedByParentAndIdOrAlias(
             $event->getNewsId(),
             $newsArchiveIds
         );
@@ -85,9 +98,9 @@ class NewsSubscriber implements EventSubscriberInterface
         $newsModel = $newsModel->current();
 
         $newsArchiveModel = $newsModel->getRelated('pid');
-        $objPage          = \PageModel::findWithDetails($newsArchiveModel->jumpTo);
+        $objPage          = PageModel::findWithDetails($newsArchiveModel->jumpTo);
 
-        $objTemplate = new \FrontendTemplate($event->getTemplate());
+        $objTemplate = new FrontendTemplate($event->getTemplate());
         $objTemplate->setData($newsModel->row());
 
         $objTemplate->class          = (($newsModel->cssClass != '') ? ' ' . $newsModel->cssClass : '');
@@ -123,7 +136,7 @@ class NewsSubscriber implements EventSubscriberInterface
             $objTemplate->text = true;
         } else {
             // Compile the news text.
-            $objElement = \ContentModel::findPublishedByPidAndTable($newsModel->id, 'tl_news');
+            $objElement = ContentModel::findPublishedByPidAndTable($newsModel->id, 'tl_news');
 
             if ($objElement !== null) {
                 while ($objElement->next()) {
@@ -151,10 +164,10 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Add an image.
         if ($newsModel->addImage && $newsModel->singleSRC != '') {
-            $objModel = \FilesModel::findByUuid($newsModel->singleSRC);
+            $objModel = FilesModel::findByUuid($newsModel->singleSRC);
 
             if ($objModel === null) {
-                if (!\Validator::isUuid($newsModel->singleSRC)) {
+                if (!Validator::isUuid($newsModel->singleSRC)) {
                     $objTemplate->text = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
                 }
             } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
@@ -198,7 +211,7 @@ class NewsSubscriber implements EventSubscriberInterface
     /**
      * Return the meta fields of a news article as array.
      *
-     * @param \NewsModel $objArticle The model.
+     * @param NewsModel $objArticle The model.
      *
      * @return array
      *
@@ -219,7 +232,7 @@ class NewsSubscriber implements EventSubscriberInterface
         foreach ($meta as $field) {
             switch ($field) {
                 case 'date':
-                    $return['date'] = \Date::parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
+                    $return['date'] = Date::parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
                     break;
 
                 case 'author':
@@ -238,7 +251,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     if ($objArticle->noComments || $objArticle->source != 'default') {
                         break;
                     }
-                    $intTotal           = \CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
+                    $intTotal           = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
                     $return['ccount']   = $intTotal;
                     $return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
                     break;
@@ -256,7 +269,7 @@ class NewsSubscriber implements EventSubscriberInterface
      *
      * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
      *
-     * @param \NewsModel               $objItem         The news model.
+     * @param NewsModel                $objItem         The news model.
      *
      * @param boolean                  $blnAddArchive   Add the current archive parameter (news archive) (default: false).
      *
@@ -270,7 +283,7 @@ class NewsSubscriber implements EventSubscriberInterface
      */
     protected function generateNewsUrl(
         EventDispatcherInterface $eventDispatcher,
-        \NewsModel $objItem,
+        NewsModel $objItem,
         $blnAddArchive = false
     ) {
         $url = null;
@@ -301,7 +314,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Link to an article.
             case 'article':
-                if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager' => true))) !== null
+                if (($objArticle = ArticleModel::findByPk($objItem->articleId, array('eager' => true))) !== null
                     && ($objPid = $objArticle->getRelated('pid')) !== null
                 ) {
                     $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
@@ -324,10 +337,10 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Link to the default page.
         if ($url === null) {
-            $objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
+            $objPage = PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
 
             if ($objPage === null) {
-                $url = ampersand(\Environment::get('request'), true);
+                $url = ampersand(Environment::get('request'), true);
             } else {
                 $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
                     $objPage->row(),
@@ -341,8 +354,8 @@ class NewsSubscriber implements EventSubscriberInterface
             }
 
             // Add the current archive parameter (news archive).
-            if ($blnAddArchive && \Input::get('month') != '') {
-                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . \Input::get('month');
+            if ($blnAddArchive && Input::get('month') != '') {
+                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . Input::get('month');
             }
         }
 
@@ -357,7 +370,7 @@ class NewsSubscriber implements EventSubscriberInterface
      *
      * @param string                   $strLink         The link text.
      *
-     * @param \Model                   $objArticle      The model.
+     * @param Model                    $objArticle      The model.
      *
      * @param bool                     $blnAddArchive   Add the current archive parameter (news archive)
      *                                                  (default: false).

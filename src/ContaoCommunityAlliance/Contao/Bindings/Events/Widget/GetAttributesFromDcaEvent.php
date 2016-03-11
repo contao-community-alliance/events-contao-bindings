@@ -20,6 +20,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Widget;
 
+use Contao\DataContainer;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
@@ -30,7 +31,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
     /**
      * The data container in use.
      *
-     * @var \DataContainer
+     * @var DataContainer
      */
     protected $dataContainer;
 
@@ -79,17 +80,17 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
     /**
      * Create a new instance.
      *
-     * @param array          $fieldConfiguration The field configuration from the dca.
+     * @param array         $fieldConfiguration The field configuration from the dca.
      *
-     * @param string         $widgetName         The name of the widget.
+     * @param string        $widgetName         The name of the widget.
      *
-     * @param mixed          $value              The value to use in the widget (optional).
+     * @param mixed         $value              The value to use in the widget (optional).
      *
-     * @param string         $widgetId           The widget id (optional).
+     * @param string        $widgetId           The widget id (optional).
      *
-     * @param string         $table              The table name (optional).
+     * @param string        $table              The table name (optional).
      *
-     * @param \DataContainer $dataContainer      The data container in use.
+     * @param DataContainer $dataContainer      The data container in use.
      */
     public function __construct(
         $fieldConfiguration,

@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
+use Contao\Template;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
@@ -38,7 +39,7 @@ class AddEnclosureToTemplateEvent extends ContaoApiEvent
     /**
      * The template object.
      *
-     * @var \Template|object
+     * @var Template|object
      */
     protected $template;
 
@@ -52,11 +53,11 @@ class AddEnclosureToTemplateEvent extends ContaoApiEvent
     /**
      * Create a new instance.
      *
-     * @param array            $imageData The enclosure data.
+     * @param array           $imageData The enclosure data.
      *
-     * @param \Template|object $template  The template object.
+     * @param Template|object $template  The template object.
      *
-     * @param string           $key       The key to use in the template.
+     * @param string          $key       The key to use in the template.
      */
     public function __construct($imageData, $template, $key = 'enclosure')
     {
@@ -78,7 +79,7 @@ class AddEnclosureToTemplateEvent extends ContaoApiEvent
     /**
      * Retrieve the template object.
      *
-     * @return \Template|object
+     * @return Template|object
      */
     public function getTemplate()
     {

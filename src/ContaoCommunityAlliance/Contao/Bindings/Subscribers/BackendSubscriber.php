@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Backend;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\GetThemeEvent;
@@ -53,7 +54,7 @@ class BackendSubscriber implements EventSubscriberInterface
      */
     public static function handleAddToUrl(AddToUrlEvent $event)
     {
-        $event->setUrl(\Backend::addToUrl($event->getSuffix()));
+        $event->setUrl(Backend::addToUrl($event->getSuffix()));
     }
 
     /**
@@ -65,6 +66,6 @@ class BackendSubscriber implements EventSubscriberInterface
      */
     public function handleGetTheme(GetThemeEvent $event)
     {
-        $event->setTheme(\Backend::getTheme());
+        $event->setTheme(Backend::getTheme());
     }
 }

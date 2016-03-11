@@ -20,6 +20,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\GetReferrerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
@@ -54,7 +55,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleGetReferer(GetReferrerEvent $event)
     {
-        $event->setReferrerUrl(\System::getReferer($event->isEncodeAmpersands(), $event->getTableName()));
+        $event->setReferrerUrl(System::getReferer($event->isEncodeAmpersands(), $event->getTableName()));
     }
 
     /**
@@ -66,7 +67,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLog(LogEvent $event)
     {
-        \System::log($event->getText(), $event->getFunction(), $event->getCategory());
+        System::log($event->getText(), $event->getFunction(), $event->getCategory());
     }
 
     /**
@@ -78,6 +79,6 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
     {
-        \System::loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
+        System::loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
     }
 }

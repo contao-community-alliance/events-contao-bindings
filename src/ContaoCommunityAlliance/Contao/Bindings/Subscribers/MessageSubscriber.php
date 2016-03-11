@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Message;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Message\AddMessageEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -51,6 +52,6 @@ class MessageSubscriber implements EventSubscriberInterface
      */
     public function addMessage(AddMessageEvent $event)
     {
-        \Message::add($event->getContent(), 'TL_' . strtoupper($event->getType()));
+        Message::add($event->getContent(), 'TL_' . strtoupper($event->getType()));
     }
 }

@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Widget;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -52,7 +53,7 @@ class WidgetSubscriber implements EventSubscriberInterface
     public function handleGetAttributesFromDca(GetAttributesFromDcaEvent $event)
     {
         $event->setResult(
-            \Widget::getAttributesFromDca(
+            Widget::getAttributesFromDca(
                 $event->getFieldConfiguration(),
                 $event->getWidgetName(),
                 $event->getValue(),

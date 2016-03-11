@@ -21,6 +21,8 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Controller;
+use Contao\PageModel;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
@@ -40,7 +42,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class ControllerSubscriber extends \Controller implements EventSubscriberInterface
+class ControllerSubscriber extends Controller implements EventSubscriberInterface
 {
     /**
      * Kill parent constructor.
@@ -81,7 +83,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public static function handleAddToUrl(AddToUrlEvent $event)
     {
-        $event->setUrl(\Controller::addToUrl($event->getSuffix()));
+        $event->setUrl(Controller::addToUrl($event->getSuffix()));
     }
 
     /**
@@ -93,7 +95,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event)
     {
-        \Controller::addEnclosuresToTemplate(
+        Controller::addEnclosuresToTemplate(
             $event->getTemplate(),
             $event->getEnclosureData(),
             $event->getKey()
@@ -109,7 +111,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleAddImageToTemplate(AddImageToTemplateEvent $event)
     {
-        \Controller::addImageToTemplate(
+        Controller::addImageToTemplate(
             $event->getTemplate(),
             $event->getImageData(),
             $event->getMaxWidth(),
@@ -126,7 +128,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
     {
-        $url = \Controller::generateFrontendUrl(
+        $url = Controller::generateFrontendUrl(
             $event->getPageData(),
             $event->getParameters(),
             $event->getLanguage()
@@ -180,7 +182,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleGetPageDetails(GetPageDetailsEvent $event)
     {
-        $page = \PageModel::findWithDetails($event->getPageId());
+        $page = PageModel::findWithDetails($event->getPageId());
 
         if ($page) {
             $event->setPageDetails($page->row());
@@ -196,7 +198,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
     {
-        $templatesArray = \Controller::getTemplateGroup($event->getPrefix());
+        $templatesArray = Controller::getTemplateGroup($event->getPrefix());
         $templates      = $event->getTemplates();
 
         foreach ($templatesArray as $templateName => $templateLabel) {
@@ -225,7 +227,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public static function handleRedirect(RedirectEvent $event)
     {
-        \Controller::redirect($event->getNewLocation(), $event->getStatusCode());
+        Controller::redirect($event->getNewLocation(), $event->getStatusCode());
     }
 
     /**
@@ -235,7 +237,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public static function handleReload()
     {
-        \Controller::reload();
+        Controller::reload();
     }
 
     /**

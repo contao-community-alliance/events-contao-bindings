@@ -20,6 +20,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Image;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Image\ResizeImageEvent;
@@ -53,7 +54,7 @@ class ImageSubscriber implements EventSubscriberInterface
     public function handleResize(ResizeImageEvent $event)
     {
         $event->setResultImage(
-            \Image::get(
+            Image::get(
                 $event->getImage(),
                 $event->getWidth(),
                 $event->getHeight(),
@@ -74,7 +75,7 @@ class ImageSubscriber implements EventSubscriberInterface
     public function handleGenerateHtml(GenerateHtmlEvent $event)
     {
         $event->setHtml(
-            \Image::getHtml(
+            Image::getHtml(
                 $event->getSrc(),
                 $event->getAlt(),
                 $event->getAttributes()

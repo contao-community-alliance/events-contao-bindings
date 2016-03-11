@@ -21,6 +21,14 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Calendar;
+use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
+use Contao\ContentModel;
+use Contao\Date;
+use Contao\FilesModel;
+use Contao\FrontendTemplate;
+use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
@@ -70,14 +78,14 @@ class CalendarSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $calendarCollection = \CalendarModel::findAll();
+        $calendarCollection = CalendarModel::findAll();
 
         if (!$calendarCollection) {
             return;
         }
 
         $calendarIds = $calendarCollection->fetchEach('id');
-        $eventModel  = \CalendarEventsModel::findPublishedByParentAndIdOrAlias(
+        $eventModel  = CalendarEventsModel::findPublishedByParentAndIdOrAlias(
             $event->getCalendarEventId(),
             $calendarIds
         );
@@ -87,7 +95,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         }
 
         $calendarModel = $eventModel->getRelated('pid');
-        $objPage       = \PageModel::findWithDetails($calendarModel->jumpTo);
+        $objPage       = PageModel::findWithDetails($calendarModel->jumpTo);
 
         if ($event->getDateTime()) {
             $selectedStartDateTime = clone $event->getDateTime();
@@ -106,7 +114,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             $intEndTime   = $eventModel->endTime;
         }
 
-        $span = \Calendar::calculateSpan($intStartTime, $intEndTime);
+        $span = Calendar::calculateSpan($intStartTime, $intEndTime);
 
         // Do not show dates in the past if the event is recurring (see #923).
         if ($eventModel->recurring) {
@@ -140,21 +148,21 @@ class CalendarSubscriber implements EventSubscriberInterface
         // Get date.
         if ($span > 0) {
             $date = $strTimeStart .
-                \Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) .
+                Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) .
                 $strTimeClose . ' - ' . $strTimeEnd .
-                \Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) .
+                Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) .
                 $strTimeClose;
         } elseif ($intStartTime == $intEndTime) {
             $date = $strTimeStart .
-                \Date::parse($objPage->dateFormat, $intStartTime) .
-                ($eventModel->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) . ')' : '') .
+                Date::parse($objPage->dateFormat, $intStartTime) .
+                ($eventModel->addTime ? ' (' . Date::parse($objPage->timeFormat, $intStartTime) . ')' : '') .
                 $strTimeClose;
         } else {
             $date = $strTimeStart .
-                \Date::parse($objPage->dateFormat, $intStartTime) .
-                ($eventModel->addTime ? ' (' . \Date::parse($objPage->timeFormat, $intStartTime) .
+                Date::parse($objPage->dateFormat, $intStartTime) .
+                ($eventModel->addTime ? ' (' . Date::parse($objPage->timeFormat, $intStartTime) .
                     $strTimeClose . ' - ' . $strTimeEnd .
-                    \Date::parse($objPage->timeFormat, $intEndTime) . ')' : ''
+                    Date::parse($objPage->timeFormat, $intEndTime) . ')' : ''
                 ) . $strTimeClose;
         }
 
@@ -170,7 +178,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             if ($eventModel->recurrences > 0) {
                 $until = sprintf(
                     $GLOBALS['TL_LANG']['MSC']['cal_until'],
-                    \Date::parse($objPage->dateFormat, $eventModel->repeatEnd)
+                    Date::parse($objPage->dateFormat, $eventModel->repeatEnd)
                 );
             }
         }
@@ -185,7 +193,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        $objTemplate = new \FrontendTemplate($event->getTemplate());
+        $objTemplate = new FrontendTemplate($event->getTemplate());
         $objTemplate->setData($eventModel->row());
 
         $objTemplate->date          = $date;
@@ -198,7 +206,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->details = '';
 
-        $objElement = \ContentModel::findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
+        $objElement = ContentModel::findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
 
         if ($objElement !== null) {
             while ($objElement->next()) {
@@ -214,10 +222,10 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         // Add an image.
         if ($eventModel->addImage && $eventModel->singleSRC != '') {
-            $objModel = \FilesModel::findByUuid($eventModel->singleSRC);
+            $objModel = FilesModel::findByUuid($eventModel->singleSRC);
 
             if ($objModel === null) {
-                if (!\Validator::isUuid($eventModel->singleSRC)) {
+                if (!Validator::isUuid($eventModel->singleSRC)) {
                     $objTemplate->text = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
                 }
             } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
