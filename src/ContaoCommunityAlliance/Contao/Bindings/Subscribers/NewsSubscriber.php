@@ -40,6 +40,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplate
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent;
+use ContaoCommunityAlliance\Contao\Bindings\Util\StringHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -123,12 +124,12 @@ class NewsSubscriber implements EventSubscriberInterface
         // Clean the RTE output.
         if ($newsModel->teaser != '') {
             if ($objPage->outputFormat == 'xhtml') {
-                $objTemplate->teaser = \String::toXhtml($newsModel->teaser);
+                $objTemplate->teaser = StringHelper::toXhtml($newsModel->teaser);
             } else {
-                $objTemplate->teaser = \String::toHtml5($newsModel->teaser);
+                $objTemplate->teaser = StringHelper::toHtml5($newsModel->teaser);
             }
 
-            $objTemplate->teaser = \String::encodeEmail($objTemplate->teaser);
+            $objTemplate->teaser = StringHelper::encodeEmail($objTemplate->teaser);
         }
 
         // Display the "read more" button for external/article links.
@@ -292,7 +293,7 @@ class NewsSubscriber implements EventSubscriberInterface
             // Link to an external page.
             case 'external':
                 if (substr($objItem->url, 0, 7) == 'mailto:') {
-                    $url = \String::encodeEmail($objItem->url);
+                    $url = StringHelper::encodeEmail($objItem->url);
                 } else {
                     $url = ampersand($objItem->url);
                 }
@@ -402,7 +403,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Encode e-mail addresses.
         if (substr($objArticle->url, 0, 7) == 'mailto:') {
-            $strArticleUrl = \String::encodeEmail($objArticle->url);
+            $strArticleUrl = StringHelper::encodeEmail($objArticle->url);
         } else {
         // Ampersand URIs.
             $strArticleUrl = ampersand($objArticle->url);
