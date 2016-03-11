@@ -38,12 +38,12 @@
   },
   "autoload": {
     "psr-0": {
-      "ContaoCommunityAlliance\\Contao\\Bindings": "src"
+      "ContaoCommunityAlliance\\Contao\\Bindings\\": "src"
     }
   },
   "autoload-dev": {
     "psr-0": {
-      "ContaoCommunityAlliance\\Contao\\Bindings\\Test": "tests"
+      "ContaoCommunityAlliance\\Contao\\Bindings\\Test\\": "tests"
     }
   },
   "extra": {
