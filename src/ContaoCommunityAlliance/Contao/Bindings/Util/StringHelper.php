@@ -371,6 +371,6 @@ class StringHelper
      */
     private static function isStringUtilAvailable()
     {
-        return version_compare('3.5.5', VERSION . '.' . BUILD, '>=');
+        return version_compare(VERSION . '.' . BUILD, '3.5.5', '>=');
     }
 }
