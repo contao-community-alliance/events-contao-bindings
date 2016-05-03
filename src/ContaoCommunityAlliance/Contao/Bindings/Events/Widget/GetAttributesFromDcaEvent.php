@@ -1,19 +1,26 @@
 <?php
+
 /**
- * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
+ * This file is part of contao-community-alliance/events-contao-bindings
  *
- * PHP version 5
+ * (c) 2014-2016 The Contao Community Alliance
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    ContaoCommunityAlliance\Contao\Bindings\Events
  * @subpackage Widget
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  The Contao Community Alliance
- * @license    LGPL.
+ * @copyright  2014 The Contao Community Alliance.
+ * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Widget;
 
+use Contao\DataContainer;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
@@ -24,7 +31,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
     /**
      * The data container in use.
      *
-     * @var \DataContainer
+     * @var DataContainer
      */
     protected $dataContainer;
 
@@ -73,17 +80,17 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
     /**
      * Create a new instance.
      *
-     * @param array          $fieldConfiguration The field configuration from the dca.
+     * @param array         $fieldConfiguration The field configuration from the dca.
      *
-     * @param string         $widgetName         The name of the widget.
+     * @param string        $widgetName         The name of the widget.
      *
-     * @param mixed          $value              The value to use in the widget (optional).
+     * @param mixed         $value              The value to use in the widget (optional).
      *
-     * @param string         $widgetId           The widget id (optional).
+     * @param string        $widgetId           The widget id (optional).
      *
-     * @param string         $table              The table name (optional).
+     * @param string        $table              The table name (optional).
      *
-     * @param \DataContainer $dataContainer      The data container in use.
+     * @param DataContainer $dataContainer      The data container in use.
      */
     public function __construct(
         $fieldConfiguration,

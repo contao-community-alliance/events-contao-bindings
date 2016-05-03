@@ -1,20 +1,27 @@
 <?php
+
 /**
- * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
+ * This file is part of contao-community-alliance/events-contao-bindings
  *
- * PHP version 5
+ * (c) 2014-2016 The Contao Community Alliance
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    ContaoCommunityAlliance\Contao\Bindings\Events
  * @subpackage Controller
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
- * @copyright  The Contao Community Alliance
- * @license    LGPL.
+ * @copyright  2014 The Contao Community Alliance.
+ * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
+use Contao\Template;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
@@ -32,7 +39,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
     /**
      * The template object.
      *
-     * @var \Template|object
+     * @var Template|object
      */
     protected $template;
 
@@ -53,10 +60,10 @@ class AddImageToTemplateEvent extends ContaoApiEvent
     /**
      * Create new event.
      *
-     * @param array            $imageData  The image data.
-     * @param \Template|object $template   The template object.
-     * @param int|null         $maxWidth   The max image width.
-     * @param string|null      $lightboxId The lightbox ID.
+     * @param array           $imageData  The image data.
+     * @param Template|object $template   The template object.
+     * @param int|null        $maxWidth   The max image width.
+     * @param string|null     $lightboxId The lightbox ID.
      */
     public function __construct($imageData, $template, $maxWidth = null, $lightboxId = null)
     {
@@ -79,7 +86,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
     /**
      * Return the template object, to add the image.
      *
-     * @return \Template|object
+     * @return Template|object
      */
     public function getTemplate()
     {

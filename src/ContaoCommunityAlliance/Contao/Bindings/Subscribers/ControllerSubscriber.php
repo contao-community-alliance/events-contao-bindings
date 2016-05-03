@@ -1,21 +1,28 @@
 <?php
 
 /**
- * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
+ * This file is part of contao-community-alliance/events-contao-bindings
  *
- * PHP version 5
+ * (c) 2014-2016 The Contao Community Alliance
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    ContaoCommunityAlliance\Contao\Bindings
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
- * @copyright  The Contao Community Alliance
- * @license    LGPL.
+ * @copyright  2014 The Contao Community Alliance.
+ * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\Controller;
+use Contao\PageModel;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
@@ -32,8 +39,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Subscriber for the Controller class in Contao.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class ControllerSubscriber extends \Controller implements EventSubscriberInterface
+class ControllerSubscriber extends Controller implements EventSubscriberInterface
 {
     /**
      * Kill parent constructor.
@@ -74,7 +83,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public static function handleAddToUrl(AddToUrlEvent $event)
     {
-        $event->setUrl(\Controller::addToUrl($event->getSuffix()));
+        $event->setUrl(Controller::addToUrl($event->getSuffix()));
     }
 
     /**
@@ -86,7 +95,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event)
     {
-        \Controller::addEnclosuresToTemplate(
+        Controller::addEnclosuresToTemplate(
             $event->getTemplate(),
             $event->getEnclosureData(),
             $event->getKey()
@@ -102,7 +111,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleAddImageToTemplate(AddImageToTemplateEvent $event)
     {
-        \Controller::addImageToTemplate(
+        Controller::addImageToTemplate(
             $event->getTemplate(),
             $event->getImageData(),
             $event->getMaxWidth(),
@@ -119,7 +128,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
     {
-        $url = \Controller::generateFrontendUrl(
+        $url = Controller::generateFrontendUrl(
             $event->getPageData(),
             $event->getParameters(),
             $event->getLanguage()
@@ -173,7 +182,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleGetPageDetails(GetPageDetailsEvent $event)
     {
-        $page = \PageModel::findWithDetails($event->getPageId());
+        $page = PageModel::findWithDetails($event->getPageId());
 
         if ($page) {
             $event->setPageDetails($page->row());
@@ -189,7 +198,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
     {
-        $templatesArray = \Controller::getTemplateGroup($event->getPrefix());
+        $templatesArray = Controller::getTemplateGroup($event->getPrefix());
         $templates      = $event->getTemplates();
 
         foreach ($templatesArray as $templateName => $templateLabel) {
@@ -218,7 +227,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public static function handleRedirect(RedirectEvent $event)
     {
-        \Controller::redirect($event->getNewLocation(), $event->getStatusCode());
+        Controller::redirect($event->getNewLocation(), $event->getStatusCode());
     }
 
     /**
@@ -228,7 +237,7 @@ class ControllerSubscriber extends \Controller implements EventSubscriberInterfa
      */
     public static function handleReload()
     {
-        \Controller::reload();
+        Controller::reload();
     }
 
     /**

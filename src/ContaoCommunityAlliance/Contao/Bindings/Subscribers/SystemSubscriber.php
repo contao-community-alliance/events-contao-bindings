@@ -1,19 +1,26 @@
 <?php
+
 /**
- * The Contao Community Alliance events-contao-bindings library allows easy use of various Contao classes.
+ * This file is part of contao-community-alliance/events-contao-bindings
  *
- * PHP version 5
+ * (c) 2014-2016 The Contao Community Alliance
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    ContaoCommunityAlliance\Contao\Bindings
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  The Contao Community Alliance
- * @license    LGPL.
+ * @copyright  2014 The Contao Community Alliance.
+ * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\GetReferrerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
@@ -48,7 +55,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleGetReferer(GetReferrerEvent $event)
     {
-        $event->setReferrerUrl(\System::getReferer($event->isEncodeAmpersands(), $event->getTableName()));
+        $event->setReferrerUrl(System::getReferer($event->isEncodeAmpersands(), $event->getTableName()));
     }
 
     /**
@@ -60,7 +67,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLog(LogEvent $event)
     {
-        \System::log($event->getText(), $event->getFunction(), $event->getCategory());
+        System::log($event->getText(), $event->getFunction(), $event->getCategory());
     }
 
     /**
@@ -72,6 +79,6 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
     {
-        \System::loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
+        System::loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
     }
 }
