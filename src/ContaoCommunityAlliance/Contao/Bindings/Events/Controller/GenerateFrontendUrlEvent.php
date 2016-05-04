@@ -50,6 +50,13 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
     protected $language = null;
 
     /**
+     * Check the domain of the target page and append it if necessary.
+     *
+     * @var string|null
+     */
+    protected $fixDomain = false;
+
+    /**
      * The resulting url.
      *
      * @var string
@@ -64,12 +71,17 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      * @param array|null  $parameters The parameters to use in the url.
      *
      * @param string|null $language   The language code to use in the url.
+     *                                This parameter will get dropped in Contao 5.0 (and thus then always be null).
+     *
+     * @param bool        $fixDomain  Check the domain of the target page and append it if necessary.
+     *                                This parameter will get dropped for Contao 5.0 (and thus then always be true).
      */
-    public function __construct(array $pageData, $parameters = null, $language = null)
+    public function __construct(array $pageData, $parameters = null, $language = null, $fixDomain = false)
     {
         $this->pageData   = $pageData;
         $this->parameters = empty($parameters) ? null : (string) $parameters;
         $this->language   = empty($language) ? null : (string) $language;
+        $this->fixDomain  = (bool) $fixDomain;
     }
 
     /**
@@ -93,13 +105,27 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
     }
 
     /**
-     * Retrtieve the language code to use in the url.
+     * Retrieve the language code to use in the url.
+     *
+     * This parameter will get dropped in Contao 5.0 (and thus then always be null).
      *
      * @return string|null
      */
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * Retrieve the check domain flag.
+     *
+     * This will get dropped for Contao 5.0 (and thus then always be true).
+     *
+     * @return null|string
+     */
+    public function getFixDomain()
+    {
+        return $this->fixDomain;
     }
 
     /**
