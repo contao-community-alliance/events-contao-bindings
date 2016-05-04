@@ -131,7 +131,8 @@ class ControllerSubscriber extends Controller implements EventSubscriberInterfac
         $url = Controller::generateFrontendUrl(
             $event->getPageData(),
             $event->getParameters(),
-            $event->getLanguage()
+            $event->getLanguage(),
+            $event->getFixDomain()
         );
 
         $event->setUrl($url);
