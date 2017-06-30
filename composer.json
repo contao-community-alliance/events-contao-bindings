@@ -35,6 +35,7 @@
   "require-dev": {
     "phpcq/all-tasks": "~1.1",
     "contao/calendar-bundle": "~4.4",
+    "contao/comments-bundle": "~4.4",
     "contao/manager-bundle": "~4.4",
     "contao/news-bundle": "~4.4"
   },
