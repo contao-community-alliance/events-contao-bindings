@@ -7,7 +7,7 @@
     "events",
     "bindings"
   ],
-  "type": "contao-module",
+  "type": "contao-bundle",
   "homepage": "http://c-c-a.org/",
   "license": "LGPL-3.0+",
   "authors": [
