@@ -57,9 +57,9 @@ class NewsSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             ContaoEvents::NEWS_GET_NEWS => 'handleNews',
-        );
+        ];
     }
 
     /**
@@ -87,7 +87,7 @@ class NewsSubscriber implements EventSubscriberInterface
         }
 
         $newsArchiveCollection = NewsArchiveModel::findAll();
-        $newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : array();
+        $newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : [];
         $newsModel             = NewsModel::findPublishedByParentAndIdOrAlias(
             $event->getNewsId(),
             $newsArchiveIds
@@ -194,7 +194,7 @@ class NewsSubscriber implements EventSubscriberInterface
             }
         }
 
-        $objTemplate->enclosure = array();
+        $objTemplate->enclosure = [];
 
         // Add enclosures.
         if ($newsModel->addEnclosure) {
@@ -226,10 +226,10 @@ class NewsSubscriber implements EventSubscriberInterface
         $meta = deserialize($this->news_metaFields);
 
         if (!is_array($meta)) {
-            return array();
+            return [];
         }
 
-        $return = array();
+        $return = [];
 
         foreach ($meta as $field) {
             switch ($field) {
@@ -316,7 +316,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Link to an article.
             case 'article':
-                if (($objArticle = ArticleModel::findByPk($objItem->articleId, array('eager' => true))) !== null
+                if (($objArticle = ArticleModel::findByPk($objItem->articleId, ['eager' => true])) !== null
                     && ($objPid = $objArticle->getRelated('pid')) !== null
                 ) {
                     $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(

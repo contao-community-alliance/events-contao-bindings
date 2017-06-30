@@ -51,9 +51,9 @@ class CalendarSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             ContaoEvents::CALENDAR_GET_EVENT => 'handleEvent',
-        );
+        ];
     }
 
     /**
@@ -243,7 +243,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        $objTemplate->enclosure = array();
+        $objTemplate->enclosure = [];
 
         // Add enclosures.
         if ($eventModel->addEnclosure) {
