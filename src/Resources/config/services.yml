@@ -1,0 +1,50 @@
+services:
+    contao.backend.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\BackendSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.calendar.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\CalendarSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.controller.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ControllerSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.date.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\DateSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.frontend.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\FrontendSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.image.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ImageSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.message.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\MessageSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.news.sbuscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\NewsSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.system.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\SystemSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    contao.widget.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\WidgetSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
