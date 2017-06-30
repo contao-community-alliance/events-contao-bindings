@@ -13,7 +13,7 @@
  * @package    ContaoCommunityAlliance\Contao\Bindings
  * @subpackage System
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  201/ The Contao Community Alliance.
+ * @copyright  2017 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
