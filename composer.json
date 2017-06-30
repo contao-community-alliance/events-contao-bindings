@@ -3,7 +3,9 @@
   "description": "This library turns the Contao Core API into events.",
   "keywords": [
     "contao",
-    "translation"
+    "bundle",
+    "events",
+    "bindings"
   ],
   "type": "contao-module",
   "homepage": "http://c-c-a.org/",
