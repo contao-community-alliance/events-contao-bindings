@@ -25,6 +25,7 @@ use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use ContaoCommunityAlliance\Contao\Bindings\CcaEventsContaoBindingsBundle;
 use ContaoCommunityAlliance\Contao\EventDispatcher\CcaEventDispatcherBundle;
 
 /**
@@ -38,7 +39,7 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(CcaEventDispatcherBundle::class)
+            BundleConfig::create(CcaEventsContaoBindingsBundle::class)
                 ->setLoadAfter(
                     [
                         ContaoCoreBundle::class,
