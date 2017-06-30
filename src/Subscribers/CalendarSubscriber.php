@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2016 The Contao Community Alliance
+ * (c) 2014-2017 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,7 @@
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2014 The Contao Community Alliance.
+ * @copyright  2017 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -128,7 +128,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        if ($objPage->outputFormat == 'xhtml') {
+        if ($objPage->outputFormat === 'xhtml') {
             $strTimeStart = '';
             $strTimeEnd   = '';
             $strTimeClose = '';
@@ -187,7 +187,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         // Override the default image size.
         // This is always false.
-        if ($this->imgSize != '') {
+        if (!empty($this->imgSize)) {
             $size = deserialize($this->imgSize);
 
             if ($size[0] > 0 || $size[1] > 0) {
@@ -201,7 +201,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $objTemplate->date          = $date;
         $objTemplate->start         = $intStartTime;
         $objTemplate->end           = $intEndTime;
-        $objTemplate->class         = ($eventModel->cssClass != '') ? ' ' . $eventModel->cssClass : '';
+        $objTemplate->class         = (!empty($eventModel->cssClass)) ? ' ' . $eventModel->cssClass : '';
         $objTemplate->recurring     = $recurring;
         $objTemplate->until         = $until;
         $objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
@@ -225,7 +225,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $objTemplate->addImage = false;
 
         // Add an image.
-        if ($eventModel->addImage && $eventModel->singleSRC != '') {
+        if ($eventModel->addImage && !empty($eventModel->singleSRC)) {
             $objModel = FilesModel::findByUuid($eventModel->singleSRC);
 
             if ($objModel === null) {

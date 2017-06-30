@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2016 The Contao Community Alliance
+ * (c) 2014-2017 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,8 @@
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
- * @copyright  2014 The Contao Community Alliance.
+ * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @copyright  2017 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -104,7 +105,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate = new FrontendTemplate($event->getTemplate());
         $objTemplate->setData($newsModel->row());
 
-        $objTemplate->class          = (($newsModel->cssClass != '') ? ' ' . $newsModel->cssClass : '');
+        $objTemplate->class          = (!empty($newsModel->cssClass) ? ' ' . $newsModel->cssClass : '');
         $objTemplate->newsHeadline   = $newsModel->headline;
         $objTemplate->subHeadline    = $newsModel->subheadline;
         $objTemplate->hasSubHeadline = $newsModel->subheadline ? true : false;
@@ -122,8 +123,8 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->text           = '';
 
         // Clean the RTE output.
-        if ($newsModel->teaser != '') {
-            if ($objPage->outputFormat == 'xhtml') {
+        if (!empty($newsModel->teaser)) {
+            if ($objPage->outputFormat === 'xhtml') {
                 $objTemplate->teaser = StringHelper::toXhtml($newsModel->teaser);
             } else {
                 $objTemplate->teaser = StringHelper::toHtml5($newsModel->teaser);
@@ -133,7 +134,7 @@ class NewsSubscriber implements EventSubscriberInterface
         }
 
         // Display the "read more" button for external/article links.
-        if ($newsModel->source != 'default') {
+        if ($newsModel->source !== 'default') {
             $objTemplate->text = true;
         } else {
             // Compile the news text.
@@ -164,7 +165,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->addImage = false;
 
         // Add an image.
-        if ($newsModel->addImage && $newsModel->singleSRC != '') {
+        if ($newsModel->addImage && !empty($newsModel->singleSRC)) {
             $objModel = FilesModel::findByUuid($newsModel->singleSRC);
 
             if ($objModel === null) {
@@ -177,7 +178,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
                 // Override the default image size.
                 // This is always false!
-                if ($this->imgSize != '') {
+                if (!empty($this->imgSize)) {
                     $size = deserialize($this->imgSize);
 
                     if ($size[0] > 0 || $size[1] > 0) {
@@ -238,7 +239,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
                 case 'author':
                     if (($objAuthor = $objArticle->getRelated('author')) !== null) {
-                        if ($objAuthor->google != '') {
+                        if (!empty($objAuthor->google)) {
                             $return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] .
                                 ' <a href="https://plus.google.com/' . $objAuthor->google .
                                 '" rel="author" target="_blank">' . $objAuthor->name . '</a>';
@@ -249,7 +250,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     break;
 
                 case 'comments':
-                    if ($objArticle->noComments || $objArticle->source != 'default') {
+                    if ($objArticle->noComments || $objArticle->source !== 'default') {
                         break;
                     }
                     $intTotal           = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
@@ -292,7 +293,7 @@ class NewsSubscriber implements EventSubscriberInterface
         switch ($objItem->source) {
             // Link to an external page.
             case 'external':
-                if (substr($objItem->url, 0, 7) == 'mailto:') {
+                if (substr($objItem->url, 0, 7) === 'mailto:') {
                     $url = StringHelper::encodeEmail($objItem->url);
                 } else {
                     $url = ampersand($objItem->url);
@@ -321,7 +322,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
                         $objPid->row(),
                         '/articles/' .
-                        ((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id)
+                        ((!$GLOBALS['TL_CONFIG']['disableAlias'] && !empty($objArticle->alias)) ? $objArticle->alias : $objArticle->id)
                     );
 
                     $eventDispatcher->dispatch(
@@ -346,7 +347,7 @@ class NewsSubscriber implements EventSubscriberInterface
                 $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
                     $objPage->row(),
                     (($GLOBALS['TL_CONFIG']['useAutoItem'] && !$GLOBALS['TL_CONFIG']['disableAlias']) ? '/' : '/items/') .
-                    ((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objItem->alias != '') ? $objItem->alias : $objItem->id)
+                    ((!$GLOBALS['TL_CONFIG']['disableAlias'] && !empty($objItem->alias)) ? $objItem->alias : $objItem->id)
                 );
 
                 $eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL, $generateFrontendUrlEvent);
@@ -355,7 +356,7 @@ class NewsSubscriber implements EventSubscriberInterface
             }
 
             // Add the current archive parameter (news archive).
-            if ($blnAddArchive && Input::get('month') != '') {
+            if ($blnAddArchive && !empty(Input::get('month'))) {
                 $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . Input::get('month');
             }
         }
@@ -391,7 +392,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $blnIsReadMore = false
     ) {
         // Internal link.
-        if ($objArticle->source != 'external') {
+        if ($objArticle->source !== 'external') {
             return sprintf(
                 '<a href="%s" title="%s">%s%s</a>',
                 $this->generateNewsUrl($eventDispatcher, $objArticle, $blnAddArchive),
@@ -402,7 +403,7 @@ class NewsSubscriber implements EventSubscriberInterface
         }
 
         // Encode e-mail addresses.
-        if (substr($objArticle->url, 0, 7) == 'mailto:') {
+        if (substr($objArticle->url, 0, 7) === 'mailto:') {
             $strArticleUrl = StringHelper::encodeEmail($objArticle->url);
         } else {
         // Ampersand URIs.
@@ -416,7 +417,7 @@ class NewsSubscriber implements EventSubscriberInterface
             specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
             $objArticle->target
             ? (
-            ($GLOBALS['objPage']->outputFormat == 'xhtml')
+            ($GLOBALS['objPage']->outputFormat === 'xhtml')
                 ? ' onclick="return !window.open(this.href)"'
                 : ' target="_blank"'
             )
