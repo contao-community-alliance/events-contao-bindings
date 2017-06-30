@@ -33,8 +33,10 @@
     "contao-community-alliance/event-dispatcher": "~2.0@dev"
   },
   "require-dev": {
-    "phpcq/all-tasks": "~1.1"
+    "phpcq/all-tasks": "~1.1",
+    "contao/calendar-bundle": "~4.4",
     "contao/manager-bundle": "~4.4",
+    "contao/news-bundle": "~4.4"
   },
   "autoload": {
     "psr-4": {
