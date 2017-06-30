@@ -36,13 +36,13 @@
     "phpcq/all-tasks": "~1.1"
   },
   "autoload": {
-    "psr-0": {
-      "ContaoCommunityAlliance\\Contao\\Bindings\\": "src"
+    "psr-4": {
+      "ContaoCommunityAlliance\\Contao\\Bindings\\": "src/"
     }
   },
   "autoload-dev": {
-    "psr-0": {
-      "ContaoCommunityAlliance\\Contao\\Bindings\\Test\\": "tests"
+    "psr-4": {
+      "ContaoCommunityAlliance\\Contao\\Bindings\\Test\\": "tests/"
     }
   },
   "extra": {
