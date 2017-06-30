@@ -34,6 +34,7 @@
   },
   "require-dev": {
     "phpcq/all-tasks": "~1.1"
+    "contao/manager-bundle": "~4.4",
   },
   "autoload": {
     "psr-4": {
@@ -46,6 +47,7 @@
     }
   },
   "extra": {
+    "contao-manager-plugin": "ContaoCommunityAlliance\\Contao\\Bindings\\ContaoManager\\Plugin",
     "branch-alias": {
       "dev-feature/contao4": "4.0.x-dev"
     }
