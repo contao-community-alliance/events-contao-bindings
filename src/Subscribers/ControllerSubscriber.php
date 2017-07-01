@@ -43,15 +43,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class ControllerSubscriber extends Controller implements EventSubscriberInterface
+class ControllerSubscriber implements EventSubscriberInterface
 {
-    /**
-     * Kill parent constructor.
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -148,7 +141,7 @@ class ControllerSubscriber extends Controller implements EventSubscriberInterfac
      */
     public function handleGetArticle(GetArticleEvent $event)
     {
-        $article = $this->getArticle(
+        $article = Controller::getArticle(
             $event->getArticleId(),
             $event->getTeaserOnly(),
             true,
@@ -167,7 +160,7 @@ class ControllerSubscriber extends Controller implements EventSubscriberInterfac
      */
     public function handleGetContentElement(GetContentElementEvent $event)
     {
-        $contentElement = $this->getContentElement(
+        $contentElement = Controller::getContentElement(
             $event->getContentElementId(),
             $event->getColumn()
         );
@@ -251,7 +244,7 @@ class ControllerSubscriber extends Controller implements EventSubscriberInterfac
      */
     public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event)
     {
-        $result = $this->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
+        $result = Controller::replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
 
         $event->setBuffer($result);
     }
