@@ -34,7 +34,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    contao.news.sbuscriber:
+    contao.news.subscriber:
         class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\NewsSubscriber
         tags:
             - { name: kernel.event_subscriber }
