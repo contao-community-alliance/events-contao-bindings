@@ -3,7 +3,7 @@
 We are really glad you're reading this, because we need volunteer developers to
 help this project come to fruition.
 
-If you haven't already, come find us in IRC (#contao.mm on freenode).
+If you haven't already, come find us in IRC (#contao.cca on freenode).
 We want you working on things you're excited about.
 
 The following is a set of guidelines for contributing to Contao Community Alliance and its
@@ -57,6 +57,6 @@ create.
 * Use the imperative mood ("Move cursor to …" not "Moves cursor to …").
 * Reference issues and pull requests liberally.
 
-[1]: https://github.com/MetaModels
+[1]: https://github.com/contao-community-alliance
 [2]: http://help.github.com/pull-requests/
 [3]: https://github.com/phpcq/coding-standard
