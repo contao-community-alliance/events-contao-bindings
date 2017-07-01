@@ -112,7 +112,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
     /**
      * Retrieve the data container in use.
      *
-     * @return \DataContainer|null
+     * @return DataContainer|null
      */
     public function getDataContainer()
     {
