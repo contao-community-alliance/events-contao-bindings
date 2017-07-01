@@ -20,10 +20,6 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings;
 
-use ContaoCommunityAlliance\Contao\EventDispatcher\Configuration\ResourceLocator;
-use ContaoCommunityAlliance\Contao\EventDispatcher\DependencyInjection\Compiler\AddConfiguratorPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
