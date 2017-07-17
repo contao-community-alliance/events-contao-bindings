@@ -210,7 +210,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleLoadDataContainer(LoadDataContainerEvent $event)
     {
-        parent::loadDataContainer($event->getName(), $event->isCacheIgnored());
+        Controller::loadDataContainer($event->getName(), $event->isCacheIgnored());
     }
 
     /**
