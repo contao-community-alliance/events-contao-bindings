@@ -128,24 +128,18 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        if ($objPage->outputFormat === 'xhtml') {
-            $strTimeStart = '';
-            $strTimeEnd   = '';
-            $strTimeClose = '';
-        } else {
-            $strTimeStart = '';
-            $strTimeEnd   = '';
-            $strTimeClose = '';
+        $strTimeStart = '';
+        $strTimeEnd   = '';
+        $strTimeClose = '';
 
-            // @codingStandardsIgnoreStart
-            /*
-            TODO $this->date and $this->time is used in the <a> title attribute and cannot contain HTML!
-            $strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '">';
-            $strTimeEnd   = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '">';
-            $strTimeClose = '</time>';
-            */
-            // @codingStandardsIgnoreEnd
-        }
+        // @codingStandardsIgnoreStart
+        /*
+        TODO $this->date and $this->time is used in the <a> title attribute and cannot contain HTML!
+        $strTimeStart = '<time datetime="' . date('Y-m-d\TH:i:sP', $intStartTime) . '">';
+        $strTimeEnd   = '<time datetime="' . date('Y-m-d\TH:i:sP', $intEndTime) . '">';
+        $strTimeClose = '</time>';
+        */
+        // @codingStandardsIgnoreEnd
 
         // Get date.
         if ($span > 0) {

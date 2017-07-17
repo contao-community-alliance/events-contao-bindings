@@ -124,13 +124,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Clean the RTE output.
         if (!empty($newsModel->teaser)) {
-            if ($objPage->outputFormat === 'xhtml') {
-                $objTemplate->teaser = StringHelper::toXhtml($newsModel->teaser);
-            } else {
-                $objTemplate->teaser = StringHelper::toHtml5($newsModel->teaser);
-            }
-
-            $objTemplate->teaser = StringHelper::encodeEmail($objTemplate->teaser);
+            $objTemplate->teaser = StringHelper::encodeEmail(StringHelper::toHtml5($newsModel->teaser));
         }
 
         // Display the "read more" button for external/article links.
@@ -415,13 +409,7 @@ class NewsSubscriber implements EventSubscriberInterface
             '<a href="%s" title="%s"%s>%s</a>',
             $strArticleUrl,
             specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-            $objArticle->target
-            ? (
-            ($GLOBALS['objPage']->outputFormat === 'xhtml')
-                ? ' onclick="return !window.open(this.href)"'
-                : ' target="_blank"'
-            )
-            : '',
+            $objArticle->target ? ' target="_blank"' : '',
             $strLink
         );
     }
