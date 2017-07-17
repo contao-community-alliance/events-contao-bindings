@@ -31,25 +31,4 @@ use Contao\StringUtil;
  */
 class StringHelper extends StringUtil
 {
-    /**
-     * Highlight a phrase within a string.
-     *
-     * @param string $strString     The string.
-     *
-     * @param string $strPhrase     The phrase to highlight.
-     *
-     * @param string $strOpeningTag The opening tag (defaults to <strong>).
-     *
-     * @param string $strClosingTag The closing tag (defaults to </strong>).
-     *
-     * @return string The highlighted string
-     *
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-     *             Use the contao string util highlight method instead.
-     *             Note the parameters strOpeningTag, strClosingTag. These have a different default value
-     */
-    public static function highlight($strString, $strPhrase, $strOpeningTag = '<strong>', $strClosingTag = '</strong>')
-    {
-        return StringUtil::highlight($strString, $strPhrase, $strOpeningTag, $strClosingTag);
-    }
 }
