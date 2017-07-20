@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Image;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent;
@@ -32,6 +33,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ImageSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * ImageSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -51,11 +69,15 @@ class ImageSubscriber implements EventSubscriberInterface
      * @param ResizeImageEvent $event The event.
      *
      * @return void
+     *
+     * Todo use the contao.image.image_factory instead Image::get.
      */
     public function handleResize(ResizeImageEvent $event)
     {
+        $imageAdapter = $this->framework->getAdapter(Image::class);
+
         $event->setResultImage(
-            Image::get(
+            $imageAdapter->get(
                 $event->getImage(),
                 $event->getWidth(),
                 $event->getHeight(),
@@ -75,8 +97,10 @@ class ImageSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateHtml(GenerateHtmlEvent $event)
     {
+        $imageAdapter = $this->framework->getAdapter(Image::class);
+
         $event->setHtml(
-            Image::getHtml(
+            $imageAdapter->getHtml(
                 $event->getSrc(),
                 $event->getAlt(),
                 $event->getAttributes()

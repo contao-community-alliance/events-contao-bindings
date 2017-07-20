@@ -23,6 +23,8 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Frontend;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Frontend\AddToUrlEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -32,6 +34,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FrontendSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * FrontendSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -51,8 +70,10 @@ class FrontendSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function handleAddToUrl(AddToUrlEvent $event)
+    public function handleAddToUrl(AddToUrlEvent $event)
     {
-        $event->setUrl(\Frontend::addToUrl($event->getSuffix(), $event->isIgnoreParams()));
+        $frontendAdapter = $this->framework->getAdapter(Frontend::class);
+
+        $event->setUrl($frontendAdapter->addToUrl($event->getSuffix(), $event->isIgnoreParams()));
     }
 }

@@ -22,6 +22,8 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Date;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,6 +33,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class DateSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * DateSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -50,10 +69,12 @@ class DateSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function handleParseDate($event)
+    public function handleParseDate($event)
     {
+        $dateAdapter = $this->framework->getAdapter(Date::class);
+
         if ($event->getResult() === null) {
-            $event->setResult(\Date::parse($event->getFormat(), $event->getTimestamp()));
+            $event->setResult($dateAdapter->parse($event->getFormat(), $event->getTimestamp()));
         }
     }
 }

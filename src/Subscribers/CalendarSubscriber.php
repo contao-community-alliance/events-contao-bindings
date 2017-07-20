@@ -26,6 +26,7 @@ use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\ContentModel;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Date;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -44,6 +45,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class CalendarSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * CalendarSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -80,14 +98,18 @@ class CalendarSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $calendarCollection = CalendarModel::findAll();
+        $calendarModelAdapter = $this->framework->getAdapter(CalendarModel::class);
+
+        $calendarCollection = $calendarModelAdapter->findAll();
 
         if (!$calendarCollection) {
             return;
         }
 
+        $calendarEventsModelAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
+
         $calendarIds = $calendarCollection->fetchEach('id');
-        $eventModel  = CalendarEventsModel::findPublishedByParentAndIdOrAlias(
+        $eventModel  = $calendarEventsModelAdapter->findPublishedByParentAndIdOrAlias(
             $event->getCalendarEventId(),
             $calendarIds
         );
@@ -96,8 +118,10 @@ class CalendarSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
+
         $calendarModel = $eventModel->getRelated('pid');
-        $objPage       = PageModel::findWithDetails($calendarModel->jumpTo);
+        $objPage       = $pageModelAdapter->findWithDetails($calendarModel->jumpTo);
 
         if ($event->getDateTime()) {
             $selectedStartDateTime = clone $event->getDateTime();
@@ -116,7 +140,9 @@ class CalendarSubscriber implements EventSubscriberInterface
             $intEndTime   = $eventModel->endTime;
         }
 
-        $span = Calendar::calculateSpan($intStartTime, $intEndTime);
+        $calendarAdapter = $this->framework->getAdapter(Calendar::class);
+
+        $span = $calendarAdapter->calculateSpan($intStartTime, $intEndTime);
 
         // Do not show dates in the past if the event is recurring (see #923).
         if ($eventModel->recurring) {
@@ -141,24 +167,26 @@ class CalendarSubscriber implements EventSubscriberInterface
         */
         // @codingStandardsIgnoreEnd
 
+        $dateAdapter = $this->framework->getAdapter(Date::class);
+
         // Get date.
         if ($span > 0) {
             $date = $strTimeStart .
-                Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) .
+                $dateAdapter->parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) .
                 $strTimeClose . ' - ' . $strTimeEnd .
-                Date::parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) .
+                    $dateAdapter->parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) .
                 $strTimeClose;
         } elseif ($intStartTime == $intEndTime) {
             $date = $strTimeStart .
-                Date::parse($objPage->dateFormat, $intStartTime) .
-                ($eventModel->addTime ? ' (' . Date::parse($objPage->timeFormat, $intStartTime) . ')' : '') .
+                    $dateAdapter->parse($objPage->dateFormat, $intStartTime) .
+                ($eventModel->addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) . ')' : '') .
                 $strTimeClose;
         } else {
             $date = $strTimeStart .
-                Date::parse($objPage->dateFormat, $intStartTime) .
-                ($eventModel->addTime ? ' (' . Date::parse($objPage->timeFormat, $intStartTime) .
+                    $dateAdapter->parse($objPage->dateFormat, $intStartTime) .
+                ($eventModel->addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) .
                     $strTimeClose . ' - ' . $strTimeEnd .
-                    Date::parse($objPage->timeFormat, $intEndTime) . ')' : ''
+                                        $dateAdapter->parse($objPage->timeFormat, $intEndTime) . ')' : ''
                 ) . $strTimeClose;
         }
 
@@ -174,7 +202,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             if ($eventModel->recurrences > 0) {
                 $until = sprintf(
                     $GLOBALS['TL_LANG']['MSC']['cal_until'],
-                    Date::parse($objPage->dateFormat, $eventModel->repeatEnd)
+                    $dateAdapter->parse($objPage->dateFormat, $eventModel->repeatEnd)
                 );
             }
         }
@@ -189,7 +217,9 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        $objTemplate = new FrontendTemplate($event->getTemplate());
+        $frontendTemplateAdapter = $this->framework->getAdapter(FrontendTemplate::class);
+
+        $objTemplate = new $frontendTemplateAdapter($event->getTemplate());
         $objTemplate->setData($eventModel->row());
 
         $objTemplate->date          = $date;
@@ -202,7 +232,9 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->details = '';
 
-        $objElement = ContentModel::findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
+        $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
+
+        $objElement = $contentModelAdapter->findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
 
         if ($objElement !== null) {
             while ($objElement->next()) {
@@ -218,12 +250,16 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->addImage = false;
 
+        $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
+
         // Add an image.
         if ($eventModel->addImage && !empty($eventModel->singleSRC)) {
-            $objModel = FilesModel::findByUuid($eventModel->singleSRC);
+            $objModel = $filesModelAdapter->findByUuid($eventModel->singleSRC);
 
             if ($objModel === null) {
-                if (!Validator::isUuid($eventModel->singleSRC)) {
+                $validatorAdapter = $this->framework->getAdapter(Validator::class);
+
+                if (!$validatorAdapter->isUuid($eventModel->singleSRC)) {
                     $objTemplate->text = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
                 }
             } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {

@@ -23,6 +23,7 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\Backend;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\GetThemeEvent;
@@ -33,6 +34,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BackendSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * BackendSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -53,9 +71,11 @@ class BackendSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function handleAddToUrl(AddToUrlEvent $event)
+    public function handleAddToUrl(AddToUrlEvent $event)
     {
-        $event->setUrl(Backend::addToUrl($event->getSuffix()));
+        $backendAdapter = $this->framework->getAdapter(Backend::class);
+
+        $event->setUrl($backendAdapter->addToUrl($event->getSuffix()));
     }
 
     /**
@@ -67,6 +87,8 @@ class BackendSubscriber implements EventSubscriberInterface
      */
     public function handleGetTheme(GetThemeEvent $event)
     {
-        $event->setTheme(Backend::getTheme());
+        $backendAdapter = $this->framework->getAdapter(Backend::class);
+
+        $event->setTheme($backendAdapter->getTheme());
     }
 }

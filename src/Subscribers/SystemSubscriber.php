@@ -21,6 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\GetReferrerEvent;
@@ -33,6 +34,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SystemSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * SystemSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -56,7 +74,9 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleGetReferer(GetReferrerEvent $event)
     {
-        $event->setReferrerUrl(System::getReferer($event->isEncodeAmpersands(), $event->getTableName()));
+        $systemAdapter = $this->framework->getAdapter(System::class);
+
+        $event->setReferrerUrl($systemAdapter->getReferer($event->isEncodeAmpersands(), $event->getTableName()));
     }
 
     /**
@@ -65,10 +85,14 @@ class SystemSubscriber implements EventSubscriberInterface
      * @param LogEvent $event The event.
      *
      * @return void
+     *
+     * Todo use logger service instead system.
      */
     public function handleLog(LogEvent $event)
     {
-        System::log($event->getText(), $event->getFunction(), $event->getCategory());
+        $systemAdapter = $this->framework->getAdapter(System::class);
+
+        $systemAdapter->log($event->getText(), $event->getFunction(), $event->getCategory());
     }
 
     /**
@@ -80,6 +104,8 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
     {
-        System::loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
+        $systemAdapter = $this->framework->getAdapter(System::class);
+
+        $systemAdapter->loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());
     }
 }

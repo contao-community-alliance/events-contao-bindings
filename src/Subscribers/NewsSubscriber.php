@@ -25,6 +25,7 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 use Contao\ArticleModel;
 use Contao\CommentsModel;
 use Contao\ContentModel;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Date;
 use Contao\Environment;
 use Contao\FilesModel;
@@ -34,6 +35,7 @@ use Contao\Model;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
@@ -50,6 +52,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NewsSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * NewsSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -86,9 +105,13 @@ class NewsSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $newsArchiveCollection = NewsArchiveModel::findAll();
+
+        $newsArchiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
+        $newsModelAdapter        = $this->framework->getAdapter(NewsModel::class);
+
+        $newsArchiveCollection = $newsArchiveModelAdapter->findAll();
         $newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : [];
-        $newsModel             = NewsModel::findPublishedByParentAndIdOrAlias(
+        $newsModel             = $newsModelAdapter->findPublishedByParentAndIdOrAlias(
             $event->getNewsId(),
             $newsArchiveIds
         );
@@ -99,10 +122,14 @@ class NewsSubscriber implements EventSubscriberInterface
 
         $newsModel = $newsModel->current();
 
-        $newsArchiveModel = $newsModel->getRelated('pid');
-        $objPage          = PageModel::findWithDetails($newsArchiveModel->jumpTo);
+        $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
-        $objTemplate = new FrontendTemplate($event->getTemplate());
+        $newsArchiveModel = $newsModel->getRelated('pid');
+        $objPage          = $pageModelAdapter->findWithDetails($newsArchiveModel->jumpTo);
+
+        $frontendTemplateAdapter = $this->framework->getAdapter(FrontendTemplate::class);
+
+        $objTemplate = new $frontendTemplateAdapter($event->getTemplate());
         $objTemplate->setData($newsModel->row());
 
         $objTemplate->class          = (!empty($newsModel->cssClass) ? ' ' . $newsModel->cssClass : '');
@@ -122,17 +149,21 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->count          = 0;
         $objTemplate->text           = '';
 
-        // Clean the RTE output.
+
         if (!empty($newsModel->teaser)) {
-            $objTemplate->teaser = StringHelper::encodeEmail(StringHelper::toHtml5($newsModel->teaser));
+            $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class); // Clean the RTE output.
+
+            $objTemplate->teaser = $stringUtilAdapter->encodeEmail($stringUtilAdapter->toHtml5($newsModel->teaser));
         }
 
         // Display the "read more" button for external/article links.
         if ($newsModel->source !== 'default') {
             $objTemplate->text = true;
         } else {
+            $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
+
             // Compile the news text.
-            $objElement = ContentModel::findPublishedByPidAndTable($newsModel->id, 'tl_news');
+            $objElement = $contentModelAdapter->findPublishedByPidAndTable($newsModel->id, 'tl_news');
 
             if ($objElement !== null) {
                 while ($objElement->next()) {
@@ -160,10 +191,14 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Add an image.
         if ($newsModel->addImage && !empty($newsModel->singleSRC)) {
-            $objModel = FilesModel::findByUuid($newsModel->singleSRC);
+            $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
+
+            $objModel = $filesModelAdapter->findByUuid($newsModel->singleSRC);
 
             if ($objModel === null) {
-                if (!Validator::isUuid($newsModel->singleSRC)) {
+                $validatorAdapter = $this->framework->getAdapter(Validator::class);
+
+                if (!$validatorAdapter->isUuid($newsModel->singleSRC)) {
                     $objTemplate->text = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
                 }
             } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
@@ -228,7 +263,9 @@ class NewsSubscriber implements EventSubscriberInterface
         foreach ($meta as $field) {
             switch ($field) {
                 case 'date':
-                    $return['date'] = Date::parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
+                    $dateAdapter = $this->framework->getAdapter(Date::class);
+
+                    $return['date'] = $dateAdapter->parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
                     break;
 
                 case 'author':
@@ -247,7 +284,13 @@ class NewsSubscriber implements EventSubscriberInterface
                     if ($objArticle->noComments || $objArticle->source !== 'default') {
                         break;
                     }
-                    $intTotal           = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
+
+                    $commentsModelAdapter = $this->framework->getAdapter(CommentsModel::class);
+
+                    $intTotal           = $commentsModelAdapter->countPublishedBySourceAndParent(
+                        'tl_news',
+                        $objArticle->id
+                    );
                     $return['ccount']   = $intTotal;
                     $return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
                     break;
@@ -310,7 +353,9 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Link to an article.
             case 'article':
-                if (($objArticle = ArticleModel::findByPk($objItem->articleId, ['eager' => true])) !== null
+                $articleModelAdapter = $this->framework->getAdapter(ArticleModel::class);
+
+                if (($objArticle = $articleModelAdapter->findByPk($objItem->articleId, ['eager' => true])) !== null
                     && ($objPid = $objArticle->getRelated('pid')) !== null
                 ) {
                     $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
@@ -333,7 +378,9 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Link to the default page.
         if ($url === null) {
-            $objPage = PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
+            $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
+
+            $objPage = $pageModelAdapter->findByPk($objItem->getRelated('pid')->jumpTo);
 
             if ($objPage === null) {
                 $url = ampersand(Environment::get('request'), true);
@@ -349,9 +396,11 @@ class NewsSubscriber implements EventSubscriberInterface
                 $url = $generateFrontendUrlEvent->getUrl();
             }
 
+            $inputAdapter = $this->framework->getAdapter(Input::class);
+
             // Add the current archive parameter (news archive).
-            if ($blnAddArchive && !empty(Input::get('month'))) {
-                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . Input::get('month');
+            if ($blnAddArchive && !empty($inputAdapter->get('month'))) {
+                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . $inputAdapter->get('month');
             }
         }
 
@@ -396,9 +445,11 @@ class NewsSubscriber implements EventSubscriberInterface
             );
         }
 
+        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+
         // Encode e-mail addresses.
         if (substr($objArticle->url, 0, 7) === 'mailto:') {
-            $strArticleUrl = StringHelper::encodeEmail($objArticle->url);
+            $strArticleUrl = $stringUtilAdapter->encodeEmail($objArticle->url);
         } else {
         // Ampersand URIs.
             $strArticleUrl = ampersand($objArticle->url);

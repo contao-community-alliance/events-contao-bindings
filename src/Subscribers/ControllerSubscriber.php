@@ -23,6 +23,7 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
@@ -45,6 +46,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ControllerSubscriber implements EventSubscriberInterface
 {
+    /**
+     * The contao framework.
+     *
+     * @var ContaoFrameworkInterface
+     */
+    protected $framework;
+
+    /**
+     * ControllerSubscriber constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -75,9 +93,11 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function handleAddToUrl(AddToUrlEvent $event)
+    public function handleAddToUrl(AddToUrlEvent $event)
     {
-        $event->setUrl(Controller::addToUrl($event->getSuffix()));
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $event->setUrl($controllerAdapter->addToUrl($event->getSuffix()));
     }
 
     /**
@@ -89,7 +109,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event)
     {
-        Controller::addEnclosuresToTemplate(
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $controllerAdapter->addEnclosuresToTemplate(
             $event->getTemplate(),
             $event->getEnclosureData(),
             $event->getKey()
@@ -105,7 +127,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleAddImageToTemplate(AddImageToTemplateEvent $event)
     {
-        Controller::addImageToTemplate(
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $controllerAdapter->addImageToTemplate(
             $event->getTemplate(),
             $event->getImageData(),
             $event->getMaxWidth(),
@@ -119,10 +143,14 @@ class ControllerSubscriber implements EventSubscriberInterface
      * @param GenerateFrontendUrlEvent $event The event.
      *
      * @return void
+     *
+     * Todo use PageModel::getFrontendUrl instead Controller::generateFrontendUrl.
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
     {
-        $url = Controller::generateFrontendUrl(
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $url = $controllerAdapter->generateFrontendUrl(
             $event->getPageData(),
             $event->getParameters(),
             $event->getLanguage(),
@@ -141,7 +169,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetArticle(GetArticleEvent $event)
     {
-        $article = Controller::getArticle(
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $article = $controllerAdapter->getArticle(
             $event->getArticleId(),
             $event->getTeaserOnly(),
             true,
@@ -160,7 +190,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetContentElement(GetContentElementEvent $event)
     {
-        $contentElement = Controller::getContentElement(
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $contentElement = $controllerAdapter->getContentElement(
             $event->getContentElementId(),
             $event->getColumn()
         );
@@ -177,7 +209,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetPageDetails(GetPageDetailsEvent $event)
     {
-        $page = PageModel::findWithDetails($event->getPageId());
+        $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
+
+        $page = $pageModelAdapter->findWithDetails($event->getPageId());
 
         if ($page) {
             $event->setPageDetails($page->row());
@@ -193,7 +227,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
     {
-        $templatesArray = Controller::getTemplateGroup($event->getPrefix());
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $templatesArray = $controllerAdapter->getTemplateGroup($event->getPrefix());
         $templates      = $event->getTemplates();
 
         foreach ($templatesArray as $templateName => $templateLabel) {
@@ -210,7 +246,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleLoadDataContainer(LoadDataContainerEvent $event)
     {
-        Controller::loadDataContainer($event->getName(), $event->isCacheIgnored());
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $controllerAdapter->loadDataContainer($event->getName(), $event->isCacheIgnored());
     }
 
     /**
@@ -220,9 +258,11 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function handleRedirect(RedirectEvent $event)
+    public function handleRedirect(RedirectEvent $event)
     {
-        Controller::redirect($event->getNewLocation(), $event->getStatusCode());
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $controllerAdapter->redirect($event->getNewLocation(), $event->getStatusCode());
     }
 
     /**
@@ -230,9 +270,11 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function handleReload()
+    public function handleReload()
     {
-        Controller::reload();
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $controllerAdapter->reload();
     }
 
     /**
@@ -244,7 +286,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event)
     {
-        $result = Controller::replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
+        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        $result = $controllerAdapter->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
 
         $event->setBuffer($result);
     }
