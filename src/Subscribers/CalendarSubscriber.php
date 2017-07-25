@@ -172,9 +172,15 @@ class CalendarSubscriber implements EventSubscriberInterface
         // Get date.
         if ($span > 0) {
             $date = $strTimeStart .
-                $dateAdapter->parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intStartTime) .
+                $dateAdapter->parse(
+                    ($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat),
+                    $intStartTime
+                ) .
                 $strTimeClose . ' - ' . $strTimeEnd .
-                    $dateAdapter->parse(($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat), $intEndTime) .
+                    $dateAdapter->parse(
+                        ($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat),
+                        $intEndTime
+                    ) .
                 $strTimeClose;
         } elseif ($intStartTime == $intEndTime) {
             $date = $strTimeStart .
