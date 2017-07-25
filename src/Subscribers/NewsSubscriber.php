@@ -31,7 +31,6 @@ use Contao\Environment;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
-use Contao\Model;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
@@ -121,11 +120,6 @@ class NewsSubscriber implements EventSubscriberInterface
         }
 
         $newsModel = $newsModel->current();
-
-        $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
-
-        $newsArchiveModel = $newsModel->getRelated('pid');
-        $objPage          = $pageModelAdapter->findWithDetails($newsArchiveModel->jumpTo);
 
         $frontendTemplateAdapter = $this->framework->getAdapter(FrontendTemplate::class);
 
@@ -416,7 +410,7 @@ class NewsSubscriber implements EventSubscriberInterface
      *
      * @param string                   $strLink         The link text.
      *
-     * @param Model                    $objArticle      The model.
+     * @param NewsModel                $objArticle      The model.
      *
      * @param bool                     $blnAddArchive   Add the current archive parameter (news archive)
      *                                                  (default: false).
