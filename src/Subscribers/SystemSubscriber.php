@@ -22,11 +22,14 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\GetReferrerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LogEvent;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -42,13 +45,19 @@ class SystemSubscriber implements EventSubscriberInterface
     protected $framework;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * SystemSubscriber constructor.
      *
      * @param ContaoFrameworkInterface $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFrameworkInterface $framework, LoggerInterface $logger)
     {
         $this->framework = $framework;
+        $this->logger    = $logger;
     }
 
     /**
@@ -86,15 +95,15 @@ class SystemSubscriber implements EventSubscriberInterface
      * @param LogEvent $event The event.
      *
      * @return void
-     *
-     * Todo use logger service instead system.
      */
     public function handleLog(LogEvent $event)
     {
-        /** @var System $systemAdapter */
-        $systemAdapter = $this->framework->getAdapter(System::class);
-
-        $systemAdapter->log($event->getText(), $event->getFunction(), $event->getCategory());
+        $level = TL_ERROR === $event->getCategory() ? LogLevel::ERROR : LogLevel::INFO;
+        $this->logger->log(
+            $level,
+            $event->getText(),
+            ['contao' => new ContaoContext($event->getFunction(), $event->getCategory())]
+        );
     }
 
     /**
