@@ -44,7 +44,7 @@ class SystemSubscriber implements EventSubscriberInterface
     /**
      * SystemSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework
+     * @param ContaoFrameworkInterface $framework The contao framework.
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {

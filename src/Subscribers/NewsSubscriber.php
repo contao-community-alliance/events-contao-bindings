@@ -62,7 +62,7 @@ class NewsSubscriber implements EventSubscriberInterface
     /**
      * NewsSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework
+     * @param ContaoFrameworkInterface $framework The contao framework.
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {
@@ -151,7 +151,8 @@ class NewsSubscriber implements EventSubscriberInterface
 
 
         if (!empty($newsModel->teaser)) {
-            $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class); // Clean the RTE output.
+            // Clean the RTE output.
+            $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
 
             $objTemplate->teaser = $stringUtilAdapter->encodeEmail($stringUtilAdapter->toHtml5($newsModel->teaser));
         }

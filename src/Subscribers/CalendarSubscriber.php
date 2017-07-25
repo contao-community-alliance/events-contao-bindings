@@ -55,7 +55,7 @@ class CalendarSubscriber implements EventSubscriberInterface
     /**
      * CalendarSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework
+     * @param ContaoFrameworkInterface $framework The contao framework.
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {
