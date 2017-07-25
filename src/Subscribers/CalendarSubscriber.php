@@ -227,9 +227,8 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        $frontendTemplateAdapter = $this->framework->getAdapter(FrontendTemplate::class);
-
-        $objTemplate = new $frontendTemplateAdapter($event->getTemplate());
+        /** @var FrontendTemplate $objTemplate */
+        $objTemplate = $this->framework->createInstance(FrontendTemplate::class, $event->getTemplate());
         $objTemplate->setData($eventModel->row());
 
         $objTemplate->date          = $date;

@@ -122,9 +122,8 @@ class NewsSubscriber implements EventSubscriberInterface
 
         $newsModel = $newsModel->current();
 
-        $frontendTemplateAdapter = $this->framework->getAdapter(FrontendTemplate::class);
-
-        $objTemplate = new $frontendTemplateAdapter($event->getTemplate());
+        /** @var FrontendTemplate $objTemplate */
+        $objTemplate = $this->framework->createInstance(FrontendTemplate::class, $event->getTemplate());
         $objTemplate->setData($newsModel->row());
 
         $objTemplate->class          = (!empty($newsModel->cssClass) ? ' ' . $newsModel->cssClass : '');
