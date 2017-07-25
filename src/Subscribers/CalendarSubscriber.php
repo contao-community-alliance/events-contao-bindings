@@ -100,7 +100,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         /** @var CalendarModel $calendarModelAdapter */
         $calendarModelAdapter = $this->framework->getAdapter(CalendarModel::class);
-        $calendarCollection = $calendarModelAdapter->findAll();
+        $calendarCollection   = $calendarModelAdapter->findAll();
 
         if (!$calendarCollection) {
             return;

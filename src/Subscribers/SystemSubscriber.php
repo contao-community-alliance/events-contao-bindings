@@ -45,6 +45,8 @@ class SystemSubscriber implements EventSubscriberInterface
     protected $framework;
 
     /**
+     * The logger service.
+     *
      * @var LoggerInterface
      */
     private $logger;
@@ -53,6 +55,7 @@ class SystemSubscriber implements EventSubscriberInterface
      * SystemSubscriber constructor.
      *
      * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param LoggerInterface          $logger    The logger service.
      */
     public function __construct(ContaoFrameworkInterface $framework, LoggerInterface $logger)
     {
