@@ -107,7 +107,8 @@ class NewsSubscriber implements EventSubscriberInterface
 
         $newsArchiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
         $newsModelAdapter        = $this->framework->getAdapter(NewsModel::class);
-
+        /** @var NewsArchiveModel $newsArchiveModelAdapter */
+        /** @var NewsModel $newsModelAdapter */
         $newsArchiveCollection = $newsArchiveModelAdapter->findAll();
         $newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : [];
         $newsModel             = $newsModelAdapter->findPublishedByParentAndIdOrAlias(
@@ -146,6 +147,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
         if (!empty($newsModel->teaser)) {
             // Clean the RTE output.
+            /** @var StringUtil $stringUtilAdapter */
             $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
 
             $objTemplate->teaser = $stringUtilAdapter->encodeEmail($stringUtilAdapter->toHtml5($newsModel->teaser));
@@ -155,6 +157,7 @@ class NewsSubscriber implements EventSubscriberInterface
         if ($newsModel->source !== 'default') {
             $objTemplate->text = true;
         } else {
+            /** @var ContentModel $contentModelAdapter */
             $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
 
             // Compile the news text.
@@ -186,11 +189,13 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Add an image.
         if ($newsModel->addImage && !empty($newsModel->singleSRC)) {
+            /** @var FilesModel $filesModelAdapter */
             $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
             $objModel = $filesModelAdapter->findByUuid($newsModel->singleSRC);
 
             if ($objModel === null) {
+                /** @var Validator $validatorAdapter */
                 $validatorAdapter = $this->framework->getAdapter(Validator::class);
 
                 if (!$validatorAdapter->isUuid($newsModel->singleSRC)) {
@@ -258,6 +263,7 @@ class NewsSubscriber implements EventSubscriberInterface
         foreach ($meta as $field) {
             switch ($field) {
                 case 'date':
+                    /** @var Date $dateAdapter */
                     $dateAdapter = $this->framework->getAdapter(Date::class);
 
                     $return['date'] = $dateAdapter->parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
@@ -280,6 +286,7 @@ class NewsSubscriber implements EventSubscriberInterface
                         break;
                     }
 
+                    /** @var CommentsModel $commentsModelAdapter */
                     $commentsModelAdapter = $this->framework->getAdapter(CommentsModel::class);
 
                     $intTotal           = $commentsModelAdapter->countPublishedBySourceAndParent(
@@ -348,6 +355,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Link to an article.
             case 'article':
+                /** @var ArticleModel $articleModelAdapter */
                 $articleModelAdapter = $this->framework->getAdapter(ArticleModel::class);
 
                 if (($objArticle = $articleModelAdapter->findByPk($objItem->articleId, ['eager' => true])) !== null
@@ -373,6 +381,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Link to the default page.
         if ($url === null) {
+            /** @var PageModel $pageModelAdapter */
             $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
             $objPage = $pageModelAdapter->findByPk($objItem->getRelated('pid')->jumpTo);
@@ -391,6 +400,7 @@ class NewsSubscriber implements EventSubscriberInterface
                 $url = $generateFrontendUrlEvent->getUrl();
             }
 
+            /** @var Input $inputAdapter */
             $inputAdapter = $this->framework->getAdapter(Input::class);
 
             // Add the current archive parameter (news archive).
@@ -440,6 +450,7 @@ class NewsSubscriber implements EventSubscriberInterface
             );
         }
 
+        /** @var StringUtil $stringUtilAdapter */
         $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
 
         // Encode e-mail addresses.

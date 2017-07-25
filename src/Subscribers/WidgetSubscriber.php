@@ -71,6 +71,7 @@ class WidgetSubscriber implements EventSubscriberInterface
      */
     public function handleGetAttributesFromDca(GetAttributesFromDcaEvent $event)
     {
+        /** @var Widget $widgetAdapter */
         $widgetAdapter = $this->framework->getAdapter(Widget::class);
 
         $event->setResult(

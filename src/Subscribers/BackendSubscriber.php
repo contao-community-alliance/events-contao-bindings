@@ -73,6 +73,7 @@ class BackendSubscriber implements EventSubscriberInterface
      */
     public function handleAddToUrl(AddToUrlEvent $event)
     {
+        /** @var Backend $backendAdapter */
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         $event->setUrl($backendAdapter->addToUrl($event->getSuffix()));
@@ -87,6 +88,7 @@ class BackendSubscriber implements EventSubscriberInterface
      */
     public function handleGetTheme(GetThemeEvent $event)
     {
+        /** @var Backend $backendAdapter */
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         $event->setTheme($backendAdapter->getTheme());

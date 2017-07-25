@@ -74,6 +74,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleGetReferer(GetReferrerEvent $event)
     {
+        /** @var System $systemAdapter */
         $systemAdapter = $this->framework->getAdapter(System::class);
 
         $event->setReferrerUrl($systemAdapter->getReferer($event->isEncodeAmpersands(), $event->getTableName()));
@@ -90,6 +91,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLog(LogEvent $event)
     {
+        /** @var System $systemAdapter */
         $systemAdapter = $this->framework->getAdapter(System::class);
 
         $systemAdapter->log($event->getText(), $event->getFunction(), $event->getCategory());
@@ -104,6 +106,7 @@ class SystemSubscriber implements EventSubscriberInterface
      */
     public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
     {
+        /** @var System $systemAdapter */
         $systemAdapter = $this->framework->getAdapter(System::class);
 
         $systemAdapter->loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());

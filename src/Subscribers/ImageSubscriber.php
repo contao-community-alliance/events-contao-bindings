@@ -74,6 +74,7 @@ class ImageSubscriber implements EventSubscriberInterface
      */
     public function handleResize(ResizeImageEvent $event)
     {
+        /** @var Image $imageAdapter */
         $imageAdapter = $this->framework->getAdapter(Image::class);
 
         $event->setResultImage(
@@ -97,6 +98,7 @@ class ImageSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateHtml(GenerateHtmlEvent $event)
     {
+        /** @var Image $imageAdapter */
         $imageAdapter = $this->framework->getAdapter(Image::class);
 
         $event->setHtml(

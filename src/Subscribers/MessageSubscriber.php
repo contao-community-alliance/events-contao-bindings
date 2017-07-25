@@ -71,6 +71,7 @@ class MessageSubscriber implements EventSubscriberInterface
      */
     public function addMessage(AddMessageEvent $event)
     {
+        /** @var Message $messageAdapter */
         $messageAdapter = $this->framework->getAdapter(Message::class);
 
         $messageAdapter->add($event->getContent(), 'TL_' . strtoupper($event->getType()));

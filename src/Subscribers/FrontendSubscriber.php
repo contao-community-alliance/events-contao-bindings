@@ -72,6 +72,7 @@ class FrontendSubscriber implements EventSubscriberInterface
      */
     public function handleAddToUrl(AddToUrlEvent $event)
     {
+        /** @var Frontend $frontendAdapter */
         $frontendAdapter = $this->framework->getAdapter(Frontend::class);
 
         $event->setUrl($frontendAdapter->addToUrl($event->getSuffix(), $event->isIgnoreParams()));

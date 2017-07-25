@@ -95,6 +95,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleAddToUrl(AddToUrlEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $event->setUrl($controllerAdapter->addToUrl($event->getSuffix()));
@@ -109,6 +110,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->addEnclosuresToTemplate(
@@ -127,6 +129,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleAddImageToTemplate(AddImageToTemplateEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->addImageToTemplate(
@@ -148,6 +151,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $url = $controllerAdapter->generateFrontendUrl(
@@ -169,6 +173,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetArticle(GetArticleEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $article = $controllerAdapter->getArticle(
@@ -190,6 +195,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetContentElement(GetContentElementEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $contentElement = $controllerAdapter->getContentElement(
@@ -209,6 +215,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetPageDetails(GetPageDetailsEvent $event)
     {
+        /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
         $page = $pageModelAdapter->findWithDetails($event->getPageId());
@@ -227,6 +234,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $templatesArray = $controllerAdapter->getTemplateGroup($event->getPrefix());
@@ -246,6 +254,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleLoadDataContainer(LoadDataContainerEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->loadDataContainer($event->getName(), $event->isCacheIgnored());
@@ -260,6 +269,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleRedirect(RedirectEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->redirect($event->getNewLocation(), $event->getStatusCode());
@@ -272,6 +282,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleReload()
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->reload();
@@ -286,6 +297,7 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event)
     {
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $result = $controllerAdapter->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());

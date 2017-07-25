@@ -71,9 +71,9 @@ class DateSubscriber implements EventSubscriberInterface
      */
     public function handleParseDate($event)
     {
-        $dateAdapter = $this->framework->getAdapter(Date::class);
-
         if ($event->getResult() === null) {
+            /** @var Date $dateAdapter */
+            $dateAdapter = $this->framework->getAdapter(Date::class);
             $event->setResult($dateAdapter->parse($event->getFormat(), $event->getTimestamp()));
         }
     }

@@ -98,14 +98,15 @@ class CalendarSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var CalendarModel $calendarModelAdapter */
         $calendarModelAdapter = $this->framework->getAdapter(CalendarModel::class);
-
         $calendarCollection = $calendarModelAdapter->findAll();
 
         if (!$calendarCollection) {
             return;
         }
 
+        /** @var CalendarEventsModel $calendarEventsModelAdapter */
         $calendarEventsModelAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         $calendarIds = $calendarCollection->fetchEach('id');
@@ -118,6 +119,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
         $calendarModel = $eventModel->getRelated('pid');
@@ -140,6 +142,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             $intEndTime   = $eventModel->endTime;
         }
 
+        /** @var Calendar $calendarAdapter */
         $calendarAdapter = $this->framework->getAdapter(Calendar::class);
 
         $span = $calendarAdapter->calculateSpan($intStartTime, $intEndTime);
@@ -167,6 +170,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         */
         // @codingStandardsIgnoreEnd
 
+        /** @var Date $dateAdapter */
         $dateAdapter = $this->framework->getAdapter(Date::class);
 
         // Get date.
@@ -238,6 +242,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->details = '';
 
+        /** @var ContentModel $contentModelAdapter */
         $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
 
         $objElement = $contentModelAdapter->findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
@@ -256,6 +261,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->addImage = false;
 
+        /** @var FilesModel $filesModelAdapter */
         $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
         // Add an image.
@@ -263,6 +269,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             $objModel = $filesModelAdapter->findByUuid($eventModel->singleSRC);
 
             if ($objModel === null) {
+                /** @var Validator $validatorAdapter */
                 $validatorAdapter = $this->framework->getAdapter(Validator::class);
 
                 if (!$validatorAdapter->isUuid($eventModel->singleSRC)) {
