@@ -56,7 +56,5 @@
     "branch-alias": {
       "dev-feature/contao4": "4.0.x-dev"
     }
-  },
-  "prefer-stable": true,
-  "minimum-stability": "dev"
+  }
 }
