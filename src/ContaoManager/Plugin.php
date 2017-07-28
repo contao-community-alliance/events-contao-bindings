@@ -47,6 +47,7 @@ class Plugin implements BundlePluginInterface
                         CcaEventDispatcherBundle::class
                     ]
                 )
+                ->setReplace(['events-contao-bindings'])
         ];
     }
 }
