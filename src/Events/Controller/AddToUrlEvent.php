@@ -79,10 +79,12 @@ class AddToUrlEvent extends ContaoApiEvent
     /**
      * Retrieve the new URL.
      *
+     * @param bool $encoded Determine if return the encoded url.
+     *
      * @return string
      */
-    public function getUrl()
+    public function getUrl($encode = false)
     {
-        return $this->newUrl;
+        return $encode ? $this->newUrl : rawurldecode($this->newUrl);
     }
 }

@@ -99,10 +99,12 @@ class GetReferrerEvent extends ContaoApiEvent
     /**
      * Get the referrer url.
      *
+     * @param bool $encoded Determine if return the encoded url.
+     *
      * @return string|null
      */
-    public function getReferrerUrl()
+    public function getReferrerUrl($encoded = false)
     {
-        return $this->referrerUrl;
+        return $encoded ? $this->referrerUrl : rawurldecode($this->referrerUrl);
     }
 }

@@ -146,10 +146,12 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
     /**
      * Retrieve the resulting url.
      *
+     * @param bool $encoded Determine if return the encoded url.
+     *
      * @return string
      */
-    public function getUrl()
+    public function getUrl($encoded = false)
     {
-        return $this->url;
+        return $encoded ? $this->url : rawurldecode($this->url);
     }
 }
