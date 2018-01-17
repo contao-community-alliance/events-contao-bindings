@@ -35,7 +35,8 @@
     "symfony/event-dispatcher": "~3.0"
   },
   "require-dev": {
-    "phpcq/all-tasks": "~1.1",
+    "phpcq/all-tasks": "~1.2",
+    "phpunit/phpunit": "~6.0",
     "contao/calendar-bundle": "~4.4",
     "contao/comments-bundle": "~4.4",
     "contao/manager-bundle": "~4.4",
@@ -54,7 +55,7 @@
   "extra": {
     "contao-manager-plugin": "ContaoCommunityAlliance\\Contao\\Bindings\\ContaoManager\\Plugin",
     "branch-alias": {
-      "dev-feature/contao4": "4.0.x-dev"
+      "dev-master": "4.4.x-dev"
     }
   }
 }
