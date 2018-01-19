@@ -146,8 +146,6 @@ class ControllerSubscriber implements EventSubscriberInterface
      * @param GenerateFrontendUrlEvent $event The event.
      *
      * @return void
-     *
-     * Todo use PageModel::getFrontendUrl instead Controller::generateFrontendUrl.
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
     {
