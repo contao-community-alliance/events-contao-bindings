@@ -1,0 +1,73 @@
+services:
+    cca.event_bindings.backend.subscriber:
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\BackendSubscriber
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.calendar.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\CalendarSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.controller.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ControllerSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.date.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\DateSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.frontend.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\FrontendSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.image.subscriber:
+        arguments:
+            - "@contao.framework"
+            - "@contao.image.image_factory"
+            - "%kernel.project_dir%"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ImageSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.message.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\MessageSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.news.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\NewsSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.system.subscriber:
+        arguments:
+            - "@contao.framework"
+            - "@monolog.logger.contao"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\SystemSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cca.event_bindings.widget.subscriber:
+        arguments:
+            - "@contao.framework"
+        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\WidgetSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
