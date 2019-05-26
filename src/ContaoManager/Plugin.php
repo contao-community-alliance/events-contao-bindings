@@ -26,7 +26,6 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use ContaoCommunityAlliance\Contao\Bindings\CcaEventsContaoBindingsBundle;
-use ContaoCommunityAlliance\Contao\EventDispatcher\CcaEventDispatcherBundle;
 
 /**
  * Plugin for the Contao Manager.
@@ -44,7 +43,6 @@ class Plugin implements BundlePluginInterface
                     [
                         ContaoCoreBundle::class,
                         ContaoManagerBundle::class,
-                        CcaEventDispatcherBundle::class
                     ]
                 )
                 ->setReplace(['events-contao-bindings'])
