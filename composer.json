@@ -38,7 +38,7 @@
     "require-dev": {
         "phpcq/all-tasks": "^1.2",
         "phpunit/phpunit": "^4.8 || ^6.0",
-        "contao/managed-edition": "^4.4"
+        "contao/manager-plugin": "^2.2"
     },
     "autoload": {
         "psr-4": {
