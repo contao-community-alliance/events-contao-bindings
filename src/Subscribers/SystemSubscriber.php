@@ -19,9 +19,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
@@ -39,36 +41,29 @@ class SystemSubscriber implements EventSubscriberInterface
 {
     /**
      * The contao framework.
-     *
-     * @var ContaoFrameworkInterface
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * The logger service.
      *
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * SystemSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
-     * @param LoggerInterface          $logger    The logger service.
+     * @param ContaoFramework $framework The contao framework.
+     * @param LoggerInterface $logger    The logger service.
      */
-    public function __construct(ContaoFrameworkInterface $framework, LoggerInterface $logger)
+    public function __construct(ContaoFramework $framework, LoggerInterface $logger)
     {
         $this->framework = $framework;
         $this->logger    = $logger;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::SYSTEM_GET_REFERRER       => 'handleGetReferer',
@@ -81,12 +76,13 @@ class SystemSubscriber implements EventSubscriberInterface
      * Retrieve the current referrer url.
      *
      * @param GetReferrerEvent $event The event.
-     *
-     * @return void
      */
-    public function handleGetReferer(GetReferrerEvent $event)
+    public function handleGetReferer(GetReferrerEvent $event): void
     {
-        /** @var System $systemAdapter */
+        /**
+         * @var System $systemAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $systemAdapter = $this->framework->getAdapter(System::class);
 
         $event->setReferrerUrl($systemAdapter->getReferer($event->isEncodeAmpersands(), $event->getTableName()));
@@ -96,12 +92,10 @@ class SystemSubscriber implements EventSubscriberInterface
      * Handle a log event.
      *
      * @param LogEvent $event The event.
-     *
-     * @return void
      */
-    public function handleLog(LogEvent $event)
+    public function handleLog(LogEvent $event): void
     {
-        $level = TL_ERROR === $event->getCategory() ? LogLevel::ERROR : LogLevel::INFO;
+        $level = /*TL_ERROR*/'ERROR' === $event->getCategory() ? LogLevel::ERROR : LogLevel::INFO;
         $this->logger->log(
             $level,
             $event->getText(),
@@ -113,12 +107,13 @@ class SystemSubscriber implements EventSubscriberInterface
      * Handle a load language file event.
      *
      * @param LoadLanguageFileEvent $event The event.
-     *
-     * @return void
      */
-    public function handleLoadLanguageFile(LoadLanguageFileEvent $event)
+    public function handleLoadLanguageFile(LoadLanguageFileEvent $event): void
     {
-        /** @var System $systemAdapter */
+        /**
+         * @var System $systemAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $systemAdapter = $this->framework->getAdapter(System::class);
 
         $systemAdapter->loadLanguageFile($event->getFileName(), $event->getLanguage(), $event->isCacheIgnored());

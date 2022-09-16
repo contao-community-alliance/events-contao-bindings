@@ -20,9 +20,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Message;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Message\AddMessageEvent;
@@ -36,26 +38,21 @@ class MessageSubscriber implements EventSubscriberInterface
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * MessageSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::MESSAGE_ADD => 'addMessage',
@@ -69,9 +66,12 @@ class MessageSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function addMessage(AddMessageEvent $event)
+    public function addMessage(AddMessageEvent $event): void
     {
-        /** @var Message $messageAdapter */
+        /**
+         * @var Message $messageAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $messageAdapter = $this->framework->getAdapter(Message::class);
 
         $messageAdapter->add($event->getContent(), 'TL_' . strtoupper($event->getType()));

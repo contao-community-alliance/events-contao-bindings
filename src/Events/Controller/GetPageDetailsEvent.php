@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,23 +36,24 @@ class GetPageDetailsEvent extends ContaoApiEvent
      *
      * @var int
      */
-    protected $pageId;
+    protected int $pageId;
 
     /**
      * The page details.
      *
      * @var array
      */
-    protected $pageDetails;
+    protected array $pageDetails;
 
     /**
      * Create a new instance.
      *
      * @param int $pageId The id of the page.
      */
-    public function __construct($pageId)
+    public function __construct(int $pageId)
     {
-        $this->pageId = (int) $pageId;
+        $this->pageId      = $pageId;
+        $this->pageDetails = [];
     }
 
     /**
@@ -58,7 +61,7 @@ class GetPageDetailsEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getPageId()
+    public function getPageId(): int
     {
         return $this->pageId;
     }
@@ -68,9 +71,9 @@ class GetPageDetailsEvent extends ContaoApiEvent
      *
      * @param array $pageDetails The page details array.
      *
-     * @return GetArticleEvent
+     * @return GetPageDetailsEvent
      */
-    public function setPageDetails(array $pageDetails)
+    public function setPageDetails(array $pageDetails): self
     {
         $this->pageDetails = $pageDetails;
 
@@ -82,7 +85,7 @@ class GetPageDetailsEvent extends ContaoApiEvent
      *
      * @return array
      */
-    public function getPageDetails()
+    public function getPageDetails(): array
     {
         return $this->pageDetails;
     }

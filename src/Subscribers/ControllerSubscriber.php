@@ -21,10 +21,12 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
@@ -44,32 +46,28 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Subscriber for the Controller class in Contao.
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ControllerSubscriber implements EventSubscriberInterface
 {
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * ControllerSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
@@ -94,9 +92,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleAddToUrl(AddToUrlEvent $event)
+    public function handleAddToUrl(AddToUrlEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $event->setUrl($controllerAdapter->addToUrl($event->getSuffix()));
@@ -109,9 +110,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event)
+    public function handleAddEnclosureToTemplate(AddEnclosureToTemplateEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->addEnclosuresToTemplate(
@@ -128,11 +132,15 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleAddImageToTemplate(AddImageToTemplateEvent $event)
+    public function handleAddImageToTemplate(AddImageToTemplateEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
+        /** @psalm-suppress DeprecatedMethod */
         $controllerAdapter->addImageToTemplate(
             $event->getTemplate(),
             $event->getImageData(),
@@ -148,11 +156,15 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event)
+    public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
+        /** @psalm-suppress DeprecatedMethod */
         $url = $controllerAdapter->generateFrontendUrl(
             $event->getPageData(),
             $event->getParameters(),
@@ -170,9 +182,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleGetArticle(GetArticleEvent $event)
+    public function handleGetArticle(GetArticleEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $article = $controllerAdapter->getArticle(
@@ -181,6 +196,9 @@ class ControllerSubscriber implements EventSubscriberInterface
             true,
             $event->getColumn()
         );
+        if (!is_string($article)) {
+            return;
+        }
 
         $event->setArticle($article);
     }
@@ -192,9 +210,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleGetContentElement(GetContentElementEvent $event)
+    public function handleGetContentElement(GetContentElementEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $contentElement = $controllerAdapter->getContentElement(
@@ -212,9 +233,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleGetPageDetails(GetPageDetailsEvent $event)
+    public function handleGetPageDetails(GetPageDetailsEvent $event): void
     {
-        /** @var PageModel $pageModelAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
         $page = $pageModelAdapter->findWithDetails($event->getPageId());
@@ -231,14 +255,21 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleGetTemplateGroup(GetTemplateGroupEvent $event)
+    public function handleGetTemplateGroup(GetTemplateGroupEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $templatesArray = $controllerAdapter->getTemplateGroup($event->getPrefix());
         $templates      = $event->getTemplates();
 
+        /**
+         * @var string $templateName
+         * @var string $templateLabel
+         */
         foreach ($templatesArray as $templateName => $templateLabel) {
             $templates[$templateName] = $templateLabel;
         }
@@ -251,9 +282,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleLoadDataContainer(LoadDataContainerEvent $event)
+    public function handleLoadDataContainer(LoadDataContainerEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->loadDataContainer($event->getName(), $event->isCacheIgnored());
@@ -266,9 +300,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleRedirect(RedirectEvent $event)
+    public function handleRedirect(RedirectEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->redirect($event->getNewLocation(), $event->getStatusCode());
@@ -279,9 +316,12 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleReload()
+    public function handleReload(): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
         $controllerAdapter->reload();
@@ -294,11 +334,15 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event)
+    public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event): void
     {
-        /** @var Controller $controllerAdapter */
+        /**
+         * @var Controller $controllerAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
+        /** @psalm-suppress DeprecatedMethod */
         $result = $controllerAdapter->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
 
         $event->setBuffer($result);

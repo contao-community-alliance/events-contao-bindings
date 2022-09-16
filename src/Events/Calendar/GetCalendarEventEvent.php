@@ -23,6 +23,7 @@
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Calendar;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
+use DateTime;
 
 /**
  * This Event is emitted when an event should be rendered.
@@ -34,41 +35,41 @@ class GetCalendarEventEvent extends ContaoApiEvent
      *
      * @var int
      */
-    protected $calendarEventId;
+    protected int $calendarEventId;
 
     /**
      * A concrete calendar event date time.
      *
-     * @var \DateTime|null
+     * @var DateTime|null
      */
-    protected $dateTime;
+    protected ?DateTime $dateTime;
 
     /**
      * The template name.
      *
      * @var string
      */
-    protected $template = 'event_full';
+    protected string $template = 'event_full';
 
     /**
      * The rendered calendar event html.
      *
-     * @var string
+     * @var string|null
      */
-    protected $calendarEventHtml;
+    protected ?string $calendarEventHtml = null;
 
     /**
      * Create the event.
      *
-     * @param int       $calendarEventId The calendar event ID.
-     * @param \DateTime $dateTime        A concrete event date time.
-     * @param string    $template        The template name.
+     * @param int      $calendarEventId The calendar event ID.
+     * @param DateTime $dateTime        A concrete event date time.
+     * @param string   $template        The template name.
      */
-    public function __construct($calendarEventId, \DateTime $dateTime = null, $template = 'event_full')
+    public function __construct(int $calendarEventId, DateTime $dateTime = null, string $template = 'event_full')
     {
-        $this->calendarEventId = (int) $calendarEventId;
+        $this->calendarEventId = $calendarEventId;
         $this->dateTime        = $dateTime;
-        $this->template        = (string) $template;
+        $this->template        = $template;
     }
 
     /**
@@ -76,7 +77,7 @@ class GetCalendarEventEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getCalendarEventId()
+    public function getCalendarEventId(): int
     {
         return $this->calendarEventId;
     }
@@ -84,9 +85,9 @@ class GetCalendarEventEvent extends ContaoApiEvent
     /**
      * Return concrete event date time.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getDateTime()
+    public function getDateTime(): ?DateTime
     {
         return $this->dateTime;
     }
@@ -96,7 +97,7 @@ class GetCalendarEventEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template;
     }
@@ -108,7 +109,7 @@ class GetCalendarEventEvent extends ContaoApiEvent
      *
      * @return GetCalendarEventEvent
      */
-    public function setCalendarEventHtml($calendarEventHtml)
+    public function setCalendarEventHtml(string $calendarEventHtml): self
     {
         $this->calendarEventHtml = $calendarEventHtml;
 
@@ -118,9 +119,9 @@ class GetCalendarEventEvent extends ContaoApiEvent
     /**
      * Return the rendered calendar event html.
      *
-     * @return string
+     * @return string|null
      */
-    public function getCalendarEventHtml()
+    public function getCalendarEventHtml(): ?string
     {
         return $this->calendarEventHtml;
     }

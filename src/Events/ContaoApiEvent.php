@@ -19,8 +19,9 @@
  * @filesource
  */
 
-namespace ContaoCommunityAlliance\Contao\Bindings\Events;
+declare(strict_types=1);
 
+namespace ContaoCommunityAlliance\Contao\Bindings\Events;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
