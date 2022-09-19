@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events;
 
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Base class for all events.
  *
  * @SuppressWarnings(PHPMD.NumberOfChildren)
+ *
+ * FIXME: change inheritance to Symfony\Contracts\EventDispatcher\Event when we are Symfony 5.0+
  */
 class ContaoApiEvent extends Event
 {
