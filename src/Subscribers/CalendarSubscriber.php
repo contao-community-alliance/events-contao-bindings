@@ -145,11 +145,11 @@ class CalendarSubscriber implements EventSubscriberInterface
          */
         $calendarModel = $eventModel->getRelated('pid');
         assert($calendarModel instanceof CalendarModel);
-        $objPage = $pageModelAdapter->findWithDetails($calendarModel->jumpTo);
+        $objPage = $pageModelAdapter->findWithDetails((int) $calendarModel->jumpTo);
         assert($objPage instanceof PageModel);
 
-        $intStartTime = $eventModel->startTime;
-        $intEndTime   = $eventModel->endTime;
+        $intStartTime = (int) $eventModel->startTime;
+        $intEndTime   = (int) $eventModel->endTime;
         if ($date = $event->getDateTime()) {
             $startDateTime = clone $date;
             $startDateTime->setTime(
@@ -254,7 +254,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             if ($eventModel->recurrences > 0) {
                 $until = sprintf(
                     (string) $GLOBALS['TL_LANG']['MSC']['cal_until'],
-                    $dateAdapter->parse($objPage->dateFormat, $eventModel->repeatEnd)
+                    $dateAdapter->parse($objPage->dateFormat, (int) $eventModel->repeatEnd)
                 );
             }
         }
@@ -275,10 +275,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
         }
 
-        /**
-         * @var FrontendTemplate $objTemplate
-         * @psalm-suppress InternalMethod
-         */
+        /** @psalm-suppress InternalMethod */
         $objTemplate = $this->framework->createInstance(FrontendTemplate::class, [$event->getTemplate()]);
         $objTemplate->setData($eventModel->row());
 
@@ -299,7 +296,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
 
         /** @var \Contao\Model\Collection|null $objElement */
-        $objElement = $contentModelAdapter->findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
+        $objElement = $contentModelAdapter->findPublishedByPidAndTable((int) $eventModel->id, 'tl_calendar_events');
 
         if ($objElement !== null) {
             while ($objElement->next()) {
