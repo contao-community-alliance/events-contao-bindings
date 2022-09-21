@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Message;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -29,15 +31,11 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
  */
 class AddMessageEvent extends ContaoApiEvent
 {
-    const TYPE_ERROR = 'error';
-
-    const TYPE_CONFIRM = 'confirm';
-
-    const TYPE_NEW = 'new';
-
-    const TYPE_INFO = 'info';
-
-    const TYPE_RAW = 'raw';
+    public const TYPE_ERROR = 'error';
+    public const TYPE_CONFIRM = 'confirm';
+    public const TYPE_NEW = 'new';
+    public const TYPE_INFO = 'info';
+    public const TYPE_RAW = 'raw';
 
     /**
      * Create an event to add an error message.
@@ -45,8 +43,11 @@ class AddMessageEvent extends ContaoApiEvent
      * @param string $content The message.
      *
      * @return AddMessageEvent
+     *
+     * @psalm-suppress UnsafeInstantiation
+     * @psalm-suppress MixedArgument
      */
-    public static function createError($content)
+    public static function createError(string $content): self
     {
         return new static($content, static::TYPE_ERROR);
     }
@@ -57,8 +58,11 @@ class AddMessageEvent extends ContaoApiEvent
      * @param string $content The message.
      *
      * @return AddMessageEvent
+     *
+     * @psalm-suppress UnsafeInstantiation
+     * @psalm-suppress MixedArgument
      */
-    public static function createConfirm($content)
+    public static function createConfirm(string $content): self
     {
         return new static($content, static::TYPE_CONFIRM);
     }
@@ -69,8 +73,11 @@ class AddMessageEvent extends ContaoApiEvent
      * @param string $content The message.
      *
      * @return AddMessageEvent
+     *
+     * @psalm-suppress UnsafeInstantiation
+     * @psalm-suppress MixedArgument
      */
-    public static function createNew($content)
+    public static function createNew(string $content): self
     {
         return new static($content, static::TYPE_NEW);
     }
@@ -81,8 +88,11 @@ class AddMessageEvent extends ContaoApiEvent
      * @param string $content The message.
      *
      * @return AddMessageEvent
+     *
+     * @psalm-suppress UnsafeInstantiation
+     * @psalm-suppress MixedArgument
      */
-    public static function createInfo($content)
+    public static function createInfo(string $content): self
     {
         return new static($content, static::TYPE_INFO);
     }
@@ -93,8 +103,11 @@ class AddMessageEvent extends ContaoApiEvent
      * @param string $content The message.
      *
      * @return AddMessageEvent
+     *
+     * @psalm-suppress UnsafeInstantiation
+     * @psalm-suppress MixedArgument
      */
-    public static function createRaw($content)
+    public static function createRaw(string $content): self
     {
         return new static($content);
     }
@@ -104,14 +117,14 @@ class AddMessageEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $content;
+    protected string $content;
 
     /**
      * The message type.
      *
      * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * Create a new instance.
@@ -120,7 +133,7 @@ class AddMessageEvent extends ContaoApiEvent
      *
      * @param string $type    The message type.
      */
-    public function __construct($content, $type = self::TYPE_RAW)
+    public function __construct(string $content, string $type = self::TYPE_RAW)
     {
         $this->content = $content;
         $this->type    = $type;
@@ -131,7 +144,7 @@ class AddMessageEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -141,7 +154,7 @@ class AddMessageEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

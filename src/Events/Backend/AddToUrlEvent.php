@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Backend;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent as ControllerAddToUrlEvent;

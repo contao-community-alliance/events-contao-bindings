@@ -19,9 +19,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Widget;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent;
@@ -35,26 +37,21 @@ class WidgetSubscriber implements EventSubscriberInterface
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * WidgetSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::WIDGET_GET_ATTRIBUTES_FROM_DCA => 'handleGetAttributesFromDca'
@@ -65,12 +62,13 @@ class WidgetSubscriber implements EventSubscriberInterface
      * Handle the widget preparation.
      *
      * @param GetAttributesFromDcaEvent $event The event.
-     *
-     * @return void
      */
-    public function handleGetAttributesFromDca(GetAttributesFromDcaEvent $event)
+    public function handleGetAttributesFromDca(GetAttributesFromDcaEvent $event): void
     {
-        /** @var Widget $widgetAdapter */
+        /**
+         * @var Widget $widgetAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $widgetAdapter = $this->framework->getAdapter(Widget::class);
 
         $event->setResult(

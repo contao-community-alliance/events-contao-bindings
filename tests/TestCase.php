@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Test;
 
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
@@ -28,5 +30,4 @@ use PHPUnit\Framework\TestCase as PhpUnitTestCase;
  */
 abstract class TestCase extends PhpUnitTestCase
 {
-
 }

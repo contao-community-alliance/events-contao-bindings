@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\System;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -33,21 +35,21 @@ class LogEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $category;
+    protected string $category;
 
     /**
      * The function name.
      *
      * @var string
      */
-    protected $function;
+    protected string $function;
 
     /**
      * The log message.
      *
      * @var string
      */
-    protected $text;
+    protected string $text;
 
     /**
      * Create a new instance.
@@ -58,7 +60,7 @@ class LogEvent extends ContaoApiEvent
      *
      * @param string $category The category name.
      */
-    public function __construct($text, $function, $category)
+    public function __construct(string $text, string $function, string $category)
     {
         $this->text     = $text;
         $this->function = $function;
@@ -70,7 +72,7 @@ class LogEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getCategory()
+    public function getCategory(): string
     {
         return $this->category;
     }
@@ -80,7 +82,7 @@ class LogEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getFunction()
+    public function getFunction(): string
     {
         return $this->function;
     }
@@ -90,7 +92,7 @@ class LogEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }

@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,23 +36,24 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $suffix;
+    protected string $suffix;
 
     /**
      * The resulting URL.
      *
      * @var string
      */
-    protected $newUrl;
+    protected string $newUrl;
 
     /**
      * Create a new instance.
      *
      * @param string $suffix The string to add to the URL.
      */
-    public function __construct($suffix)
+    public function __construct(string $suffix)
     {
         $this->suffix = $suffix;
+        $this->newUrl = '';
     }
 
     /**
@@ -58,7 +61,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getSuffix()
+    public function getSuffix(): string
     {
         return $this->suffix;
     }
@@ -70,7 +73,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return AddToUrlEvent
      */
-    public function setUrl($newUrl)
+    public function setUrl(string $newUrl): self
     {
         $this->newUrl = $newUrl;
 
@@ -84,7 +87,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getUrl($encode = false)
+    public function getUrl(bool $encode = false): string
     {
         return $encode ? $this->newUrl : rawurldecode($this->newUrl);
     }

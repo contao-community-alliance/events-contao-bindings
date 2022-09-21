@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,42 +36,42 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * @var array
      */
-    protected $pageData;
+    protected array $pageData;
 
     /**
      * The parameters to use in the url.
      *
      * @var string|null
      */
-    protected $parameters = null;
+    protected ?string $parameters = null;
 
     /**
      * The language code to use in the url.
      *
      * @var string|null
      */
-    protected $language = null;
+    protected ?string $language = null;
 
     /**
      * Check the domain of the target page and append it if necessary.
      *
-     * @var string|null
+     * @var bool
      */
-    protected $fixDomain = false;
+    protected bool $fixDomain = false;
 
     /**
      * The resulting url.
      *
      * @var string
      */
-    protected $url;
+    protected string $url;
 
     /**
      * Create a new instance.
      *
      * @param array       $pageData   The data for the page.
      *
-     * @param array|null  $parameters The parameters to use in the url.
+     * @param string|null  $parameters The parameters to use in the url.
      *
      * @param string|null $language   The language code to use in the url.
      *                                This parameter will get dropped in Contao 5.0 (and thus then always be null).
@@ -77,12 +79,17 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      * @param bool        $fixDomain  Check the domain of the target page and append it if necessary.
      *                                This parameter will get dropped for Contao 5.0 (and thus then always be true).
      */
-    public function __construct(array $pageData, $parameters = null, $language = null, $fixDomain = false)
-    {
+    public function __construct(
+        array $pageData,
+        ?string $parameters = null,
+        ?string $language = null,
+        bool $fixDomain = false
+    ) {
         $this->pageData   = $pageData;
-        $this->parameters = empty($parameters) ? null : (string) $parameters;
-        $this->language   = empty($language) ? null : (string) $language;
-        $this->fixDomain  = (bool) $fixDomain;
+        $this->parameters = empty($parameters) ? null : $parameters;
+        $this->language   = empty($language) ? null : $language;
+        $this->fixDomain  = $fixDomain;
+        $this->url        = '';
     }
 
     /**
@@ -90,7 +97,7 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * @return array
      */
-    public function getPageData()
+    public function getPageData(): array
     {
         return $this->pageData;
     }
@@ -100,7 +107,7 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * @return string|null
      */
-    public function getParameters()
+    public function getParameters(): ?string
     {
         return $this->parameters;
     }
@@ -112,7 +119,7 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * @return string|null
      */
-    public function getLanguage()
+    public function getLanguage(): ?string
     {
         return $this->language;
     }
@@ -122,9 +129,11 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * This will get dropped for Contao 5.0 (and thus then always be true).
      *
-     * @return null|string
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getFixDomain()
+    public function getFixDomain(): bool
     {
         return $this->fixDomain;
     }
@@ -136,7 +145,7 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * @return GenerateFrontendUrlEvent
      */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
@@ -150,7 +159,7 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getUrl($encoded = false)
+    public function getUrl(bool $encoded = false): string
     {
         return $encoded ? $this->url : rawurldecode($this->url);
     }

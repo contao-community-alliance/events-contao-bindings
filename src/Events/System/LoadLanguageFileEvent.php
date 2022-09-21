@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\System;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -33,32 +35,32 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @var bool
      */
-    protected $ignoreCache = false;
+    protected bool $ignoreCache = false;
 
     /**
      * The language code of the language in which the file shall get loaded.
      *
      * @var null|string
      */
-    protected $language = null;
+    protected ?string $language = null;
 
     /**
      * The name of the language file to load.
      *
      * @var string
      */
-    protected $fileName;
+    protected string $fileName;
 
     /**
      * Create a new instance of the event.
      *
-     * @param string $fileName    The name of the language file to load.
+     * @param string      $fileName    The name of the language file to load.
      *
-     * @param string $language    Optional language code of the language in which the file shall get loaded.
+     * @param string|null $language    Optional language code of the language in which the file shall get loaded.
      *
-     * @param bool   $ignoreCache Determinator if the cache shall be ignored and the file loaded again.
+     * @param bool        $ignoreCache Determinator if the cache shall be ignored and the file loaded again.
      */
-    public function __construct($fileName, $language = null, $ignoreCache = false)
+    public function __construct(string $fileName, string $language = null, bool $ignoreCache = false)
     {
         $this->fileName    = $fileName;
         $this->language    = $language;
@@ -72,7 +74,7 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @return LoadLanguageFileEvent
      */
-    public function setIgnoreCache($ignoreCache)
+    public function setIgnoreCache(bool $ignoreCache): self
     {
         $this->ignoreCache = $ignoreCache;
 
@@ -84,7 +86,7 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @return boolean
      */
-    public function isCacheIgnored()
+    public function isCacheIgnored(): bool
     {
         return $this->ignoreCache;
     }
@@ -92,11 +94,11 @@ class LoadLanguageFileEvent extends ContaoApiEvent
     /**
      * Set the language code of the language in which the file shall get loaded.
      *
-     * @param null|string $language The value.
+     * @param string|null $language The value.
      *
      * @return LoadLanguageFileEvent
      */
-    public function setLanguage($language)
+    public function setLanguage(?string $language): self
     {
         $this->language = $language;
 
@@ -108,7 +110,7 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @return null|string
      */
-    public function getLanguage()
+    public function getLanguage(): ?string
     {
         return $this->language;
     }
@@ -120,7 +122,7 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @return LoadLanguageFileEvent
      */
-    public function setFileName($fileName)
+    public function setFileName(string $fileName): self
     {
         $this->fileName = $fileName;
 
@@ -132,7 +134,7 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName;
     }
