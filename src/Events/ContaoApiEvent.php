@@ -21,8 +21,7 @@
 
 namespace ContaoCommunityAlliance\Contao\Bindings\Events;
 
-
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Base class for all events.
