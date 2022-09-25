@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -33,14 +35,14 @@ class RedirectEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $newLocation;
+    protected string $newLocation;
 
     /**
      * The HTTP status code (one of 301, 302, 303, 307, defaults to 303).
      *
      * @var int
      */
-    protected $statusCode;
+    protected int $statusCode;
 
     /**
      * Create a new instance.
@@ -49,7 +51,7 @@ class RedirectEvent extends ContaoApiEvent
      *
      * @param int    $statusCode  The HTTP status code (301, 302, 303, 307, defaults to 303).
      */
-    public function __construct($newLocation, $statusCode = 303)
+    public function __construct(string $newLocation, int $statusCode = 303)
     {
         $this->newLocation = $newLocation;
         $this->statusCode  = $statusCode;
@@ -60,7 +62,7 @@ class RedirectEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getNewLocation()
+    public function getNewLocation(): string
     {
         return $this->newLocation;
     }
@@ -70,7 +72,7 @@ class RedirectEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }

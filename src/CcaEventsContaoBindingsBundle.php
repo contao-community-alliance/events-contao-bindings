@@ -18,6 +18,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;

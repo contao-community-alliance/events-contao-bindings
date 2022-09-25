@@ -18,6 +18,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -35,8 +37,9 @@ class Plugin implements BundlePluginInterface
 {
     /**
      * {@inheritdoc}
+     * @psalm-suppress UndefinedClass - we do not depend on these classes but want to load after them if they exist.
      */
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(CcaEventsContaoBindingsBundle::class)

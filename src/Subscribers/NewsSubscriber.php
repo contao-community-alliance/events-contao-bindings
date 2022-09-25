@@ -20,12 +20,14 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\ArticleModel;
 use Contao\CommentsModel;
 use Contao\ContentModel;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\Environment;
 use Contao\FilesModel;
@@ -42,38 +44,35 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplate
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetContentElementEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Util\StringHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Subscriber for the news extension.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class NewsSubscriber implements EventSubscriberInterface
 {
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * NewsSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::NEWS_GET_NEWS => 'handleNews',
@@ -97,21 +96,31 @@ class NewsSubscriber implements EventSubscriberInterface
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @psalm-suppress MixedArrayAccess - The global access can not be typed.
+     * @psalm-suppress UndefinedMagicPropertyAssignment
+     * @psalm-suppress UndefinedMagicPropertyFetch
+     * @psalm-suppress UndefinedConstant
      */
-    public function handleNews(GetNewsEvent $event, $eventName, EventDispatcherInterface $eventDispatcher)
+    public function handleNews(GetNewsEvent $event, string $eventName, EventDispatcherInterface $eventDispatcher): void
     {
         if ($event->getNewsHtml()) {
             return;
         }
 
-
-        $newsArchiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
-        $newsModelAdapter        = $this->framework->getAdapter(NewsModel::class);
-        /** @var NewsArchiveModel $newsArchiveModelAdapter */
-        /** @var NewsModel $newsModelAdapter */
-        $newsArchiveCollection = $newsArchiveModelAdapter->findAll();
-        $newsArchiveIds        = $newsArchiveCollection ? $newsArchiveCollection->fetchEach('id') : [];
-        $newsModel             = $newsModelAdapter->findPublishedByParentAndIdOrAlias(
+        /**
+         * @var NewsArchiveModel $archiveModelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $archiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
+        /**
+         * @var NewsModel $newsModelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $newsModelAdapter  = $this->framework->getAdapter(NewsModel::class);
+        $archiveCollection = $archiveModelAdapter->findAll();
+        $newsArchiveIds    = $archiveCollection ? $archiveCollection->fetchEach('id') : [];
+        $newsModel         = $newsModelAdapter->findPublishedByParentAndIdOrAlias(
             $event->getNewsId(),
             $newsArchiveIds
         );
@@ -122,7 +131,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
         $newsModel = $newsModel->current();
 
-        /** @var FrontendTemplate $objTemplate */
+        /** @psalm-suppress InternalMethod */
         $objTemplate = $this->framework->createInstance(FrontendTemplate::class, $event->getTemplate());
         $objTemplate->setData($newsModel->row());
 
@@ -133,7 +142,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->linkHeadline   = $this->generateLink($eventDispatcher, $newsModel->headline, $newsModel);
         $objTemplate->more           = $this->generateLink(
             $eventDispatcher,
-            $GLOBALS['TL_LANG']['MSC']['more'],
+            (string) $GLOBALS['TL_LANG']['MSC']['more'],
             $newsModel,
             false,
             true
@@ -146,9 +155,13 @@ class NewsSubscriber implements EventSubscriberInterface
 
         if (!empty($newsModel->teaser)) {
             // Clean the RTE output.
-            /** @var StringUtil $stringUtilAdapter */
+            /**
+             * @var StringUtil $stringUtilAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
             $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
 
+            /** @psalm-suppress DeprecatedMethod */
             $objTemplate->teaser = $stringUtilAdapter->encodeEmail($stringUtilAdapter->toHtml5($newsModel->teaser));
         }
 
@@ -156,19 +169,23 @@ class NewsSubscriber implements EventSubscriberInterface
         if ($newsModel->source !== 'default') {
             $objTemplate->text = true;
         } else {
-            /** @var ContentModel $contentModelAdapter */
+            /**
+             * @var ContentModel $contentModelAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
             $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
 
             // Compile the news text.
-            $objElement = $contentModelAdapter->findPublishedByPidAndTable($newsModel->id, 'tl_news');
+            /** @var \Contao\Model\Collection|null $objElement */
+            $objElement = $contentModelAdapter->findPublishedByPidAndTable((int) $newsModel->id, 'tl_news');
 
             if ($objElement !== null) {
                 while ($objElement->next()) {
-                    $getContentElementEvent = new GetContentElementEvent($objElement->id);
+                    $contentElementEvent = new GetContentElementEvent((int) $objElement->id);
 
-                    $eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT, $getContentElementEvent);
-
-                    $objTemplate->text .= $getContentElementEvent->getContentElementHtml();
+                    $eventDispatcher->dispatch($contentElementEvent, ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT);
+                    /** @psalm-suppress MixedOperand */
+                    $objTemplate->text .= (string) $contentElementEvent->getContentElementHtml();
                 }
             }
         }
@@ -182,43 +199,59 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->commentCount     = $arrMeta['comments'];
         $objTemplate->timestamp        = $newsModel->date;
         $objTemplate->author           = $arrMeta['author'];
-        $objTemplate->datetime         = date('Y-m-d\TH:i:sP', $newsModel->date);
+        $objTemplate->datetime         = date('Y-m-d\TH:i:sP', (int) $newsModel->date);
 
         $objTemplate->addImage = false;
 
         // Add an image.
         if ($newsModel->addImage && !empty($newsModel->singleSRC)) {
-            /** @var FilesModel $filesModelAdapter */
+            /**
+             * @var FilesModel $filesModelAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
             $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
             $objModel = $filesModelAdapter->findByUuid($newsModel->singleSRC);
 
             if ($objModel === null) {
-                /** @var Validator $validatorAdapter */
+                /**
+                 * @var Validator $validatorAdapter
+                 * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+                 */
                 $validatorAdapter = $this->framework->getAdapter(Validator::class);
 
                 if (!$validatorAdapter->isUuid($newsModel->singleSRC)) {
-                    $objTemplate->text = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
+                    $objTemplate->text = sprintf(
+                        '<p class="error">%1$s</p>',
+                        (string) $GLOBALS['TL_LANG']['ERR']['version2format']
+                    );
                 }
             } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
                 // Do not override the field now that we have a model registry (see #6303).
                 $arrArticle = $newsModel->row();
 
                 // Override the default image size.
-                // This is always false!
-                if (!empty($this->imgSize)) {
-                    $size = deserialize($this->imgSize);
+                // FIXME: This is always false!
+                if (!empty($imgSize = (string) $this->imgSize)) {
+                    /**
+                     * @var StringUtil $stringUtilAdapter
+                     * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+                     */
+                    $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+
+                    /** @var list<string> $size */
+                    $size = $stringUtilAdapter->deserialize($imgSize);
 
                     if ($size[0] > 0 || $size[1] > 0) {
-                        $arrArticle['size'] = $this->imgSize;
+                        $arrArticle['size'] = $imgSize;
                     }
                 }
 
                 $arrArticle['singleSRC'] = $objModel->path;
 
-                $addImageToTemplateEvent = new AddImageToTemplateEvent($arrArticle, $objTemplate);
+                $imageEvent = new AddImageToTemplateEvent($arrArticle, $objTemplate);
 
-                $eventDispatcher->dispatch(ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE, $addImageToTemplateEvent);
+                $eventDispatcher->dispatch($imageEvent, ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE);
             }
         }
 
@@ -226,12 +259,9 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Add enclosures.
         if ($newsModel->addEnclosure) {
-            $addEnclosureToTemplateEvent = new AddEnclosureToTemplateEvent($newsModel->row(), $objTemplate);
+            $enclosureEvent = new AddEnclosureToTemplateEvent($newsModel->row(), $objTemplate);
 
-            $eventDispatcher->dispatch(
-                ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE,
-                $addEnclosureToTemplateEvent
-            );
+            $eventDispatcher->dispatch($enclosureEvent, ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE);
         }
 
         $news = $objTemplate->parse();
@@ -248,10 +278,20 @@ class NewsSubscriber implements EventSubscriberInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     *
+     * @psalm-suppress MixedArrayAccess - The global access can not be typed.
      */
-    protected function getMetaFields($objArticle)
+    protected function getMetaFields(NewsModel $objArticle): array
     {
-        $meta = deserialize($this->news_metaFields);
+        /**
+         * @var StringUtil $stringUtilAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+
+        /** @var list<string>|null $meta */
+        // FIXME: news_metaFields is in tl_module - can not reach from here.
+        $meta = $stringUtilAdapter->deserialize(/*$this->news_metaFields*/'');
 
         if (!is_array($meta)) {
             return [];
@@ -262,20 +302,26 @@ class NewsSubscriber implements EventSubscriberInterface
         foreach ($meta as $field) {
             switch ($field) {
                 case 'date':
-                    /** @var Date $dateAdapter */
+                    /**
+                     * @var Date $dateAdapter
+                     * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+                     */
                     $dateAdapter = $this->framework->getAdapter(Date::class);
-
-                    $return['date'] = $dateAdapter->parse($GLOBALS['objPage']->datimFormat, $objArticle->date);
+                    /** @var PageModel $page */
+                    $page = $GLOBALS['objPage'];
+                    $return['date'] = $dateAdapter->parse($page->datimFormat, (int) $objArticle->date);
                     break;
 
                 case 'author':
-                    if (($objAuthor = $objArticle->getRelated('author')) !== null) {
+                    /** @var \Contao\BackendUser|null $objAuthor */
+                    $objAuthor = $objArticle->getRelated('author');
+                    if ($objAuthor !== null) {
                         if (!empty($objAuthor->google)) {
-                            $return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] .
-                                ' <a href="https://plus.google.com/' . $objAuthor->google .
+                            $return['author'] = (string) $GLOBALS['TL_LANG']['MSC']['by'] .
+                                ' <a href="https://plus.google.com/' . (string) $objAuthor->google .
                                 '" rel="author" target="_blank">' . $objAuthor->name . '</a>';
                         } else {
-                            $return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+                            $return['author'] = (string) $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
                         }
                     }
                     break;
@@ -285,15 +331,17 @@ class NewsSubscriber implements EventSubscriberInterface
                         break;
                     }
 
-                    /** @var CommentsModel $commentsModelAdapter */
+                    /**
+                     * @var CommentsModel $commentsModelAdapter
+                     * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+                     */
                     $commentsModelAdapter = $this->framework->getAdapter(CommentsModel::class);
-
-                    $intTotal           = $commentsModelAdapter->countPublishedBySourceAndParent(
+                    $intTotal             = $commentsModelAdapter->countPublishedBySourceAndParent(
                         'tl_news',
-                        $objArticle->id
+                        (int) $objArticle->id
                     );
                     $return['ccount']   = $intTotal;
-                    $return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
+                    $return['comments'] = sprintf((string) $GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
                     break;
                 default:
             }
@@ -320,58 +368,62 @@ class NewsSubscriber implements EventSubscriberInterface
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @psalm-suppress MixedArrayAccess - The global access can not be typed.
      */
     protected function generateNewsUrl(
         EventDispatcherInterface $eventDispatcher,
         NewsModel $objItem,
-        $blnAddArchive = false
-    ) {
+        bool $blnAddArchive = false
+    ): string {
+        /**
+         * @var StringUtil $stringUtilAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+
         $url = null;
 
         switch ($objItem->source) {
             // Link to an external page.
             case 'external':
                 if (substr($objItem->url, 0, 7) === 'mailto:') {
-                    $url = StringHelper::encodeEmail($objItem->url);
+                    $url = $stringUtilAdapter->encodeEmail($objItem->url);
                 } else {
-                    $url = ampersand($objItem->url);
+                    $url = $stringUtilAdapter->ampersand($objItem->url);
                 }
                 break;
 
             // Link to an internal page.
             case 'internal':
                 if (($objTarget = $objItem->getRelated('jumpTo')) !== null) {
-                    $generateFrontendUrlEvent = new GenerateFrontendUrlEvent($objTarget->row());
-
-                    $eventDispatcher->dispatch(
-                        ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL,
-                        $generateFrontendUrlEvent
-                    );
-
-                    $url = $generateFrontendUrlEvent->getUrl();
+                    $event = new GenerateFrontendUrlEvent($objTarget->row());
+                    $eventDispatcher->dispatch($event, ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL);
+                    $url = $event->getUrl();
                 }
                 break;
 
             // Link to an article.
             case 'article':
-                /** @var ArticleModel $articleModelAdapter */
+                /**
+                 * @var ArticleModel $articleModelAdapter
+                 * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+                 */
                 $articleModelAdapter = $this->framework->getAdapter(ArticleModel::class);
-
-                if (($objArticle = $articleModelAdapter->findByPk($objItem->articleId, ['eager' => true])) !== null
+                /** @var ArticleModel|null $objArticle */
+                $objArticle = $articleModelAdapter->findByPk($objItem->articleId, ['eager' => true]);
+                if (($objArticle !== null)
                     && ($objPid = $objArticle->getRelated('pid')) !== null
                 ) {
-                    $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
+                    $event = new GenerateFrontendUrlEvent(
                         $objPid->row(),
                         '/articles/' .
                         ((!$GLOBALS['TL_CONFIG']['disableAlias'] && !empty($objArticle->alias)) ? $objArticle->alias : $objArticle->id)
                     );
 
-                    $eventDispatcher->dispatch(
-                        ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL,
-                        $generateFrontendUrlEvent
-                    );
+                    $eventDispatcher->dispatch($event, ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL);
 
-                    $url = $generateFrontendUrlEvent->getUrl();
+                    $url = $event->getUrl();
                 }
                 break;
 
@@ -380,31 +432,39 @@ class NewsSubscriber implements EventSubscriberInterface
 
         // Link to the default page.
         if ($url === null) {
-            /** @var PageModel $pageModelAdapter */
+            /**
+             * @var PageModel $pageModelAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
             $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
-
-            $objPage = $pageModelAdapter->findByPk($objItem->getRelated('pid')->jumpTo);
+            /** @var NewsArchiveModel $related */
+            $related = $objItem->getRelated('pid');
+            /** @var PageModel|null $objPage */
+            $objPage = $pageModelAdapter->findByPk($related->jumpTo);
 
             if ($objPage === null) {
-                $url = ampersand(Environment::get('request'), true);
+                $url = $stringUtilAdapter->ampersand((string) Environment::get('request'), true);
             } else {
-                $generateFrontendUrlEvent = new GenerateFrontendUrlEvent(
+                $event = new GenerateFrontendUrlEvent(
                     $objPage->row(),
                     (($GLOBALS['TL_CONFIG']['useAutoItem'] && !$GLOBALS['TL_CONFIG']['disableAlias']) ? '/' : '/items/') .
                     ((!$GLOBALS['TL_CONFIG']['disableAlias'] && !empty($objItem->alias)) ? $objItem->alias : $objItem->id)
                 );
 
-                $eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL, $generateFrontendUrlEvent);
+                $eventDispatcher->dispatch($event, ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL);
 
-                $url = $generateFrontendUrlEvent->getUrl();
+                $url = $event->getUrl();
             }
 
-            /** @var Input $inputAdapter */
+            /**
+             * @var Input $inputAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
             $inputAdapter = $this->framework->getAdapter(Input::class);
 
             // Add the current archive parameter (news archive).
             if ($blnAddArchive && !empty($inputAdapter->get('month'))) {
-                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . $inputAdapter->get('month');
+                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . (string) $inputAdapter->get('month');
             }
         }
 
@@ -430,41 +490,49 @@ class NewsSubscriber implements EventSubscriberInterface
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     *
+     * @psalm-suppress MixedArrayAccess - The global access can not be typed.
      */
     protected function generateLink(
         EventDispatcherInterface $eventDispatcher,
-        $strLink,
-        $objArticle,
-        $blnAddArchive = false,
-        $blnIsReadMore = false
-    ) {
+        string $strLink,
+        NewsModel $objArticle,
+        bool $blnAddArchive = false,
+        bool $blnIsReadMore = false
+    ): string {
+        /**
+         * @var StringUtil $stringUtilAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+
         // Internal link.
         if ($objArticle->source !== 'external') {
             return sprintf(
                 '<a href="%s" title="%s">%s%s</a>',
                 $this->generateNewsUrl($eventDispatcher, $objArticle, $blnAddArchive),
-                specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
+                $stringUtilAdapter->specialchars(
+                    sprintf((string) $GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline),
+                    true
+                ),
                 $strLink,
                 ($blnIsReadMore ? ' <span class="invisible">' . $objArticle->headline . '</span>' : '')
             );
         }
-
-        /** @var StringUtil $stringUtilAdapter */
-        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
 
         // Encode e-mail addresses.
         if (substr($objArticle->url, 0, 7) === 'mailto:') {
             $strArticleUrl = $stringUtilAdapter->encodeEmail($objArticle->url);
         } else {
         // Ampersand URIs.
-            $strArticleUrl = ampersand($objArticle->url);
+            $strArticleUrl = $stringUtilAdapter->ampersand($objArticle->url);
         }
 
         // External link.
         return sprintf(
             '<a href="%s" title="%s"%s>%s</a>',
             $strArticleUrl,
-            specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
+            $stringUtilAdapter->specialchars(sprintf((string) $GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
             $objArticle->target ? ' target="_blank"' : '',
             $strLink
         );

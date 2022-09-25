@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,28 +36,28 @@ class GetArticleEvent extends ContaoApiEvent
      *
      * @var int
      */
-    protected $articleId;
+    protected int $articleId;
 
     /**
      * Flag determining if only the teaser shall be returned.
      *
      * @var bool
      */
-    protected $teaserOnly = false;
+    protected bool $teaserOnly = false;
 
     /**
      * The column for the article.
      *
      * @var string
      */
-    protected $column = 'main';
+    protected string $column = 'main';
 
     /**
      * The html code for the article.
      *
-     * @var string
+     * @var string|null
      */
-    protected $article;
+    protected ?string $article = null;
 
     /**
      * Create a new instance.
@@ -66,11 +68,11 @@ class GetArticleEvent extends ContaoApiEvent
      *
      * @param string $column     The column for the content element.
      */
-    public function __construct($articleId, $teaserOnly = false, $column = 'main')
+    public function __construct(int $articleId, bool $teaserOnly = false, string $column = 'main')
     {
-        $this->articleId  = (int) $articleId;
-        $this->teaserOnly = (bool) $teaserOnly;
-        $this->column     = (string) $column;
+        $this->articleId  = $articleId;
+        $this->teaserOnly = $teaserOnly;
+        $this->column     = $column;
     }
 
     /**
@@ -78,7 +80,7 @@ class GetArticleEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getArticleId()
+    public function getArticleId(): int
     {
         return $this->articleId;
     }
@@ -90,7 +92,7 @@ class GetArticleEvent extends ContaoApiEvent
      *
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getTeaserOnly()
+    public function getTeaserOnly(): bool
     {
         return $this->teaserOnly;
     }
@@ -100,7 +102,7 @@ class GetArticleEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getColumn()
+    public function getColumn(): string
     {
         return $this->column;
     }
@@ -112,7 +114,7 @@ class GetArticleEvent extends ContaoApiEvent
      *
      * @return GetArticleEvent
      */
-    public function setArticle($article)
+    public function setArticle(string $article): self
     {
         $this->article = $article;
 
@@ -122,9 +124,9 @@ class GetArticleEvent extends ContaoApiEvent
     /**
      * Retrieve the resulting html code for the article.
      *
-     * @return string
+     * @return string|null
      */
-    public function getArticle()
+    public function getArticle(): ?string
     {
         return $this->article;
     }

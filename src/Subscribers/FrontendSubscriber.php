@@ -20,9 +20,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Frontend;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Frontend\AddToUrlEvent;
@@ -36,26 +38,21 @@ class FrontendSubscriber implements EventSubscriberInterface
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     protected $framework;
 
     /**
      * FrontendSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::FRONTEND_ADD_TO_URL => 'handleAddToUrl'
@@ -69,9 +66,12 @@ class FrontendSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleAddToUrl(AddToUrlEvent $event)
+    public function handleAddToUrl(AddToUrlEvent $event): void
     {
-        /** @var Frontend $frontendAdapter */
+        /**
+         * @var Frontend $frontendAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $frontendAdapter = $this->framework->getAdapter(Frontend::class);
 
         $event->setUrl($frontendAdapter->addToUrl($event->getSuffix(), $event->isIgnoreParams()));

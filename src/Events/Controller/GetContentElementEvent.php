@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,21 +36,21 @@ class GetContentElementEvent extends ContaoApiEvent
      *
      * @var int
      */
-    protected $contentElementId;
+    protected int $contentElementId;
 
     /**
      * The column for the content element.
      *
      * @var string
      */
-    protected $column = 'main';
+    protected string $column = 'main';
 
     /**
      * The html code for the content element.
      *
-     * @var string
+     * @var string|null
      */
-    protected $contentElementHtml;
+    protected ?string $contentElementHtml = null;
 
     /**
      * Create a new instance.
@@ -57,10 +59,10 @@ class GetContentElementEvent extends ContaoApiEvent
      *
      * @param string $column           The column for the content element.
      */
-    public function __construct($contentElementId, $column = 'main')
+    public function __construct(int $contentElementId, string $column = 'main')
     {
-        $this->contentElementId = (int) $contentElementId;
-        $this->column           = (string) $column;
+        $this->contentElementId = $contentElementId;
+        $this->column           = $column;
     }
 
     /**
@@ -68,7 +70,7 @@ class GetContentElementEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getContentElementId()
+    public function getContentElementId(): int
     {
         return $this->contentElementId;
     }
@@ -78,7 +80,7 @@ class GetContentElementEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getColumn()
+    public function getColumn(): string
     {
         return $this->column;
     }
@@ -90,7 +92,7 @@ class GetContentElementEvent extends ContaoApiEvent
      *
      * @return GetContentElementEvent
      */
-    public function setContentElementHtml($contentElement)
+    public function setContentElementHtml(string $contentElement): self
     {
         $this->contentElementHtml = $contentElement;
 
@@ -100,9 +102,9 @@ class GetContentElementEvent extends ContaoApiEvent
     /**
      * Retrieve the html code for the content element.
      *
-     * @return string
+     * @return string|null
      */
-    public function getContentElementHtml()
+    public function getContentElementHtml(): ?string
     {
         return $this->contentElementHtml;
     }

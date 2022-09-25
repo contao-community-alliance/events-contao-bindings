@@ -33,28 +33,28 @@ class GenerateHtmlEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $alt;
+    protected string $alt;
 
     /**
      * A string of other attributes.
      *
      * @var string
      */
-    protected $attributes;
+    protected string $attributes;
 
     /**
      * The image path.
      *
      * @var string
      */
-    protected $src;
+    protected string $src;
 
     /**
      * Resulting output.
      *
-     * @var string
+     * @var string|null
      */
-    protected $html;
+    protected ?string $html;
 
     /**
      * Generate an image tag and return it as string.
@@ -65,11 +65,12 @@ class GenerateHtmlEvent extends ContaoApiEvent
      *
      * @param string $attributes A string of other attributes.
      */
-    public function __construct($src, $alt = '', $attributes = '')
+    public function __construct(string $src, string $alt = '', string $attributes = '')
     {
         $this->src        = $src;
         $this->alt        = $alt;
         $this->attributes = $attributes;
+        $this->html       = null;
     }
 
     /**
@@ -77,7 +78,7 @@ class GenerateHtmlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getAlt()
+    public function getAlt(): string
     {
         return $this->alt;
     }
@@ -87,7 +88,7 @@ class GenerateHtmlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getAttributes()
+    public function getAttributes(): string
     {
         return $this->attributes;
     }
@@ -97,7 +98,7 @@ class GenerateHtmlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getSrc()
+    public function getSrc(): string
     {
         return $this->src;
     }
@@ -109,7 +110,7 @@ class GenerateHtmlEvent extends ContaoApiEvent
      *
      * @return GenerateHtmlEvent
      */
-    public function setHtml($html)
+    public function setHtml(string $html): self
     {
         $this->html = $html;
 
@@ -119,9 +120,9 @@ class GenerateHtmlEvent extends ContaoApiEvent
     /**
      * Get the generated html representation.
      *
-     * @return string
+     * @return string|null
      */
-    public function getHtml()
+    public function getHtml(): ?string
     {
         return $this->html;
     }

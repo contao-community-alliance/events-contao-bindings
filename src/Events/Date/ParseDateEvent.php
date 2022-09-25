@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Date;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -31,35 +33,36 @@ class ParseDateEvent extends ContaoApiEvent
     /**
      * The date format.
      *
-     * @var string
+     * @var string|null
      */
-    protected $format;
+    protected ?string $format;
 
     /**
      * The timestamp.
      *
-     * @var int
+     * @var int|null
      */
-    protected $timestamp;
+    protected ?int $timestamp;
 
     /**
      * The parsed date.
      *
-     * @var string
+     * @var string|null
      */
-    protected $result;
+    protected ?string $result;
 
     /**
      * Create a new instance.
      *
-     * @param int    $timestamp The timestamp.
+     * @param int|null    $timestamp The timestamp.
      *
-     * @param string $format    The format string.
+     * @param string|null $format    The format string.
      */
-    public function __construct($timestamp = null, $format = null)
+    public function __construct(?int $timestamp = null, string $format = null)
     {
         $this->timestamp = $timestamp;
         $this->format    = $format;
+        $this->result    = null;
     }
 
     /**
@@ -67,7 +70,7 @@ class ParseDateEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getFormat()
+    public function getFormat(): ?string
     {
         return $this->format;
     }
@@ -79,7 +82,7 @@ class ParseDateEvent extends ContaoApiEvent
      *
      * @return ParseDateEvent
      */
-    public function setFormat($format)
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 
@@ -89,9 +92,9 @@ class ParseDateEvent extends ContaoApiEvent
     /**
      * Retrieve the timestamp.
      *
-     * @return int
+     * @return int|null
      */
-    public function getTimestamp()
+    public function getTimestamp(): ?int
     {
         return $this->timestamp;
     }
@@ -103,7 +106,7 @@ class ParseDateEvent extends ContaoApiEvent
      *
      * @return ParseDateEvent
      */
-    public function setTimestamp($timestamp)
+    public function setTimestamp(int $timestamp): self
     {
         $this->timestamp = $timestamp;
 
@@ -113,9 +116,9 @@ class ParseDateEvent extends ContaoApiEvent
     /**
      * Retrieve the parsed date.
      *
-     * @return string
+     * @return string|null
      */
-    public function getResult()
+    public function getResult(): ?string
     {
         return $this->result;
     }
@@ -127,7 +130,7 @@ class ParseDateEvent extends ContaoApiEvent
      *
      * @return ParseDateEvent
      */
-    public function setResult($result)
+    public function setResult(string $result): self
     {
         $this->result = $result;
 

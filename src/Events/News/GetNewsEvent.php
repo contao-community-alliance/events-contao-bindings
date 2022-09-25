@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\News;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,21 +36,21 @@ class GetNewsEvent extends ContaoApiEvent
      *
      * @var int
      */
-    protected $newsId;
+    protected int $newsId;
 
     /**
      * The template name.
      *
      * @var string
      */
-    protected $template = 'news_full';
+    protected string $template = 'news_full';
 
     /**
      * The rendered news html.
      *
-     * @var string
+     * @var string|null
      */
-    protected $newsHtml;
+    protected ?string $newsHtml = null;
 
     /**
      * Create the event.
@@ -56,10 +58,10 @@ class GetNewsEvent extends ContaoApiEvent
      * @param int    $newsId   The news ID.
      * @param string $template The template name.
      */
-    public function __construct($newsId, $template = 'news_full')
+    public function __construct(int $newsId, string $template = 'news_full')
     {
-        $this->newsId   = (int) $newsId;
-        $this->template = (string) $template;
+        $this->newsId   = $newsId;
+        $this->template = $template;
     }
 
     /**
@@ -67,7 +69,7 @@ class GetNewsEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getNewsId()
+    public function getNewsId(): int
     {
         return $this->newsId;
     }
@@ -77,7 +79,7 @@ class GetNewsEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template;
     }
@@ -89,7 +91,7 @@ class GetNewsEvent extends ContaoApiEvent
      *
      * @return GetNewsEvent
      */
-    public function setNewsHtml($newsHtml)
+    public function setNewsHtml(string $newsHtml): self
     {
         $this->newsHtml = $newsHtml;
 
@@ -99,9 +101,9 @@ class GetNewsEvent extends ContaoApiEvent
     /**
      * Return the rendered news html.
      *
-     * @return string
+     * @return string|null
      */
-    public function getNewsHtml()
+    public function getNewsHtml(): ?string
     {
         return $this->newsHtml;
     }

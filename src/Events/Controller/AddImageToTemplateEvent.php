@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use Contao\Template;
@@ -35,7 +37,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
      *
      * @var array
      */
-    protected $imageData;
+    protected array $imageData;
 
     /**
      * The template object.
@@ -49,14 +51,14 @@ class AddImageToTemplateEvent extends ContaoApiEvent
      *
      * @var int|null
      */
-    protected $maxWidth = null;
+    protected ?int $maxWidth = null;
 
     /**
      * The lightbox ID.
      *
      * @var string|null
      */
-    protected $lightboxId = null;
+    protected ?string $lightboxId = null;
 
     /**
      * Create new event.
@@ -66,12 +68,12 @@ class AddImageToTemplateEvent extends ContaoApiEvent
      * @param int|null        $maxWidth   The max image width.
      * @param string|null     $lightboxId The lightbox ID.
      */
-    public function __construct($imageData, $template, $maxWidth = null, $lightboxId = null)
+    public function __construct(array $imageData, $template, ?int $maxWidth = null, ?string $lightboxId = null)
     {
         $this->imageData  = $imageData;
         $this->template   = $template;
-        $this->maxWidth   = empty($maxWidth) ? null : (int) $maxWidth;
-        $this->lightboxId = empty($lightboxId) ? null : (string) $lightboxId;
+        $this->maxWidth   = empty($maxWidth) ? null : $maxWidth;
+        $this->lightboxId = empty($lightboxId) ? null : $lightboxId;
     }
 
     /**
@@ -79,7 +81,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
      *
      * @return array
      */
-    public function getImageData()
+    public function getImageData(): array
     {
         return $this->imageData;
     }
@@ -99,7 +101,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
      *
      * @return int|null
      */
-    public function getMaxWidth()
+    public function getMaxWidth(): ?int
     {
         return $this->maxWidth;
     }
@@ -109,7 +111,7 @@ class AddImageToTemplateEvent extends ContaoApiEvent
      *
      * @return null|string
      */
-    public function getLightboxId()
+    public function getLightboxId(): ?string
     {
         return $this->lightboxId;
     }

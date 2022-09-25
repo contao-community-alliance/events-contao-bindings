@@ -20,8 +20,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
+use ArrayObject;
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
@@ -34,24 +37,26 @@ class GetTemplateGroupEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $prefix;
+    protected string $prefix;
 
     /**
      * The list of matching templates.
      *
-     * @var \ArrayObject
+     * @var ArrayObject<string, string>
      */
-    protected $templates;
+    protected ArrayObject $templates;
 
     /**
      * Create a new instance.
      *
      * @param string $prefix The prefix for the matching templates.
      */
-    public function __construct($prefix)
+    public function __construct(string $prefix)
     {
-        $this->prefix    = (string) $prefix;
-        $this->templates = new \ArrayObject();
+        $this->prefix = $prefix;
+        /** @var ArrayObject<string, string> $templates */
+        $templates       = new ArrayObject();
+        $this->templates = $templates;
     }
 
     /**
@@ -59,7 +64,7 @@ class GetTemplateGroupEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -67,9 +72,9 @@ class GetTemplateGroupEvent extends ContaoApiEvent
     /**
      * Retrieve the array object containing the template list.
      *
-     * @return \ArrayObject
+     * @return ArrayObject
      */
-    public function getTemplates()
+    public function getTemplates(): ArrayObject
     {
         return $this->templates;
     }

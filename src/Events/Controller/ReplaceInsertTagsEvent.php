@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -33,14 +35,14 @@ class ReplaceInsertTagsEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $buffer;
+    protected string $buffer;
 
     /**
      * The resulting URL.
      *
      * @var bool
      */
-    protected $allowCache;
+    protected bool $allowCache;
 
     /**
      * Create a new instance.
@@ -49,7 +51,7 @@ class ReplaceInsertTagsEvent extends ContaoApiEvent
      *
      * @param bool   $allowCache True if caching is allowed, false otherwise (default: true).
      */
-    public function __construct($buffer, $allowCache = true)
+    public function __construct(string $buffer, bool $allowCache = true)
     {
         $this->buffer     = $buffer;
         $this->allowCache = $allowCache;
@@ -60,7 +62,7 @@ class ReplaceInsertTagsEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getBuffer()
+    public function getBuffer(): string
     {
         return $this->buffer;
     }
@@ -72,7 +74,7 @@ class ReplaceInsertTagsEvent extends ContaoApiEvent
      *
      * @return ReplaceInsertTagsEvent
      */
-    public function setBuffer($buffer)
+    public function setBuffer(string $buffer): self
     {
         $this->buffer = $buffer;
 
@@ -84,7 +86,7 @@ class ReplaceInsertTagsEvent extends ContaoApiEvent
      *
      * @return bool
      */
-    public function isCachingAllowed()
+    public function isCachingAllowed(): bool
     {
         return $this->allowCache;
     }

@@ -20,9 +20,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\Image;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
@@ -38,44 +40,39 @@ class ImageSubscriber implements EventSubscriberInterface
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * The image factory.
      *
      * @var ImageFactoryInterface
      */
-    private $imageFactory;
+    private ImageFactoryInterface $imageFactory;
 
     /**
      * Project root dir.
      *
      * @var string
      */
-    private $rootDir;
+    private string $rootDir;
 
     /**
      * ImageSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework    The contao framework.
-     * @param ImageFactoryInterface    $imageFactory The image factory.
-     * @param string                   $rootDir      Project root dir.
+     * @param ContaoFramework       $framework    The contao framework.
+     * @param ImageFactoryInterface $imageFactory The image factory.
+     * @param string                $rootDir      Project root dir.
      */
-    public function __construct(ContaoFrameworkInterface $framework, ImageFactoryInterface $imageFactory, $rootDir)
+    public function __construct(ContaoFramework $framework, ImageFactoryInterface $imageFactory, string $rootDir)
     {
         $this->framework    = $framework;
         $this->imageFactory = $imageFactory;
         $this->rootDir      = $rootDir;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::IMAGE_RESIZE   => 'handleResize',
@@ -90,7 +87,7 @@ class ImageSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleResize(ResizeImageEvent $event)
+    public function handleResize(ResizeImageEvent $event): void
     {
         $image = $this->imageFactory->create(
             $this->rootDir . '/' . $event->getImage(),
@@ -108,9 +105,12 @@ class ImageSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleGenerateHtml(GenerateHtmlEvent $event)
+    public function handleGenerateHtml(GenerateHtmlEvent $event): void
     {
-        /** @var Image $imageAdapter */
+        /**
+         * @var Image $imageAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $imageAdapter = $this->framework->getAdapter(Image::class);
 
         $event->setHtml(

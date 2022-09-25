@@ -31,106 +31,106 @@ class ResizeImageEvent extends ContaoApiEvent
     /**
      * Use upper left corner.
      */
-    const MODE_LEFT_TOP = 'left_top';
+    public const MODE_LEFT_TOP = 'left_top';
 
     /**
      * Use upper centered.
      */
-    const MODE_CENTER_TOP = 'center_top';
+    public const MODE_CENTER_TOP = 'center_top';
 
     /**
      * Use upper right corner.
      */
-    const MODE_RIGHT_TOP = 'right_top';
+    public const MODE_RIGHT_TOP = 'right_top';
 
     /**
      * Use left center.
      */
-    const MODE_LEFT_CENTER = 'left_center';
+    public const MODE_LEFT_CENTER = 'left_center';
 
     /**
      * Use the center of the image.
      */
-    const MODE_CENTER_CENTER = 'center_center';
+    public const MODE_CENTER_CENTER = 'center_center';
 
     /**
      * Use right center.
      */
-    const MODE_RIGHT_CENTER = 'right_center';
+    public const MODE_RIGHT_CENTER = 'right_center';
 
     /**
      * Use lower left corner.
      */
-    const MODE_LEFT_BOTTOM = 'left_bottom';
+    public const MODE_LEFT_BOTTOM = 'left_bottom';
 
     /**
      * Use bottom centered.
      */
-    const MODE_CENTER_BOTTOM = 'center_bottom';
+    public const MODE_CENTER_BOTTOM = 'center_bottom';
 
     /**
      * Use lower right corner.
      */
-    const MODE_RIGHT_BOTTOM = 'right_bottom';
+    public const MODE_RIGHT_BOTTOM = 'right_bottom';
 
     /**
      * Resize proportional.
      */
-    const MODE_PROPORTIONAL = 'proportional';
+    public const MODE_PROPORTIONAL = 'proportional';
 
     /**
      * Fit image into box.
      */
-    const MODE_BOX = 'box';
+    public const MODE_BOX = 'box';
 
     /**
      * The image path.
      *
      * @var string
      */
-    protected $image;
+    protected string $image;
 
     /**
      * The target width.
      *
      * @var int
      */
-    protected $width;
+    protected int $width;
 
     /**
      * The target height.
      *
      * @var int
      */
-    protected $height;
+    protected int $height;
 
     /**
      * The resize mode.
      *
      * @var string
      */
-    protected $mode;
+    protected string $mode;
 
     /**
      * An optional target path.
      *
      * @var null|string
      */
-    protected $target;
+    protected ?string $target;
 
     /**
      * Override existing target images.
      *
      * @var bool
      */
-    protected $force;
+    protected bool $force;
 
     /**
      * The path of the resized image or null.
      *
      * @var string|null
      */
-    protected $resultImage;
+    protected ?string $resultImage = null;
 
     /**
      * Create a new instance.
@@ -143,12 +143,18 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @param string      $mode   The resize mode.
      *
-     * @param null|string $target An optional target path.
+     * @param string|null $target An optional target path.
      *
      * @param bool        $force  Override existing target images.
      */
-    public function __construct($image, $width, $height, $mode = '', $target = null, $force = false)
-    {
+    public function __construct(
+        string $image,
+        int $width,
+        int $height,
+        string $mode = '',
+        ?string $target = null,
+        bool $force = false
+    ) {
         $this->image  = $image;
         $this->width  = $width;
         $this->height = $height;
@@ -162,7 +168,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return boolean
      */
-    public function isForced()
+    public function isForced(): bool
     {
         return $this->force;
     }
@@ -172,7 +178,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }
@@ -182,7 +188,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getImage()
+    public function getImage(): string
     {
         return $this->image;
     }
@@ -192,7 +198,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getMode()
+    public function getMode(): string
     {
         return $this->mode;
     }
@@ -204,7 +210,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return ResizeImageEvent
      */
-    public function setResultImage($resultImage)
+    public function setResultImage(?string $resultImage): self
     {
         $this->resultImage = $resultImage;
 
@@ -216,7 +222,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return string|null
      */
-    public function getResultImage()
+    public function getResultImage(): ?string
     {
         return $this->resultImage;
     }
@@ -226,7 +232,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return null|string
      */
-    public function getTarget()
+    public function getTarget(): ?string
     {
         return $this->target;
     }
@@ -236,7 +242,7 @@ class ResizeImageEvent extends ContaoApiEvent
      *
      * @return int
      */
-    public function getWidth()
+    public function getWidth(): int
     {
         return $this->width;
     }

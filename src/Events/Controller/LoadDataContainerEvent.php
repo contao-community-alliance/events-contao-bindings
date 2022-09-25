@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Controller;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -33,14 +35,14 @@ class LoadDataContainerEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Flag if the internal cache shall get bypassed.
      *
      * @var bool
      */
-    protected $ignoreCache;
+    protected bool $ignoreCache;
 
     /**
      * Create a new instance.
@@ -49,7 +51,7 @@ class LoadDataContainerEvent extends ContaoApiEvent
      *
      * @param bool   $ignoreCache Flag if the cache shall get bypassed.
      */
-    public function __construct($name, $ignoreCache = false)
+    public function __construct(string $name, bool $ignoreCache = false)
     {
         $this->name        = $name;
         $this->ignoreCache = $ignoreCache;
@@ -60,7 +62,7 @@ class LoadDataContainerEvent extends ContaoApiEvent
      *
      * @return boolean
      */
-    public function isCacheIgnored()
+    public function isCacheIgnored(): bool
     {
         return $this->ignoreCache;
     }
@@ -70,7 +72,7 @@ class LoadDataContainerEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
