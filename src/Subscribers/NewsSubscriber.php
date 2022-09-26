@@ -131,10 +131,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
         $newsModel = $newsModel->current();
 
-        /**
-         * @var FrontendTemplate $objTemplate
-         * @psalm-suppress InternalMethod
-         */
+        /**  @psalm-suppress InternalMethod */
         $objTemplate = $this->framework->createInstance(FrontendTemplate::class, [$event->getTemplate()]);
         $objTemplate->setData($newsModel->row());
 
@@ -180,7 +177,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Compile the news text.
             /** @var \Contao\Model\Collection|null $objElement */
-            $objElement = $contentModelAdapter->findPublishedByPidAndTable($newsModel->id, 'tl_news');
+            $objElement = $contentModelAdapter->findPublishedByPidAndTable((int) $newsModel->id, 'tl_news');
 
             if ($objElement !== null) {
                 while ($objElement->next()) {
@@ -202,7 +199,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->commentCount     = $arrMeta['comments'];
         $objTemplate->timestamp        = $newsModel->date;
         $objTemplate->author           = $arrMeta['author'];
-        $objTemplate->datetime         = date('Y-m-d\TH:i:sP', $newsModel->date);
+        $objTemplate->datetime         = date('Y-m-d\TH:i:sP', (int) $newsModel->date);
 
         $objTemplate->addImage = false;
 
@@ -312,7 +309,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     $dateAdapter = $this->framework->getAdapter(Date::class);
                     /** @var PageModel $page */
                     $page = $GLOBALS['objPage'];
-                    $return['date'] = $dateAdapter->parse($page->datimFormat, $objArticle->date);
+                    $return['date'] = $dateAdapter->parse($page->datimFormat, (int) $objArticle->date);
                     break;
 
                 case 'author':
@@ -341,7 +338,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     $commentsModelAdapter = $this->framework->getAdapter(CommentsModel::class);
                     $intTotal             = $commentsModelAdapter->countPublishedBySourceAndParent(
                         'tl_news',
-                        $objArticle->id
+                        (int) $objArticle->id
                     );
                     $return['ccount']   = $intTotal;
                     $return['comments'] = sprintf((string) $GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
