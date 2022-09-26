@@ -20,17 +20,20 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\ContentModel;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent;
@@ -42,32 +45,29 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Subscriber for the calendar extension.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CalendarSubscriber implements EventSubscriberInterface
 {
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * CalendarSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::CALENDAR_GET_EVENT => 'handleEvent',
@@ -91,26 +91,40 @@ class CalendarSubscriber implements EventSubscriberInterface
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @psalm-suppress MixedArrayAccess - The global access can not be typed.
+     * @psalm-suppress UndefinedMagicPropertyAssignment
+     * @psalm-suppress UndefinedMagicPropertyFetch
+     * @psalm-suppress UndefinedConstant
      */
-    public function handleEvent(GetCalendarEventEvent $event, $eventName, EventDispatcherInterface $eventDispatcher)
-    {
+    public function handleEvent(
+        GetCalendarEventEvent $event,
+        string $eventName,
+        EventDispatcherInterface $eventDispatcher
+    ): void {
         if ($event->getCalendarEventHtml()) {
             return;
         }
 
-        /** @var CalendarModel $calendarModelAdapter */
-        $calendarModelAdapter = $this->framework->getAdapter(CalendarModel::class);
-        $calendarCollection   = $calendarModelAdapter->findAll();
+        /**
+         * @var CalendarModel $modelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $modelAdapter = $this->framework->getAdapter(CalendarModel::class);
+        $calendarCollection   = $modelAdapter->findAll();
 
         if (!$calendarCollection) {
             return;
         }
 
-        /** @var CalendarEventsModel $calendarEventsModelAdapter */
-        $calendarEventsModelAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
+        /**
+         * @var CalendarEventsModel $eventsModelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
+        $eventsModelAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         $calendarIds = $calendarCollection->fetchEach('id');
-        $eventModel  = $calendarEventsModelAdapter->findPublishedByParentAndIdOrAlias(
+        $eventModel  = $eventsModelAdapter->findPublishedByParentAndIdOrAlias(
             $event->getCalendarEventId(),
             $calendarIds
         );
@@ -119,37 +133,54 @@ class CalendarSubscriber implements EventSubscriberInterface
             return;
         }
 
-        /** @var PageModel $pageModelAdapter */
+        /**
+         * @var PageModel $pageModelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
+        /**
+         * @var CalendarModel|null $calendarModel
+         * @psalm-suppress DocblockTypeContradiction - the parent is not denoted in Contao code.
+         */
         $calendarModel = $eventModel->getRelated('pid');
-        $objPage       = $pageModelAdapter->findWithDetails($calendarModel->jumpTo);
+        assert($calendarModel instanceof CalendarModel);
+        $objPage = $pageModelAdapter->findWithDetails($calendarModel->jumpTo);
+        assert($objPage instanceof PageModel);
 
-        if ($event->getDateTime()) {
-            $selectedStartDateTime = clone $event->getDateTime();
-            $selectedStartDateTime->setTime(
-                date('H', $eventModel->startTime),
-                date('i', $eventModel->startTime),
-                date('s', $eventModel->startTime)
+        $intStartTime = $eventModel->startTime;
+        $intEndTime   = $eventModel->endTime;
+        if ($date = $event->getDateTime()) {
+            $startDateTime = clone $date;
+            $startDateTime->setTime(
+                (int) date('H', $intStartTime),
+                (int) date('i', $intStartTime),
+                (int) date('s', $intStartTime)
             );
 
-            $secondsBetweenStartAndEndTime = ($eventModel->endTime - $eventModel->startTime);
+            $durationInSeconds = ($intEndTime - $intStartTime);
 
-            $intStartTime = $selectedStartDateTime->getTimestamp();
-            $intEndTime   = ($intStartTime + $secondsBetweenStartAndEndTime);
-        } else {
-            $intStartTime = $eventModel->startTime;
-            $intEndTime   = $eventModel->endTime;
+            $intStartTime = $startDateTime->getTimestamp();
+            $intEndTime   = ($intStartTime + $durationInSeconds);
         }
 
-        /** @var Calendar $calendarAdapter */
+        /**
+         * @var Calendar $calendarAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $calendarAdapter = $this->framework->getAdapter(Calendar::class);
 
         $span = $calendarAdapter->calculateSpan($intStartTime, $intEndTime);
 
         // Do not show dates in the past if the event is recurring (see #923).
         if ($eventModel->recurring) {
-            $arrRange = deserialize($eventModel->repeatEach);
+            /**
+             * @var StringUtil $stringUtilAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
+            $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+            /** @var array{value: string, unit: string} $arrRange */
+            $arrRange = $stringUtilAdapter->deserialize($eventModel->repeatEach);
 
             while ($intStartTime < time() && $intEndTime < $eventModel->repeatEnd) {
                 $intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
@@ -170,7 +201,10 @@ class CalendarSubscriber implements EventSubscriberInterface
         */
         // @codingStandardsIgnoreEnd
 
-        /** @var Date $dateAdapter */
+        /**
+         * @var Date $dateAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $dateAdapter = $this->framework->getAdapter(Date::class);
 
         // Get date.
@@ -193,11 +227,13 @@ class CalendarSubscriber implements EventSubscriberInterface
                 $strTimeClose;
         } else {
             $date = $strTimeStart .
-                    $dateAdapter->parse($objPage->dateFormat, $intStartTime) .
-                ($eventModel->addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) .
+                $dateAdapter->parse($objPage->dateFormat, $intStartTime) .
+                (
+                    $eventModel->addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) .
                     $strTimeClose . ' - ' . $strTimeEnd .
-                                        $dateAdapter->parse($objPage->timeFormat, $intEndTime) . ')' : ''
-                ) . $strTimeClose;
+                    $dateAdapter->parse($objPage->timeFormat, $intEndTime) . ')' : ''
+                ) .
+                $strTimeClose;
         }
 
         $until     = '';
@@ -205,30 +241,45 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         // Recurring event.
         if ($eventModel->recurring) {
-            $arrRange  = deserialize($eventModel->repeatEach);
+            /**
+             * @var StringUtil $stringUtilAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
+            $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+            /** @var array{unit: string, value: string} */
+            $arrRange  = $stringUtilAdapter->deserialize($eventModel->repeatEach);
             $strKey    = 'cal_' . $arrRange['unit'];
-            $recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+            $recurring = sprintf((string) $GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
 
             if ($eventModel->recurrences > 0) {
                 $until = sprintf(
-                    $GLOBALS['TL_LANG']['MSC']['cal_until'],
+                    (string) $GLOBALS['TL_LANG']['MSC']['cal_until'],
                     $dateAdapter->parse($objPage->dateFormat, $eventModel->repeatEnd)
                 );
             }
         }
 
         // Override the default image size.
-        // This is always false.
-        if (!empty($this->imgSize)) {
-            $size = deserialize($this->imgSize);
+        // FIXME: This is always false!
+        if (!empty($imgSize = (string) $this->imgSize)) {
+            /**
+             * @var StringUtil $stringUtilAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
+            $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+            /** @var list<string> $size */
+            $size = $stringUtilAdapter->deserialize($imgSize);
 
             if ($size[0] > 0 || $size[1] > 0) {
-                $eventModel->size = $this->imgSize;
+                $eventModel->size = $imgSize;
             }
         }
 
-        /** @var FrontendTemplate $objTemplate */
-        $objTemplate = $this->framework->createInstance(FrontendTemplate::class, $event->getTemplate());
+        /**
+         * @var FrontendTemplate $objTemplate
+         * @psalm-suppress InternalMethod
+         */
+        $objTemplate = $this->framework->createInstance(FrontendTemplate::class, [$event->getTemplate()]);
         $objTemplate->setData($eventModel->row());
 
         $objTemplate->date          = $date;
@@ -241,18 +292,23 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->details = '';
 
-        /** @var ContentModel $contentModelAdapter */
+        /**
+         * @var ContentModel $contentModelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $contentModelAdapter = $this->framework->getAdapter(ContentModel::class);
 
+        /** @var \Contao\Model\Collection|null $objElement */
         $objElement = $contentModelAdapter->findPublishedByPidAndTable($eventModel->id, 'tl_calendar_events');
 
         if ($objElement !== null) {
             while ($objElement->next()) {
-                $getContentElementEvent = new GetContentElementEvent($objElement->id);
+                $contentElementEvent = new GetContentElementEvent((int) $objElement->id);
 
-                $eventDispatcher->dispatch(ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT, $getContentElementEvent);
+                $eventDispatcher->dispatch($contentElementEvent, ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT);
 
-                $objTemplate->details .= $getContentElementEvent->getContentElementHtml();
+                /** @psalm-suppress MixedOperand */
+                $objTemplate->details .= (string) $contentElementEvent->getContentElementHtml();
             }
 
             $objTemplate->hasDetails = true;
@@ -260,7 +316,10 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $objTemplate->addImage = false;
 
-        /** @var FilesModel $filesModelAdapter */
+        /**
+         * @var FilesModel $filesModelAdapter
+         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+         */
         $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
         // Add an image.
@@ -268,20 +327,26 @@ class CalendarSubscriber implements EventSubscriberInterface
             $objModel = $filesModelAdapter->findByUuid($eventModel->singleSRC);
 
             if ($objModel === null) {
-                /** @var Validator $validatorAdapter */
+                /**
+                 * @var Validator $validatorAdapter
+                 * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+                 */
                 $validatorAdapter = $this->framework->getAdapter(Validator::class);
 
                 if (!$validatorAdapter->isUuid($eventModel->singleSRC)) {
-                    $objTemplate->text = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
+                    $objTemplate->text = sprintf(
+                        '<p class="error">%1$s</p>',
+                        (string) $GLOBALS['TL_LANG']['ERR']['version2format']
+                    );
                 }
             } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
                 // Do not override the field now that we have a model registry (see #6303).
                 $arrEvent              = $eventModel->row();
                 $arrEvent['singleSRC'] = $objModel->path;
 
-                $addImageToTemplateEvent = new AddImageToTemplateEvent($arrEvent, $objTemplate);
+                $addImageEvent = new AddImageToTemplateEvent($arrEvent, $objTemplate);
 
-                $eventDispatcher->dispatch(ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE, $addImageToTemplateEvent);
+                $eventDispatcher->dispatch($addImageEvent, ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE);
             }
         }
 
@@ -289,12 +354,9 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         // Add enclosures.
         if ($eventModel->addEnclosure) {
-            $addEnclosureToTemplateEvent = new AddEnclosureToTemplateEvent($eventModel->row(), $objTemplate);
+            $eclosureEvent = new AddEnclosureToTemplateEvent($eventModel->row(), $objTemplate);
 
-            $eventDispatcher->dispatch(
-                ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE,
-                $addEnclosureToTemplateEvent
-            );
+            $eventDispatcher->dispatch($eclosureEvent, ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE);
         }
 
         $calendarEvent = $objTemplate->parse();

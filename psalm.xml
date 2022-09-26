@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<psalm
+    hideExternalErrors="true"
+    errorLevel="1"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="src" />
+    </projectFiles>
+    <issueHandlers>
+        <TooManyArguments>
+            <errorLevel type="suppress">
+                <!--
+                Symfony 4.x to 5.x transition changed the signature to be compatible with PSR.
+                Change to SF contracts for SF 5.0 which reintroduces the second parameter.
+                -->
+                <referencedFunction name="Symfony\Contracts\EventDispatcher\EventDispatcherInterface::dispatch"/>
+            </errorLevel>
+        </TooManyArguments>
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+                <!--
+                Symfony 4.x to 5.x transition deprecated the class to contracts.
+                Change to SF contracts for SF 5.0.
+                -->
+                <referencedClass name="Symfony\Component\EventDispatcher\Event"/>
+            </errorLevel>
+        </DeprecatedClass>
+    </issueHandlers>
+</psalm>

@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\System;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -33,33 +35,34 @@ class GetReferrerEvent extends ContaoApiEvent
      *
      * @var bool
      */
-    protected $encodeAmpersands;
+    protected bool $encodeAmpersands;
 
     /**
      * An optional table name.
      *
      * @var null|string
      */
-    protected $tableName;
+    protected ?string $tableName;
 
     /**
      * The referrer url.
      *
-     * @var null|string
+     * @var string
      */
-    protected $referrerUrl;
+    protected string $referrerUrl;
 
     /**
      * Return the current referer URL and optionally encode ampersands.
      *
-     * @param boolean $encodeAmpersands If true, ampersands will be encoded.
+     * @param boolean     $encodeAmpersands If true, ampersands will be encoded.
      *
-     * @param string  $tableName        An optional table name.
+     * @param string|null $tableName        An optional table name.
      */
-    public function __construct($encodeAmpersands = false, $tableName = null)
+    public function __construct(bool $encodeAmpersands = false, string $tableName = null)
     {
         $this->encodeAmpersands = $encodeAmpersands;
         $this->tableName        = $tableName;
+        $this->referrerUrl      = '';
     }
 
     /**
@@ -67,7 +70,7 @@ class GetReferrerEvent extends ContaoApiEvent
      *
      * @return boolean
      */
-    public function isEncodeAmpersands()
+    public function isEncodeAmpersands(): bool
     {
         return $this->encodeAmpersands;
     }
@@ -77,7 +80,7 @@ class GetReferrerEvent extends ContaoApiEvent
      *
      * @return null|string
      */
-    public function getTableName()
+    public function getTableName(): ?string
     {
         return $this->tableName;
     }
@@ -89,7 +92,7 @@ class GetReferrerEvent extends ContaoApiEvent
      *
      * @return GetReferrerEvent
      */
-    public function setReferrerUrl($referrerUrl)
+    public function setReferrerUrl(string $referrerUrl): self
     {
         $this->referrerUrl = $referrerUrl;
 
@@ -101,9 +104,9 @@ class GetReferrerEvent extends ContaoApiEvent
      *
      * @param bool $encoded Determine if return the encoded url.
      *
-     * @return string|null
+     * @return string
      */
-    public function getReferrerUrl($encoded = false)
+    public function getReferrerUrl(bool $encoded = false): string
     {
         return $encoded ? $this->referrerUrl : rawurldecode($this->referrerUrl);
     }

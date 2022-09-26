@@ -19,10 +19,12 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events;
 
-
-use Symfony\Contracts\EventDispatcher\Event;
+// FIXME: change to Symfony\Contracts\EventDispatcher\Event when running in SF 5.x only
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Base class for all events.

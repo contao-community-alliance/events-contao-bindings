@@ -19,9 +19,11 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent;
@@ -35,26 +37,21 @@ class DateSubscriber implements EventSubscriberInterface
     /**
      * The contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * DateSubscriber constructor.
      *
-     * @param ContaoFrameworkInterface $framework The contao framework.
+     * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ContaoEvents::DATE_PARSE => 'handleParseDate',
@@ -68,12 +65,15 @@ class DateSubscriber implements EventSubscriberInterface
      *
      * @return void
      */
-    public function handleParseDate($event)
+    public function handleParseDate(ParseDateEvent $event): void
     {
         if ($event->getResult() === null) {
-            /** @var Date $dateAdapter */
+            /**
+             * @var Date $dateAdapter
+             * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
+             */
             $dateAdapter = $this->framework->getAdapter(Date::class);
-            $event->setResult($dateAdapter->parse($event->getFormat(), $event->getTimestamp()));
+            $event->setResult($dateAdapter->parse($event->getFormat() ?? '', $event->getTimestamp()));
         }
     }
 }

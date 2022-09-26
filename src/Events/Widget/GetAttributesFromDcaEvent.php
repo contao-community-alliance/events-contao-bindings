@@ -19,6 +19,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Widget;
 
 use Contao\DataContainer;
@@ -32,23 +34,23 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
     /**
      * The data container in use.
      *
-     * @var DataContainer
+     * @var DataContainer|null
      */
-    protected $dataContainer;
+    protected ?DataContainer $dataContainer;
 
     /**
      * The input field configuration.
      *
      * @var array
      */
-    protected $fieldConfiguration;
+    protected array $fieldConfiguration;
 
     /**
      * The resulting widget configuration.
      *
      * @var array
      */
-    protected $result;
+    protected array $result = [];
 
     /**
      * The value to use in the widget.
@@ -62,46 +64,41 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * The (html) id for the widget.
      *
      * @var string
      */
-    protected $widgetId;
+    protected string $widgetId;
 
     /**
      * The name of the widget.
      *
      * @var string
      */
-    protected $widgetName;
+    protected string $widgetName;
 
     /**
      * Create a new instance.
      *
-     * @param array         $fieldConfiguration The field configuration from the dca.
-     *
-     * @param string        $widgetName         The name of the widget.
-     *
-     * @param mixed         $value              The value to use in the widget (optional).
-     *
-     * @param string        $widgetId           The widget id (optional).
-     *
-     * @param string        $table              The table name (optional).
-     *
-     * @param DataContainer $dataContainer      The data container in use.
+     * @param array              $fieldConfiguration The field configuration from the dca.
+     * @param string             $widgetName         The name of the widget.
+     * @param mixed              $value              The value to use in the widget (optional).
+     * @param string             $widgetId           The widget id (optional).
+     * @param string             $table              The table name (optional).
+     * @param DataContainer|null $dataContainer      The data container in use.
      */
     public function __construct(
-        $fieldConfiguration,
-        $widgetName,
+        array $fieldConfiguration,
+        string $widgetName,
         $value = null,
-        $widgetId = '',
-        $table = '',
-        $dataContainer = null
+        string $widgetId = '',
+        string $table = '',
+        ?DataContainer $dataContainer = null
     ) {
-        $this->fieldConfiguration = (array) $fieldConfiguration;
+        $this->fieldConfiguration = $fieldConfiguration;
         $this->widgetName         = $widgetName;
         $this->value              = $value;
         $this->widgetId           = $widgetId;
@@ -114,7 +111,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return DataContainer|null
      */
-    public function getDataContainer()
+    public function getDataContainer(): ?DataContainer
     {
         return $this->dataContainer;
     }
@@ -124,7 +121,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return array
      */
-    public function getFieldConfiguration()
+    public function getFieldConfiguration(): array
     {
         return $this->fieldConfiguration;
     }
@@ -136,7 +133,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return GetAttributesFromDcaEvent
      */
-    public function setResult($result)
+    public function setResult(array $result): self
     {
         $this->result = $result;
 
@@ -148,7 +145,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return array
      */
-    public function getResult()
+    public function getResult(): array
     {
         return $this->result;
     }
@@ -168,7 +165,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
@@ -178,7 +175,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getWidgetId()
+    public function getWidgetId(): string
     {
         return $this->widgetId;
     }
@@ -188,7 +185,7 @@ class GetAttributesFromDcaEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getWidgetName()
+    public function getWidgetName(): string
     {
         return $this->widgetName;
     }

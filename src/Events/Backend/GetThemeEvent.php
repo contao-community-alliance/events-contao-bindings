@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Backend;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,7 +36,7 @@ class GetThemeEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $theme;
+    protected string $theme = '';
 
     /**
      * Set the theme name.
@@ -43,9 +45,9 @@ class GetThemeEvent extends ContaoApiEvent
      *
      * @return GetThemeEvent
      */
-    public function setTheme($theme)
+    public function setTheme(string $theme): self
     {
-        $this->theme = (string) $theme;
+        $this->theme = $theme;
 
         return $this;
     }
@@ -55,7 +57,7 @@ class GetThemeEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getTheme()
+    public function getTheme(): string
     {
         return $this->theme;
     }

@@ -20,6 +20,8 @@
  * @filesource
  */
 
+declare(strict_types=1);
+
 namespace ContaoCommunityAlliance\Contao\Bindings\Events\Frontend;
 
 use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
@@ -34,30 +36,31 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @var string
      */
-    protected $suffix;
+    protected string $suffix;
 
     /**
      * The resulting URL.
      *
      * @var string
      */
-    protected $newUrl;
+    protected string $newUrl;
 
     /**
      * The resulting URL.
      *
      * @var boolean
      */
-    protected $ignore = false;
+    protected bool $ignore = false;
 
     /**
      * Create a new instance.
      *
      * @param string $suffix The string to add to the URL.
      */
-    public function __construct($suffix)
+    public function __construct(string $suffix)
     {
         $this->suffix = $suffix;
+        $this->newUrl = '';
     }
 
     /**
@@ -65,7 +68,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getSuffix()
+    public function getSuffix(): string
     {
         return $this->suffix;
     }
@@ -77,7 +80,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return AddToUrlEvent
      */
-    public function setUrl($newUrl)
+    public function setUrl(string $newUrl): self
     {
         $this->newUrl = $newUrl;
 
@@ -91,7 +94,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return string
      */
-    public function getUrl($encoded = false)
+    public function getUrl(bool $encoded = false): string
     {
         return $encoded ? $this->newUrl : rawurldecode($this->newUrl);
     }
@@ -103,7 +106,7 @@ class AddToUrlEvent extends ContaoApiEvent
      *
      * @return AddToUrlEvent
      */
-    public function setIgnoreParams($ignore)
+    public function setIgnoreParams(bool $ignore): self
     {
         $this->ignore = $ignore;
 
@@ -113,9 +116,9 @@ class AddToUrlEvent extends ContaoApiEvent
     /**
      * Retrieve the flag for ignoring the GET parameters.
      *
-     * @return string
+     * @return bool
      */
-    public function isIgnoreParams()
+    public function isIgnoreParams(): bool
     {
         return $this->ignore;
     }
