@@ -68,10 +68,9 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "4.9.x-dev",
-      "dev-release/4.10.0": "4.10.x-dev",
-      "dev-release/4.13.0": "4.13.x-dev",
-      "dev-support/4.4.0": "4.4.x-dev"
+      "dev-master": "4.13.x-dev",
+      "dev-support/4.4.0": "4.4.x-dev",
+      "dev-support/4.9.0": "4.9.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Contao\\Bindings\\ContaoManager\\Plugin"
   }
