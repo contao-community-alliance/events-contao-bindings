@@ -104,7 +104,7 @@ class NewsSubscriber implements EventSubscriberInterface
      */
     public function handleNews(GetNewsEvent $event, string $eventName, EventDispatcherInterface $eventDispatcher): void
     {
-        if ($event->getNewsHtml()) {
+        if (null === $event->getNewsHtml()) {
             return;
         }
 
