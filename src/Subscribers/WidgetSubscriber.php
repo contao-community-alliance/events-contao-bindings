@@ -81,7 +81,10 @@ class WidgetSubscriber implements EventSubscriberInterface
         );
 
         // Bugfix: Contao does not validate for label array when determining the description.
-        if (strlen($result['description']) === 1 && !\is_array($event->getFieldConfiguration()['label'] ?? null)) {
+        if (
+            strlen((string) $result['description']) === 1
+            && !\is_array($event->getFieldConfiguration()['label'] ?? null)
+        ) {
             $result['description'] = '';
         }
 
