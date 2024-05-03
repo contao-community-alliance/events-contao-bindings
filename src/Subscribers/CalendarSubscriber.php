@@ -16,7 +16,7 @@
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @author     Ingolf Steinhardt <info@e-spin.de>
- * @copyright  2024 The Contao Community Alliance.
+ * @copyright  2014-2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -79,9 +79,7 @@ class CalendarSubscriber implements EventSubscriberInterface
      * Render a calendar event.
      *
      * @param GetCalendarEventEvent    $event           The event.
-     *
      * @param string                   $eventName       The event name.
-     *
      * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
      *
      * @return void
@@ -174,7 +172,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $span = $calendarAdapter->calculateSpan($intStartTime, $intEndTime);
 
         // Do not show dates in the past if the event is recurring (see #923).
-        if ($eventModel->recurring) {
+        if ((bool) $eventModel->recurring) {
             /**
              * @var StringUtil $stringUtilAdapter
              * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
@@ -209,28 +207,29 @@ class CalendarSubscriber implements EventSubscriberInterface
         $dateAdapter = $this->framework->getAdapter(Date::class);
 
         // Get date.
+        $addTime = (bool) $eventModel->addTime;
         if ($span > 0) {
             $date = $strTimeStart .
                 $dateAdapter->parse(
-                    ($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat),
+                    ($addTime ? $objPage->datimFormat : $objPage->dateFormat),
                     $intStartTime
                 ) .
                 $strTimeClose . ' - ' . $strTimeEnd .
                     $dateAdapter->parse(
-                        ($eventModel->addTime ? $objPage->datimFormat : $objPage->dateFormat),
+                        ($addTime ? $objPage->datimFormat : $objPage->dateFormat),
                         $intEndTime
                     ) .
                 $strTimeClose;
         } elseif ($intStartTime == $intEndTime) {
             $date = $strTimeStart .
                     $dateAdapter->parse($objPage->dateFormat, $intStartTime) .
-                ($eventModel->addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) . ')' : '') .
+                ($addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) . ')' : '') .
                 $strTimeClose;
         } else {
             $date = $strTimeStart .
                 $dateAdapter->parse($objPage->dateFormat, $intStartTime) .
                 (
-                    $eventModel->addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) .
+                $addTime ? ' (' . $dateAdapter->parse($objPage->timeFormat, $intStartTime) .
                     $strTimeClose . ' - ' . $strTimeEnd .
                     $dateAdapter->parse($objPage->timeFormat, $intEndTime) . ')' : ''
                 ) .
@@ -241,7 +240,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $recurring = '';
 
         // Recurring event.
-        if ($eventModel->recurring) {
+        if ((bool) $eventModel->recurring) {
             /**
              * @var StringUtil $stringUtilAdapter
              * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
@@ -321,7 +320,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
         // Add an image.
-        if ($eventModel->addImage && !empty($eventModel->singleSRC)) {
+        if ((bool) $eventModel->addImage && null !== $eventModel->singleSRC) {
             $objModel = $filesModelAdapter->findByUuid($eventModel->singleSRC);
 
             if ($objModel === null) {
@@ -351,7 +350,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $objTemplate->enclosure = [];
 
         // Add enclosures.
-        if ($eventModel->addEnclosure) {
+        if ((bool) $eventModel->addEnclosure) {
             $enclosureEvent = new AddEnclosureToTemplateEvent($eventModel->row(), $objTemplate);
 
             $eventDispatcher->dispatch($enclosureEvent, ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE);

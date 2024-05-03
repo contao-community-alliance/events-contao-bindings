@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2024 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,8 @@
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2018 The Contao Community Alliance.
+ * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @copyright  2014-2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -83,9 +84,7 @@ class NewsSubscriber implements EventSubscriberInterface
      * Render a news.
      *
      * @param GetNewsEvent             $event           The event.
-     *
      * @param string                   $eventName       The event name.
-     *
      * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
      *
      * @return void
@@ -153,7 +152,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->text           = '';
 
 
-        if (!empty($newsModel->teaser)) {
+        if (null !== $newsModel->teaser) {
             // Clean the RTE output.
             /**
              * @var StringUtil $stringUtilAdapter
@@ -204,7 +203,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->addImage = false;
 
         // Add an image.
-        if ($newsModel->addImage && !empty($newsModel->singleSRC)) {
+        if ((bool) $newsModel->addImage && null !== $newsModel->singleSRC) {
             /**
              * @var FilesModel $filesModelAdapter
              * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
@@ -258,7 +257,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->enclosure = [];
 
         // Add enclosures.
-        if ($newsModel->addEnclosure) {
+        if ((bool) $newsModel->addEnclosure) {
             $enclosureEvent = new AddEnclosureToTemplateEvent($newsModel->row(), $objTemplate);
 
             $eventDispatcher->dispatch($enclosureEvent, ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE);
@@ -327,7 +326,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     break;
 
                 case 'comments':
-                    if ($objArticle->noComments || $objArticle->source !== 'default') {
+                    if ((bool) $objArticle->noComments || $objArticle->source !== 'default') {
                         break;
                     }
 
@@ -356,9 +355,7 @@ class NewsSubscriber implements EventSubscriberInterface
      * Generate a URL and return it as string.
      *
      * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
-     *
      * @param NewsModel                $objItem         The news model.
-     *
      * @param boolean                  $blnAddArchive   Add the current archive parameter (news archive) (default: false).
      *
      * @return string
@@ -368,6 +365,7 @@ class NewsSubscriber implements EventSubscriberInterface
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @psalm-suppress MixedArrayAccess - The global access can not be typed.
      */
@@ -464,7 +462,8 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Add the current archive parameter (news archive).
             if ($blnAddArchive && !empty($inputAdapter->get('month'))) {
-                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?') . 'month=' . (string) $inputAdapter->get('month');
+                $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?')
+                        . 'month=' . (string) $inputAdapter->get('month');
             }
         }
 
@@ -476,14 +475,10 @@ class NewsSubscriber implements EventSubscriberInterface
      * Generate a link and return it as string.
      *
      * @param EventDispatcherInterface $eventDispatcher The event dispatcher.
-     *
      * @param string                   $strLink         The link text.
-     *
      * @param NewsModel                $objArticle      The model.
-     *
      * @param bool                     $blnAddArchive   Add the current archive parameter (news archive)
      *                                                  (default: false).
-     *
      * @param bool                     $blnIsReadMore   Determine if the link is a "read more" link.
      *
      * @return string
@@ -533,7 +528,7 @@ class NewsSubscriber implements EventSubscriberInterface
             '<a href="%s" title="%s"%s>%s</a>',
             $strArticleUrl,
             $stringUtilAdapter->specialchars(sprintf((string) $GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-            $objArticle->target ? ' target="_blank"' : '',
+            (bool) $objArticle->target ? ' target="_blank"' : '',
             $strLink
         );
     }
