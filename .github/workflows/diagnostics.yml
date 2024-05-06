@@ -28,6 +28,10 @@ jobs:
             output: '-o default'
             phpcq_install: 'update'
             contao: '~4.13.0'
+          - php: '8.2'
+            output: '-o default'
+            phpcq_install: 'update'
+            contao: '~4.13.0'
 
     steps:
       - name: Pull source
