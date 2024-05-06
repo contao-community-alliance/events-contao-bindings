@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2024 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,8 @@
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2018 The Contao Community Alliance.
+ * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @copyright  2014-2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -70,12 +71,9 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
      * Create a new instance.
      *
      * @param array       $pageData   The data for the page.
-     *
-     * @param string|null  $parameters The parameters to use in the url.
-     *
+     * @param string|null $parameters The parameters to use in the url.
      * @param string|null $language   The language code to use in the url.
      *                                This parameter will get dropped in Contao 5.0 (and thus then always be null).
-     *
      * @param bool        $fixDomain  Check the domain of the target page and append it if necessary.
      *                                This parameter will get dropped for Contao 5.0 (and thus then always be true).
      */
@@ -86,8 +84,8 @@ class GenerateFrontendUrlEvent extends ContaoApiEvent
         bool $fixDomain = false
     ) {
         $this->pageData   = $pageData;
-        $this->parameters = empty($parameters) ? null : $parameters;
-        $this->language   = empty($language) ? null : $language;
+        $this->parameters = ('' === $parameters) ? null : $parameters;
+        $this->language   = ('' === $language) ? null : $language;
         $this->fixDomain  = $fixDomain;
         $this->url        = '';
     }

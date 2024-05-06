@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2024 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,8 @@
  * @subpackage Subscribers
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2018 The Contao Community Alliance.
+ * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @copyright  2014-2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -70,16 +71,23 @@ class WidgetSubscriber implements EventSubscriberInterface
          * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
          */
         $widgetAdapter = $this->framework->getAdapter(Widget::class);
-
-        $event->setResult(
-            $widgetAdapter->getAttributesFromDca(
-                $event->getFieldConfiguration(),
-                $event->getWidgetName(),
-                $event->getValue(),
-                $event->getWidgetId(),
-                $event->getTable(),
-                $event->getDataContainer()
-            )
+        $result = $widgetAdapter->getAttributesFromDca(
+            $event->getFieldConfiguration(),
+            $event->getWidgetName(),
+            $event->getValue(),
+            $event->getWidgetId(),
+            $event->getTable(),
+            $event->getDataContainer()
         );
+
+        // Bugfix: Contao does not validate for label array when determining the description.
+        if (
+            strlen((string) $result['description']) === 1
+            && !\is_array($event->getFieldConfiguration()['label'] ?? null)
+        ) {
+            $result['description'] = '';
+        }
+
+        $event->setResult($result);
     }
 }
