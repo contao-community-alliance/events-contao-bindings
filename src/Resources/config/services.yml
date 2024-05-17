@@ -37,7 +37,7 @@ services:
     cca.event_bindings.image.subscriber:
         arguments:
             - "@contao.framework"
-            - "@contao.image.image_factory"
+            - "@contao.image.factory"
             - "%kernel.project_dir%"
         class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ImageSubscriber
         tags:
