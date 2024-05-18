@@ -176,7 +176,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
             // Compile the news text.
             /** @var \Contao\Model\Collection|null $objElement */
-            $objElement = $contentModelAdapter->findPublishedByPidAndTable((int) $newsModel->id, 'tl_news');
+            $objElement = $contentModelAdapter->findPublishedByPidAndTable($newsModel->id, 'tl_news');
 
             if ($objElement !== null) {
                 while ($objElement->next()) {
@@ -198,12 +198,12 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->commentCount     = $arrMeta['comments'];
         $objTemplate->timestamp        = $newsModel->date;
         $objTemplate->author           = $arrMeta['author'];
-        $objTemplate->datetime         = date('Y-m-d\TH:i:sP', (int) $newsModel->date);
+        $objTemplate->datetime         = date('Y-m-d\TH:i:sP', $newsModel->date);
 
         $objTemplate->addImage = false;
 
         // Add an image.
-        if ((bool) $newsModel->addImage && null !== $newsModel->singleSRC) {
+        if ($newsModel->addImage && null !== $newsModel->singleSRC) {
             /**
              * @var FilesModel $filesModelAdapter
              * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
@@ -257,7 +257,7 @@ class NewsSubscriber implements EventSubscriberInterface
         $objTemplate->enclosure = [];
 
         // Add enclosures.
-        if ((bool) $newsModel->addEnclosure) {
+        if ($newsModel->addEnclosure) {
             $enclosureEvent = new AddEnclosureToTemplateEvent($newsModel->row(), $objTemplate);
 
             $eventDispatcher->dispatch($enclosureEvent, ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE);
@@ -308,7 +308,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     $dateAdapter = $this->framework->getAdapter(Date::class);
                     /** @var PageModel $page */
                     $page = $GLOBALS['objPage'];
-                    $return['date'] = $dateAdapter->parse($page->datimFormat, (int) $objArticle->date);
+                    $return['date'] = $dateAdapter->parse($page->datimFormat, $objArticle->date);
                     break;
 
                 case 'author':
@@ -326,7 +326,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     break;
 
                 case 'comments':
-                    if ((bool) $objArticle->noComments || $objArticle->source !== 'default') {
+                    if ($objArticle->noComments || $objArticle->source !== 'default') {
                         break;
                     }
 
@@ -337,7 +337,7 @@ class NewsSubscriber implements EventSubscriberInterface
                     $commentsModelAdapter = $this->framework->getAdapter(CommentsModel::class);
                     $intTotal             = $commentsModelAdapter->countPublishedBySourceAndParent(
                         'tl_news',
-                        (int) $objArticle->id
+                        $objArticle->id
                     );
                     $return['ccount']   = $intTotal;
                     $return['comments'] = sprintf((string) $GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
@@ -463,7 +463,7 @@ class NewsSubscriber implements EventSubscriberInterface
             // Add the current archive parameter (news archive).
             if ($blnAddArchive && !empty($inputAdapter->get('month'))) {
                 $url .= ($GLOBALS['TL_CONFIG']['disableAlias'] ? '&amp;' : '?')
-                        . 'month=' . (string) $inputAdapter->get('month');
+                        . 'month=' . $inputAdapter->get('month');
             }
         }
 
