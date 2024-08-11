@@ -35,6 +35,7 @@ use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent;
@@ -321,7 +322,9 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         // Add an image.
         if ($eventModel->addImage && null !== $eventModel->singleSRC) {
-            $objModel = $filesModelAdapter->findByUuid($eventModel->singleSRC);
+            $objModel   = $filesModelAdapter->findByUuid($eventModel->singleSRC);
+            $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+            assert(\is_string($projectDir));
 
             if ($objModel === null) {
                 /**
@@ -336,7 +339,7 @@ class CalendarSubscriber implements EventSubscriberInterface
                         (string) $GLOBALS['TL_LANG']['ERR']['version2format']
                     );
                 }
-            } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
+            } elseif (is_file($projectDir . '/' . $objModel->path)) {
                 // Do not override the field now that we have a model registry (see #6303).
                 $arrEvent              = $eventModel->row();
                 $arrEvent['singleSRC'] = $objModel->path;

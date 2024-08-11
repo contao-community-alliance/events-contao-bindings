@@ -38,6 +38,7 @@ use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Validator;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
@@ -210,7 +211,9 @@ class NewsSubscriber implements EventSubscriberInterface
              */
             $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
 
-            $objModel = $filesModelAdapter->findByUuid($newsModel->singleSRC);
+            $objModel   = $filesModelAdapter->findByUuid($newsModel->singleSRC);
+            $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+            assert(\is_string($projectDir));
 
             if ($objModel === null) {
                 /**
@@ -225,7 +228,7 @@ class NewsSubscriber implements EventSubscriberInterface
                         (string) $GLOBALS['TL_LANG']['ERR']['version2format']
                     );
                 }
-            } elseif (is_file(TL_ROOT . '/' . $objModel->path)) {
+            } elseif (is_file($projectDir . '/' . $objModel->path)) {
                 // Do not override the field now that we have a model registry (see #6303).
                 $arrArticle = $newsModel->row();
 
@@ -528,7 +531,7 @@ class NewsSubscriber implements EventSubscriberInterface
             '<a href="%s" title="%s"%s>%s</a>',
             $strArticleUrl,
             $stringUtilAdapter->specialchars(sprintf((string) $GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-            (bool) $objArticle->target ? ' target="_blank"' : '',
+            $objArticle->target ? ' target="_blank"' : '',
             $strLink
         );
     }

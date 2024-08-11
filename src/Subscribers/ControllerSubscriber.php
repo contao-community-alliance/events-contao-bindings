@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2024 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,8 @@
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 The Contao Community Alliance.
+ * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @copyright  2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -27,7 +28,10 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\InsertTags;
 use Contao\PageModel;
+use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
@@ -62,8 +66,10 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFramework $framework)
-    {
+    public function __construct(
+        ContaoFramework $framework,
+        private readonly InsertTagParser $insertTagParser
+    ) {
         $this->framework = $framework;
     }
 
@@ -158,6 +164,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event): void
     {
+        $router = System::getContainer()->get('contao.routing.content_url_generator');
+
+
         /**
          * @var Controller $controllerAdapter
          * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
@@ -290,7 +299,7 @@ class ControllerSubscriber implements EventSubscriberInterface
          */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
-        $controllerAdapter->loadDataContainer($event->getName(), $event->isCacheIgnored());
+        $controllerAdapter->loadDataContainer($event->getName());
     }
 
     /**
@@ -336,14 +345,10 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event): void
     {
-        /**
-         * @var Controller $controllerAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
-
-        /** @psalm-suppress DeprecatedMethod */
-        $result = $controllerAdapter->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
+        if ($event->isCachingAllowed()) {
+            \trigger_error('Not supported since Contao 5.0.', E_USER_WARNING);
+        }
+        $result = $this->insertTagParser->replace($event->getBuffer());
 
         $event->setBuffer($result);
     }

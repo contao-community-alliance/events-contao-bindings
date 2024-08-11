@@ -16,6 +16,7 @@ services:
     cca.event_bindings.controller.subscriber:
         arguments:
             - "@contao.framework"
+            - "@contao.insert_tag.parser"
         class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ControllerSubscriber
         tags:
             - { name: kernel.event_subscriber }
