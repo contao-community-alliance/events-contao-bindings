@@ -29,6 +29,8 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
@@ -45,6 +47,9 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerE
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReplaceInsertTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Subscriber for the Controller class in Contao.
@@ -76,18 +81,18 @@ class ControllerSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
+            ContaoEvents::CONTROLLER_ADD_TO_URL => 'handleAddToUrl',
             ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
-            ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE     => 'handleAddImageToTemplate',
-            ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL     => 'handleGenerateFrontendUrl',
-            ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
-            ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
-            ContaoEvents::CONTROLLER_GET_PAGE_DETAILS          => 'handleGetPageDetails',
-            ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP        => 'handleGetTemplateGroup',
-            ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
-            ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
-            ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
-            ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS       => 'handleReplaceInsertTags',
+            ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE => 'handleAddImageToTemplate',
+            ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL => 'handleGenerateFrontendUrl',
+            ContaoEvents::CONTROLLER_GET_ARTICLE => 'handleGetArticle',
+            ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT => 'handleGetContentElement',
+            ContaoEvents::CONTROLLER_GET_PAGE_DETAILS => 'handleGetPageDetails',
+            ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP => 'handleGetTemplateGroup',
+            ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER => 'handleLoadDataContainer',
+            ContaoEvents::CONTROLLER_REDIRECT => 'handleRedirect',
+            ContaoEvents::CONTROLLER_RELOAD => 'handleReload',
+            ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS => 'handleReplaceInsertTags',
         ];
     }
 
@@ -164,24 +169,34 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event): void
     {
-        $router = System::getContainer()->get('contao.routing.content_url_generator');
+        $urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+        assert($urlGenerator instanceof ContentUrlGenerator);
 
+        $pageData = $event->getPageData();
+        if (null === ($page = PageModel::findById($pageData['id'] ?? ''))) {
+            return;
+        }
+        $page->setRow($pageData);
+        $page->loadDetails();
 
-        /**
-         * @var Controller $controllerAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+        try {
+            $event->setUrl(
+                $urlGenerator->generate(
+                    $page,
+                    $event->getParameters() ? ['parameters' => $event->getParameters()] : [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            );
+        } catch (RouteNotFoundException $e) {
+            $pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+            assert($pageRegistry instanceof PageRegistry);
 
-        /** @psalm-suppress DeprecatedMethod */
-        $url = $controllerAdapter->generateFrontendUrl(
-            $event->getPageData(),
-            $event->getParameters(),
-            $event->getLanguage(),
-            $event->getFixDomain()
-        );
+            if (!$pageRegistry->isRoutable($page)) {
+                throw new ResourceNotFoundException(\sprintf('Page ID %s is not routable', $page->id), 0, $e);
+            }
 
-        $event->setUrl($url);
+            throw $e;
+        }
     }
 
     /**
