@@ -29,5 +29,12 @@
                 <referencedClass name="Symfony\Component\EventDispatcher\Event"/>
             </errorLevel>
         </DeprecatedClass>
+        <MissingClassConstType>
+            <errorLevel type="suppress">
+                <file name="src/ContaoEvents.php"/>
+                <file name="src/Events/Image/ResizeImageEvent.php"/>
+                <file name="src/Events/Message/AddMessageEvent.php"/>
+            </errorLevel>
+        </MissingClassConstType>
     </issueHandlers>
 </psalm>
