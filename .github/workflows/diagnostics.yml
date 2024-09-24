@@ -18,7 +18,7 @@ jobs:
         include:
           - php: '7.4'
             output: '-o github-action -o default'
-            phpcq_install: 'install'
+            phpcq_install: 'update'
             contao: '~4.13.0'
           - php: '8.0'
             output: '-o default'
@@ -26,16 +26,20 @@ jobs:
             contao: '~4.13.0'
           - php: '8.1'
             output: '-o default'
-            phpcq_install: 'update'
+            phpcq_install: 'install'
             contao: '~4.13.0'
           - php: '8.2'
+            output: '-o default'
+            phpcq_install: 'update'
+            contao: '~4.13.0'
+          - php: '8.3'
             output: '-o default'
             phpcq_install: 'update'
             contao: '~4.13.0'
 
     steps:
       - name: Pull source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
@@ -44,7 +48,7 @@ jobs:
 
       # setup caches
       - name: Cache composer cache directory
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: composer-cache-dir
         with:
@@ -52,7 +56,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}
 
       - name: Cache vendor directory
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: vendor
         with:
@@ -61,7 +65,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-${{ matrix.contao }}-build-${{ env.cache-name }}-
       - name: Cache phpcq directory
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: phpcq
         with:
@@ -82,7 +86,7 @@ jobs:
         run: ./vendor/bin/phpcq run -v ${{ matrix.output }}
 
       - name: Upload build directory to artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: ${{ success() }} || ${{ failure() }}
         with:
           name: phpcq-builds-php-${{ matrix.php }}-${{ matrix.contao }}

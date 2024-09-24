@@ -27,7 +27,6 @@
   "support": {
     "email": "info@contao-community-alliance.de",
     "issues": "https://github.com/contao-community-alliance/events-contao-bindings/issues",
-    "irc": "irc://irc.freenode.org/contao.cca",
     "source": "https://github.com/contao-community-alliance/events-contao-bindings"
   },
   "require": {
@@ -48,7 +47,7 @@
     "phpcq/runner-bootstrap": "^1.0@dev"
   },
   "conflict": {
-    "contao-community-alliance/event-dispatcher": "<2.0 >=3.0"
+    "contao-community-alliance/event-dispatcher": "<2.0 || >=3.0"
   },
   "autoload": {
     "psr-4": {
