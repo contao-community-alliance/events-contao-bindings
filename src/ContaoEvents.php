@@ -76,15 +76,6 @@ class ContaoEvents
     public const CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE = 'contao.events.controller.add-enclosure-to-template';
 
     /**
-     * Event for adding an image to a template.
-     *
-     * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent
-     *
-     * @see \Contao\Controller::addImageToTemplate()
-     */
-    public const CONTROLLER_ADD_IMAGE_TO_TEMPLATE = 'contao.events.controller.add-image-to-template';
-
-    /**
      * Event to generate a frontend url.
      *
      * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent
@@ -199,6 +190,9 @@ class ContaoEvents
      *
      * @see \Contao\System::getReferer()
      */
+
+
+
     public const SYSTEM_GET_REFERRER = 'contao.events.system.get.referrer';
 
     /**
@@ -218,20 +212,6 @@ class ContaoEvents
      * @see \Contao\System::loadLanguageFile()
      */
     public const SYSTEM_LOAD_LANGUAGE_FILE = 'contao.events.system.load.language.file';
-
-    /**
-     * Event for generate a calendar event.
-     *
-     * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
-     */
-    public const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
-
-    /**
-     * Event for generate a news.
-     *
-     * @see \ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent
-     */
-    public const NEWS_GET_NEWS = 'contao.events.news.get-news';
 
     /**
      * Event for preparing the configuration array of an widget.

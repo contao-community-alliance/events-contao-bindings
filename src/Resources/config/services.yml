@@ -6,13 +6,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    cca.event_bindings.calendar.subscriber:
-        arguments:
-            - "@contao.framework"
-        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\CalendarSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
-
     cca.event_bindings.controller.subscriber:
         arguments:
             - "@contao.framework"
@@ -48,13 +41,6 @@ services:
         arguments:
             - "@contao.framework"
         class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\MessageSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
-
-    cca.event_bindings.news.subscriber:
-        arguments:
-            - "@contao.framework"
-        class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\NewsSubscriber
         tags:
             - { name: kernel.event_subscriber }
 

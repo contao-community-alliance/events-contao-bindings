@@ -31,12 +31,10 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
@@ -83,7 +81,6 @@ class ControllerSubscriber implements EventSubscriberInterface
         return [
             ContaoEvents::CONTROLLER_ADD_TO_URL => 'handleAddToUrl',
             ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
-            ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE => 'handleAddImageToTemplate',
             ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL => 'handleGenerateFrontendUrl',
             ContaoEvents::CONTROLLER_GET_ARTICLE => 'handleGetArticle',
             ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT => 'handleGetContentElement',
@@ -137,30 +134,6 @@ class ControllerSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Add an image to a template.
-     *
-     * @param AddImageToTemplateEvent $event The event.
-     *
-     * @return void
-     */
-    public function handleAddImageToTemplate(AddImageToTemplateEvent $event): void
-    {
-        /**
-         * @var Controller $controllerAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
-
-        /** @psalm-suppress DeprecatedMethod */
-        $controllerAdapter->addImageToTemplate(
-            $event->getTemplate(),
-            $event->getImageData(),
-            $event->getMaxWidth(),
-            $event->getLightboxId()
-        );
-    }
-
-    /**
      * Generate a frontend url.
      *
      * @param GenerateFrontendUrlEvent $event The event.
@@ -183,7 +156,7 @@ class ControllerSubscriber implements EventSubscriberInterface
             $event->setUrl(
                 $urlGenerator->generate(
                     $page,
-                    $event->getParameters() ? ['parameters' => $event->getParameters()] : [],
+                    null !== ($parameters = $event->getParameters()) ? ['parameters' => $parameters] : [],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 )
             );
