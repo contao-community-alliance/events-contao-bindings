@@ -189,6 +189,8 @@ class ContaoEvents
      * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent
      *
      * @see \Contao\Image::getHtml()
+     *
+     * @deprecated The event has been deprecated will get removed in version 5.
      */
     public const IMAGE_GET_HTML = 'contao.events.image.get.html';
 
@@ -223,6 +225,8 @@ class ContaoEvents
      * Event for generate a calendar event.
      *
      * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
+     *
+     * @deprecated The event has been deprecated will get removed in version 5.
      */
     public const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
 
@@ -230,6 +234,8 @@ class ContaoEvents
      * Event for generate a news.
      *
      * @see \ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent
+     *
+     * @deprecated The event has been deprecated will get removed in version 5.
      */
     public const NEWS_GET_NEWS = 'contao.events.news.get-news';
 
