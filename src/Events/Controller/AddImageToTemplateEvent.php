@@ -30,6 +30,8 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
 
 /**
  * This Event is emitted to add an image to a template.
+ *
+ * @deprecated The event has been deprecated will get removed in version 5.
  */
 class AddImageToTemplateEvent extends ContaoApiEvent
 {

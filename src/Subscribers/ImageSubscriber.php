@@ -74,6 +74,7 @@ class ImageSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        /** @psalm-suppress DeprecatedConstant */
         return [
             ContaoEvents::IMAGE_RESIZE   => 'handleResize',
             ContaoEvents::IMAGE_GET_HTML => 'handleGenerateHtml',

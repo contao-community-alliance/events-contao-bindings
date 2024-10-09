@@ -51,6 +51,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Subscriber for the news extension.
  *
+ * @deprecated The event has been deprecated will get removed in version 5.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
@@ -75,6 +77,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        /** @psalm-suppress DeprecatedConstant */
         return [
             ContaoEvents::NEWS_GET_NEWS => 'handleNews',
         ];
@@ -100,6 +103,7 @@ class NewsSubscriber implements EventSubscriberInterface
      * @psalm-suppress UndefinedMagicPropertyAssignment
      * @psalm-suppress UndefinedMagicPropertyFetch
      * @psalm-suppress UndefinedConstant
+     * @psalm-suppress DeprecatedClass
      */
     public function handleNews(GetNewsEvent $event, string $eventName, EventDispatcherInterface $eventDispatcher): void
     {
@@ -248,6 +252,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
                 $arrArticle['singleSRC'] = $objModel->path;
 
+                /** @psalm-suppress DeprecatedClass */
                 $imageEvent = new AddImageToTemplateEvent($arrArticle, $objTemplate);
 
                 $eventDispatcher->dispatch($imageEvent, ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE);

@@ -131,6 +131,10 @@ class ControllerSubscriber implements EventSubscriberInterface
      * @param AddImageToTemplateEvent $event The event.
      *
      * @return void
+     *
+     * @deprecated The event has been deprecated will get removed in version 5.
+     *
+     * @psalm-suppress DeprecatedClass
      */
     public function handleAddImageToTemplate(AddImageToTemplateEvent $event): void
     {
