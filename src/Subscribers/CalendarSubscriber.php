@@ -47,6 +47,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Subscriber for the calendar extension.
  *
+ * @deprecated The event has been deprecated will get removed in version 5.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CalendarSubscriber implements EventSubscriberInterface
@@ -70,6 +72,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        /** @psalm-suppress DeprecatedConstant */
         return [
             ContaoEvents::CALENDAR_GET_EVENT => 'handleEvent',
         ];
@@ -95,6 +98,7 @@ class CalendarSubscriber implements EventSubscriberInterface
      * @psalm-suppress UndefinedMagicPropertyAssignment
      * @psalm-suppress UndefinedMagicPropertyFetch
      * @psalm-suppress UndefinedConstant
+     * @psalm-suppress DeprecatedClass
      */
     public function handleEvent(
         GetCalendarEventEvent $event,
@@ -341,6 +345,7 @@ class CalendarSubscriber implements EventSubscriberInterface
                 $arrEvent              = $eventModel->row();
                 $arrEvent['singleSRC'] = $objModel->path;
 
+                /** @psalm-suppress DeprecatedClass */
                 $addImageEvent = new AddImageToTemplateEvent($arrEvent, $objTemplate);
 
                 $eventDispatcher->dispatch($addImageEvent, ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE);
