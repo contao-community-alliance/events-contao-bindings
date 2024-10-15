@@ -181,6 +181,8 @@ class ContaoEvents
      * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent
      *
      * @see \Contao\Image::getHtml()
+     *
+     * @deprecated The event has been deprecated will get removed in version 5.
      */
     public const IMAGE_GET_HTML = 'contao.events.image.get.html';
 
