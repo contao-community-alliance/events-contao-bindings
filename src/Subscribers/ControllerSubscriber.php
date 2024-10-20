@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2024 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,8 @@
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 The Contao Community Alliance.
+ * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @copyright  2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -27,10 +28,13 @@ namespace ContaoCommunityAlliance\Contao\Bindings\Subscribers;
 
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\PageModel;
+use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GenerateFrontendUrlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetArticleEvent;
@@ -41,6 +45,9 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerE
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReplaceInsertTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Subscriber for the Controller class in Contao.
@@ -62,26 +69,27 @@ class ControllerSubscriber implements EventSubscriberInterface
      *
      * @param ContaoFramework $framework The contao framework.
      */
-    public function __construct(ContaoFramework $framework)
-    {
+    public function __construct(
+        ContaoFramework $framework,
+        private readonly InsertTagParser $insertTagParser
+    ) {
         $this->framework = $framework;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
+            ContaoEvents::CONTROLLER_ADD_TO_URL => 'handleAddToUrl',
             ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
-            ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE     => 'handleAddImageToTemplate',
-            ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL     => 'handleGenerateFrontendUrl',
-            ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
-            ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
-            ContaoEvents::CONTROLLER_GET_PAGE_DETAILS          => 'handleGetPageDetails',
-            ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP        => 'handleGetTemplateGroup',
-            ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
-            ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
-            ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
-            ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS       => 'handleReplaceInsertTags',
+            ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL => 'handleGenerateFrontendUrl',
+            ContaoEvents::CONTROLLER_GET_ARTICLE => 'handleGetArticle',
+            ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT => 'handleGetContentElement',
+            ContaoEvents::CONTROLLER_GET_PAGE_DETAILS => 'handleGetPageDetails',
+            ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP => 'handleGetTemplateGroup',
+            ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER => 'handleLoadDataContainer',
+            ContaoEvents::CONTROLLER_REDIRECT => 'handleRedirect',
+            ContaoEvents::CONTROLLER_RELOAD => 'handleReload',
+            ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS => 'handleReplaceInsertTags',
         ];
     }
 
@@ -126,34 +134,6 @@ class ControllerSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Add an image to a template.
-     *
-     * @param AddImageToTemplateEvent $event The event.
-     *
-     * @return void
-     *
-     * @deprecated The event has been deprecated will get removed in version 5.
-     *
-     * @psalm-suppress DeprecatedClass
-     */
-    public function handleAddImageToTemplate(AddImageToTemplateEvent $event): void
-    {
-        /**
-         * @var Controller $controllerAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
-
-        /** @psalm-suppress DeprecatedMethod */
-        $controllerAdapter->addImageToTemplate(
-            $event->getTemplate(),
-            $event->getImageData(),
-            $event->getMaxWidth(),
-            $event->getLightboxId()
-        );
-    }
-
-    /**
      * Generate a frontend url.
      *
      * @param GenerateFrontendUrlEvent $event The event.
@@ -162,21 +142,34 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event): void
     {
-        /**
-         * @var Controller $controllerAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
+        $urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+        assert($urlGenerator instanceof ContentUrlGenerator);
 
-        /** @psalm-suppress DeprecatedMethod */
-        $url = $controllerAdapter->generateFrontendUrl(
-            $event->getPageData(),
-            $event->getParameters(),
-            $event->getLanguage(),
-            $event->getFixDomain()
-        );
+        $pageData = $event->getPageData();
+        if (null === ($page = PageModel::findById($pageData['id'] ?? ''))) {
+            return;
+        }
+        $page->setRow($pageData);
+        $page->loadDetails();
 
-        $event->setUrl($url);
+        try {
+            $event->setUrl(
+                $urlGenerator->generate(
+                    $page,
+                    null !== ($parameters = $event->getParameters()) ? ['parameters' => $parameters] : [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            );
+        } catch (RouteNotFoundException $e) {
+            $pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+            assert($pageRegistry instanceof PageRegistry);
+
+            if (!$pageRegistry->isRoutable($page)) {
+                throw new ResourceNotFoundException(\sprintf('Page ID %s is not routable', $page->id), 0, $e);
+            }
+
+            throw $e;
+        }
     }
 
     /**
@@ -294,7 +287,7 @@ class ControllerSubscriber implements EventSubscriberInterface
          */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 
-        $controllerAdapter->loadDataContainer($event->getName(), $event->isCacheIgnored());
+        $controllerAdapter->loadDataContainer($event->getName());
     }
 
     /**
@@ -340,14 +333,10 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleReplaceInsertTags(ReplaceInsertTagsEvent $event): void
     {
-        /**
-         * @var Controller $controllerAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
-
-        /** @psalm-suppress DeprecatedMethod */
-        $result = $controllerAdapter->replaceInsertTags($event->getBuffer(), $event->isCachingAllowed());
+        if ($event->isCachingAllowed()) {
+            \trigger_error('Not supported since Contao 5.0.', E_USER_WARNING);
+        }
+        $result = $this->insertTagParser->replace($event->getBuffer());
 
         $event->setBuffer($result);
     }

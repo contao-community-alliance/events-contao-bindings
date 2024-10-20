@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2024 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,8 @@
  * @author     Stefan Heimes <stefan_heimes@hotmail.com>
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2018 The Contao Community Alliance.
+ * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @copyright  2014-2024 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -74,15 +75,6 @@ class ContaoEvents
      * @see \Contao\Controller::addEnclosureToTemplate()
      */
     public const CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE = 'contao.events.controller.add-enclosure-to-template';
-
-    /**
-     * Event for adding an image to a template.
-     *
-     * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddImageToTemplateEvent
-     *
-     * @see \Contao\Controller::addImageToTemplate()
-     */
-    public const CONTROLLER_ADD_IMAGE_TO_TEMPLATE = 'contao.events.controller.add-image-to-template';
 
     /**
      * Event to generate a frontend url.
@@ -220,24 +212,6 @@ class ContaoEvents
      * @see \Contao\System::loadLanguageFile()
      */
     public const SYSTEM_LOAD_LANGUAGE_FILE = 'contao.events.system.load.language.file';
-
-    /**
-     * Event for generate a calendar event.
-     *
-     * @see \ContaoCommunityAlliance\Contao\Bindings\Events\Calendar\GetCalendarEventEvent
-     *
-     * @deprecated The event has been deprecated will get removed in version 5.
-     */
-    public const CALENDAR_GET_EVENT = 'contao.events.calendar.get-event';
-
-    /**
-     * Event for generate a news.
-     *
-     * @see \ContaoCommunityAlliance\Contao\Bindings\Events\News\GetNewsEvent
-     *
-     * @deprecated The event has been deprecated will get removed in version 5.
-     */
-    public const NEWS_GET_NEWS = 'contao.events.news.get-news';
 
     /**
      * Event for preparing the configuration array of an widget.

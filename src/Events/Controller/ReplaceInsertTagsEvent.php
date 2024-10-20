@@ -51,7 +51,7 @@ class ReplaceInsertTagsEvent extends ContaoApiEvent
      *
      * @param bool   $allowCache True if caching is allowed, false otherwise (default: true).
      */
-    public function __construct(string $buffer, bool $allowCache = true)
+    public function __construct(string $buffer, bool $allowCache = false)
     {
         $this->buffer     = $buffer;
         $this->allowCache = $allowCache;

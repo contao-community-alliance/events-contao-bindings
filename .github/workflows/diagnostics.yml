@@ -4,9 +4,6 @@ on:
   pull_request:
   push:
     branches:
-      - master
-      - 'release/*'
-      - 'hotfix/*'
 
 jobs:
   build:
@@ -15,27 +12,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - php: '7.4'
-            output: '-o github-action -o default'
-            phpcq_install: 'update'
-            contao: '~4.13.0'
-          - php: '8.0'
-            output: '-o default'
-            phpcq_install: 'update'
-            contao: '~4.13.0'
-          - php: '8.1'
-            output: '-o default'
-            phpcq_install: 'install'
-            contao: '~4.13.0'
-          - php: '8.2'
-            output: '-o default'
-            phpcq_install: 'update'
-            contao: '~4.13.0'
-          - php: '8.3'
-            output: '-o default'
-            phpcq_install: 'update'
-            contao: '~4.13.0'
+        php: [ '8.2', '8.3' ]
+        contao: [ '~5.3.0' ]
+        phpcq_install: [ 'update' ]
+        output: [ '-o github-action -o default' ]
 
     steps:
       - name: Pull source
@@ -64,6 +44,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-${{ matrix.contao }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-${{ matrix.contao }}-build-${{ env.cache-name }}-
+
       - name: Cache phpcq directory
         uses: actions/cache@v4
         env:
@@ -73,6 +54,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-${{ hashFiles('**/.phpcq.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-
+
       # install dependencies and tools
       - name: Install composer dependencies
         run: |
