@@ -254,7 +254,7 @@ class NewsSubscriber implements EventSubscriberInterface
 
                 /** @psalm-suppress DeprecatedClass */
                 $imageEvent = new AddImageToTemplateEvent($arrArticle, $objTemplate);
-
+                /** @psalm-suppress DeprecatedConstant */
                 $eventDispatcher->dispatch($imageEvent, ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE);
             }
         }

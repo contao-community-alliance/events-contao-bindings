@@ -347,7 +347,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
                 /** @psalm-suppress DeprecatedClass */
                 $addImageEvent = new AddImageToTemplateEvent($arrEvent, $objTemplate);
-
+                /** @psalm-suppress DeprecatedConstant */
                 $eventDispatcher->dispatch($addImageEvent, ContaoEvents::CONTROLLER_ADD_IMAGE_TO_TEMPLATE);
             }
         }
