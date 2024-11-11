@@ -79,17 +79,17 @@ class ControllerSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ContaoEvents::CONTROLLER_ADD_TO_URL => 'handleAddToUrl',
+            ContaoEvents::CONTROLLER_ADD_TO_URL                => 'handleAddToUrl',
             ContaoEvents::CONTROLLER_ADD_ENCLOSURE_TO_TEMPLATE => 'handleAddEnclosureToTemplate',
-            ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL => 'handleGenerateFrontendUrl',
-            ContaoEvents::CONTROLLER_GET_ARTICLE => 'handleGetArticle',
-            ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT => 'handleGetContentElement',
-            ContaoEvents::CONTROLLER_GET_PAGE_DETAILS => 'handleGetPageDetails',
-            ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP => 'handleGetTemplateGroup',
-            ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER => 'handleLoadDataContainer',
-            ContaoEvents::CONTROLLER_REDIRECT => 'handleRedirect',
-            ContaoEvents::CONTROLLER_RELOAD => 'handleReload',
-            ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS => 'handleReplaceInsertTags',
+            ContaoEvents::CONTROLLER_GENERATE_FRONTEND_URL     => 'handleGenerateFrontendUrl',
+            ContaoEvents::CONTROLLER_GET_ARTICLE               => 'handleGetArticle',
+            ContaoEvents::CONTROLLER_GET_CONTENT_ELEMENT       => 'handleGetContentElement',
+            ContaoEvents::CONTROLLER_GET_PAGE_DETAILS          => 'handleGetPageDetails',
+            ContaoEvents::CONTROLLER_GET_TEMPLATE_GROUP        => 'handleGetTemplateGroup',
+            ContaoEvents::CONTROLLER_LOAD_DATA_CONTAINER       => 'handleLoadDataContainer',
+            ContaoEvents::CONTROLLER_REDIRECT                  => 'handleRedirect',
+            ContaoEvents::CONTROLLER_RELOAD                    => 'handleReload',
+            ContaoEvents::CONTROLLER_REPLACE_INSERT_TAGS       => 'handleReplaceInsertTags',
         ];
     }
 
