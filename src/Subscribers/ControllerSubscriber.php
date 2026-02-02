@@ -44,6 +44,7 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\GetTemplateGroupEv
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\LoadDataContainerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\RedirectEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\ReplaceInsertTagsEvent;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -76,6 +77,7 @@ class ControllerSubscriber implements EventSubscriberInterface
         $this->framework = $framework;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

@@ -28,6 +28,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Frontend;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Frontend\AddToUrlEvent;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -52,6 +53,7 @@ class FrontendSubscriber implements EventSubscriberInterface
         $this->framework = $framework;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

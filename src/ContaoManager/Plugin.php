@@ -29,6 +29,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use ContaoCommunityAlliance\Contao\Bindings\CcaEventsContaoBindingsBundle;
 use ContaoCommunityAlliance\Contao\EventDispatcher\CcaEventDispatcherBundle;
+use Override;
 
 /**
  * Plugin for the Contao Manager.
@@ -39,6 +40,7 @@ class Plugin implements BundlePluginInterface
      * {@inheritdoc}
      * @psalm-suppress UndefinedClass - we do not depend on these classes but want to load after them if they exist.
      */
+    #[Override]
     public function getBundles(ParserInterface $parser): array
     {
         return [

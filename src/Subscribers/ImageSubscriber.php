@@ -31,6 +31,7 @@ use Contao\Image;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Image\GenerateHtmlEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Image\ResizeImageEvent;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -73,6 +74,7 @@ class ImageSubscriber implements EventSubscriberInterface
         $this->rootDir      = $rootDir;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

@@ -30,6 +30,7 @@ use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\GetReferrerEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LogEvent;
+use Override;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -63,6 +64,7 @@ class SystemSubscriber implements EventSubscriberInterface
         $this->logger    = $logger;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [
