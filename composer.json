@@ -30,8 +30,8 @@
     "source": "https://github.com/contao-community-alliance/events-contao-bindings"
   },
   "require": {
-    "php": "^8.2",
-    "contao/core-bundle": "^5.3",
+    "php": "^8.4",
+    "contao/core-bundle": "^5.7",
     "psr/log": "^2.0 || ^3.0",
     "symfony/config": "^6.4 || ^7.4",
     "symfony/dependency-injection": "^6.4 || ^7.4",
@@ -66,7 +66,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-release/5.0.0": "5.0.x-dev"
+      "dev-release/5.1.0": "5.1.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Contao\\Bindings\\ContaoManager\\Plugin"
   }
