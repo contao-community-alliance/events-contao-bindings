@@ -55,10 +55,9 @@ class ParseDateEvent extends ContaoApiEvent
      * Create a new instance.
      *
      * @param int|null    $timestamp The timestamp.
-     *
      * @param string|null $format    The format string.
      */
-    public function __construct(?int $timestamp = null, string $format = null)
+    public function __construct(?int $timestamp = null, ?string $format = null)
     {
         $this->timestamp = $timestamp;
         $this->format    = $format;
