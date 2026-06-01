@@ -27,6 +27,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Date\ParseDateEvent;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -51,6 +52,7 @@ class DateSubscriber implements EventSubscriberInterface
         $this->framework = $framework;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

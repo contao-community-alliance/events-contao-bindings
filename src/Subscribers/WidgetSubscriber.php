@@ -28,6 +28,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Widget;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Widget\GetAttributesFromDcaEvent;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -52,6 +53,7 @@ class WidgetSubscriber implements EventSubscriberInterface
         $this->framework = $framework;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

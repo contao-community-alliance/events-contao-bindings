@@ -28,6 +28,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Message;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Message\AddMessageEvent;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -52,6 +53,7 @@ class MessageSubscriber implements EventSubscriberInterface
         $this->framework = $framework;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [
