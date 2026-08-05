@@ -60,7 +60,7 @@ class LoadLanguageFileEvent extends ContaoApiEvent
      *
      * @param bool        $ignoreCache Determinator if the cache shall be ignored and the file loaded again.
      */
-    public function __construct(string $fileName, string $language = null, bool $ignoreCache = false)
+    public function __construct(string $fileName, ?string $language = null, bool $ignoreCache = false)
     {
         $this->fileName    = $fileName;
         $this->language    = $language;
