@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2026 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,6 +15,7 @@
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @author     Ingolf Steinhardt <info@e-spin.de>
  * @copyright  2018 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
@@ -31,11 +32,11 @@ use ContaoCommunityAlliance\Contao\Bindings\Events\ContaoApiEvent;
  */
 class AddMessageEvent extends ContaoApiEvent
 {
-    public const TYPE_ERROR = 'error';
-    public const TYPE_CONFIRM = 'confirm';
-    public const TYPE_NEW = 'new';
-    public const TYPE_INFO = 'info';
-    public const TYPE_RAW = 'raw';
+    public const string TYPE_ERROR = 'error';
+    public const string TYPE_CONFIRM = 'confirm';
+    public const string TYPE_NEW = 'new';
+    public const string TYPE_INFO = 'info';
+    public const string TYPE_RAW = 'raw';
 
     /**
      * Create an event to add an error message.

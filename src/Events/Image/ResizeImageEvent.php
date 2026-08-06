@@ -3,7 +3,7 @@
 /**
  * This file is part of contao-community-alliance/events-contao-bindings
  *
- * (c) 2014-2018 The Contao Community Alliance
+ * (c) 2014-2026 The Contao Community Alliance
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,6 +14,7 @@
  * @subpackage Image
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @author     Ingolf Steinhardt <info@e-spin.de>
  * @copyright  2018 The Contao Community Alliance.
  * @license    https://github.com/contao-community-alliance/events-contao-bindings/blob/master/LICENSE LGPL-3.0
  * @filesource
@@ -31,57 +32,57 @@ class ResizeImageEvent extends ContaoApiEvent
     /**
      * Use upper left corner.
      */
-    public const MODE_LEFT_TOP = 'left_top';
+    public const string MODE_LEFT_TOP = 'left_top';
 
     /**
      * Use upper centered.
      */
-    public const MODE_CENTER_TOP = 'center_top';
+    public const string MODE_CENTER_TOP = 'center_top';
 
     /**
      * Use upper right corner.
      */
-    public const MODE_RIGHT_TOP = 'right_top';
+    public const string MODE_RIGHT_TOP = 'right_top';
 
     /**
      * Use left center.
      */
-    public const MODE_LEFT_CENTER = 'left_center';
+    public const string MODE_LEFT_CENTER = 'left_center';
 
     /**
      * Use the center of the image.
      */
-    public const MODE_CENTER_CENTER = 'center_center';
+    public const string MODE_CENTER_CENTER = 'center_center';
 
     /**
      * Use right center.
      */
-    public const MODE_RIGHT_CENTER = 'right_center';
+    public const string MODE_RIGHT_CENTER = 'right_center';
 
     /**
      * Use lower left corner.
      */
-    public const MODE_LEFT_BOTTOM = 'left_bottom';
+    public const string MODE_LEFT_BOTTOM = 'left_bottom';
 
     /**
      * Use bottom centered.
      */
-    public const MODE_CENTER_BOTTOM = 'center_bottom';
+    public const string MODE_CENTER_BOTTOM = 'center_bottom';
 
     /**
      * Use lower right corner.
      */
-    public const MODE_RIGHT_BOTTOM = 'right_bottom';
+    public const string MODE_RIGHT_BOTTOM = 'right_bottom';
 
     /**
      * Resize proportional.
      */
-    public const MODE_PROPORTIONAL = 'proportional';
+    public const string MODE_PROPORTIONAL = 'proportional';
 
     /**
      * Fit image into box.
      */
-    public const MODE_BOX = 'box';
+    public const string MODE_BOX = 'box';
 
     /**
      * The image path.
