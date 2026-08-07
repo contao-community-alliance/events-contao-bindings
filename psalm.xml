@@ -12,13 +12,6 @@
         <directory name="src" />
     </projectFiles>
     <issueHandlers>
-        <MissingClassConstType>
-            <errorLevel type="suppress">
-                <file name="src/ContaoEvents.php"/>
-                <file name="src/Events/Image/ResizeImageEvent.php"/>
-                <file name="src/Events/Message/AddMessageEvent.php"/>
-            </errorLevel>
-        </MissingClassConstType>
         <ClassMustBeFinal>
             <errorLevel type="suppress">
                 <directory name="src"/>

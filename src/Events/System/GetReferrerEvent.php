@@ -58,7 +58,7 @@ class GetReferrerEvent extends ContaoApiEvent
      *
      * @param string|null $tableName        An optional table name.
      */
-    public function __construct(bool $encodeAmpersands = false, string $tableName = null)
+    public function __construct(bool $encodeAmpersands = false, ?string $tableName = null)
     {
         $this->encodeAmpersands = $encodeAmpersands;
         $this->tableName        = $tableName;
