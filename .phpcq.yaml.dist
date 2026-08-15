@@ -61,6 +61,7 @@ phpcq:
     - 033E5F8D801A2F8D
     # composer-normalize
     - C00543248C87FB13
+    - 96E91A992CF22FF4
 
 tasks:
   fix:
