@@ -31,14 +31,14 @@
   },
   "require": {
     "php": "^8.4",
-    "contao/core-bundle": "^5.7",
+    "contao/core-bundle": "^6.0",
     "psr/log": "^2.0 || ^3.0",
-    "symfony/config": "^6.4 || ^7.4",
-    "symfony/dependency-injection": "^6.4 || ^7.4",
-    "symfony/event-dispatcher": "^6.4 || ^7.4",
+    "symfony/config": "^6.4 || ^7.4 || ^8.0",
+    "symfony/dependency-injection": "^6.4 || ^7.4 || ^8.0",
+    "symfony/event-dispatcher": "^6.4 || ^7.4 || ^8.0",
     "symfony/event-dispatcher-contracts": "^2.0 || ^3.0",
-    "symfony/http-kernel": "^6.4 || ^7.4",
-    "symfony/routing": "^6.4 || ^7.4"
+    "symfony/http-kernel": "^6.4 || ^7.4 || ^8.0",
+    "symfony/routing": "^6.4 || ^7.4 || ^8.0"
   },
   "require-dev": {
     "contao/calendar-bundle": "^5.3",
@@ -66,7 +66,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-release/5.7.0": "5.7.x-dev"
+      "dev-feature/contao6": "6.3.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Contao\\Bindings\\ContaoManager\\Plugin"
   }
