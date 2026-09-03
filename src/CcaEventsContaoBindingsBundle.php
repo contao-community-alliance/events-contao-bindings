@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Contao\Bindings;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Kernel\AbstractBundle;
 
 /**
  * This is the bundle for binding contao events.
+ *
+ * Extends the DependencyInjection component's AbstractBundle directly rather than
+ * Symfony\Component\HttpKernel\Bundle\Bundle: the latter still works, but implements the
+ * now-deprecated Symfony\Component\HttpKernel\Bundle\BundleInterface.
  */
-class CcaEventsContaoBindingsBundle extends Bundle
+class CcaEventsContaoBindingsBundle extends AbstractBundle
 {
 }
