@@ -21,6 +21,11 @@
       "name": "Stefan Heimes",
       "email": "stefan_heimes@hotmail.com",
       "role": "Developer"
+    },
+    {
+      "name": "Ingolf Steinhardt",
+      "email": "info@e-spin.de",
+      "role": "Developer"
     }
   ],
   "homepage": "https://c-c-a.org/",
@@ -33,18 +38,18 @@
     "php": "^8.4",
     "contao/core-bundle": "^6.0",
     "psr/log": "^2.0 || ^3.0",
-    "symfony/config": "^6.4 || ^7.4 || ^8.0",
-    "symfony/dependency-injection": "^6.4 || ^7.4 || ^8.0",
-    "symfony/event-dispatcher": "^6.4 || ^7.4 || ^8.0",
-    "symfony/event-dispatcher-contracts": "^2.0 || ^3.0",
-    "symfony/http-kernel": "^6.4 || ^7.4 || ^8.0",
-    "symfony/routing": "^6.4 || ^7.4 || ^8.0"
+    "symfony/config": "^7.4 || ^8.0",
+    "symfony/dependency-injection": "^7.4 || ^8.0",
+    "symfony/event-dispatcher": "^7.4 || ^8.0",
+    "symfony/event-dispatcher-contracts": "^3.0",
+    "symfony/http-kernel": "^7.4 || ^8.0",
+    "symfony/routing": "^7.4 || ^8.0"
   },
   "require-dev": {
-    "contao/calendar-bundle": "^5.3",
-    "contao/comments-bundle": "^5.3",
-    "contao/manager-plugin": "^2.2",
-    "contao/news-bundle": "^5.3",
+    "contao/calendar-bundle": "^6.0",
+    "contao/comments-bundle": "^6.0",
+    "contao/manager-plugin": "^2.3",
+    "contao/news-bundle": "^6.0",
     "phpcq/runner-bootstrap": "^1.0@dev"
   },
   "autoload": {
@@ -66,7 +71,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-feature/contao6": "6.3.x-dev"
+      "dev-release/6.0.0": "6.0.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Contao\\Bindings\\ContaoManager\\Plugin"
   }

@@ -28,7 +28,6 @@ use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\AddToUrlEvent;
-use ContaoCommunityAlliance\Contao\Bindings\Events\Backend\GetThemeEvent;
 use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -59,7 +58,6 @@ class BackendSubscriber implements EventSubscriberInterface
     {
         return [
             ContaoEvents::BACKEND_ADD_TO_URL => 'handleAddToUrl',
-            ContaoEvents::BACKEND_GET_THEME  => 'handleGetTheme',
         ];
     }
 
@@ -79,23 +77,5 @@ class BackendSubscriber implements EventSubscriberInterface
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         $event->setUrl($backendAdapter->addToUrl($event->getSuffix()));
-    }
-
-    /**
-     * Add some suffix to the current URL.
-     *
-     * @param GetThemeEvent $event The event.
-     *
-     * @return void
-     */
-    public function handleGetTheme(GetThemeEvent $event): void
-    {
-        /**
-         * @var Backend $backendAdapter
-         * @psalm-suppress InternalMethod - getAdapter is the official way and NOT internal.
-         */
-        $backendAdapter = $this->framework->getAdapter(Backend::class);
-
-        $event->setTheme($backendAdapter->getTheme());
     }
 }
