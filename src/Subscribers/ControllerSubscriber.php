@@ -32,7 +32,6 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\PageModel;
-use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddEnclosureToTemplateEvent;
 use ContaoCommunityAlliance\Contao\Bindings\Events\Controller\AddToUrlEvent;
@@ -72,7 +71,9 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         ContaoFramework $framework,
-        private readonly InsertTagParser $insertTagParser
+        private readonly InsertTagParser $insertTagParser,
+        private readonly ContentUrlGenerator $urlGenerator,
+        private readonly PageRegistry $pageRegistry
     ) {
         $this->framework = $framework;
     }
@@ -144,9 +145,6 @@ class ControllerSubscriber implements EventSubscriberInterface
      */
     public function handleGenerateFrontendUrl(GenerateFrontendUrlEvent $event): void
     {
-        $urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-        assert($urlGenerator instanceof ContentUrlGenerator);
-
         $pageData = $event->getPageData();
         if (null === ($page = PageModel::findById($pageData['id'] ?? ''))) {
             return;
@@ -156,15 +154,14 @@ class ControllerSubscriber implements EventSubscriberInterface
 
         try {
             $event->setUrl(
-                $urlGenerator->generate(
+                $this->urlGenerator->generate(
                     $page,
                     null !== ($parameters = $event->getParameters()) ? ['parameters' => $parameters] : [],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 )
             );
         } catch (RouteNotFoundException $e) {
-            $pageRegistry = System::getContainer()->get('contao.routing.page_registry');
-            assert($pageRegistry instanceof PageRegistry);
+            $pageRegistry = $this->pageRegistry;
 
             if (!$pageRegistry->isRoutable($page)) {
                 throw new ResourceNotFoundException(\sprintf('Page ID %s is not routable', $page->id), 0, $e);

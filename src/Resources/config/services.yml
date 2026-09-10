@@ -10,6 +10,8 @@ services:
         arguments:
             - "@contao.framework"
             - "@contao.insert_tag.parser"
+            - "@contao.routing.content_url_generator"
+            - "@contao.routing.page_registry"
         class: ContaoCommunityAlliance\Contao\Bindings\Subscribers\ControllerSubscriber
         tags:
             - { name: kernel.event_subscriber }
